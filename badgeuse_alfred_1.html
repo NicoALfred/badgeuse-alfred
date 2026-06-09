@@ -6,16 +6,16 @@
 <title>Badgeuse Alfred</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap');
-
+ 
   :root {
     --bleu: #A8D5DC;
     --orange: #E8703A;
     --noir: #1A1A1A;
     --blanc: #F8F6F2;
   }
-
+ 
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
+ 
   body {
     font-family: 'DM Sans', sans-serif;
     background: var(--noir);
@@ -27,7 +27,7 @@
     padding: 24px;
     color: var(--blanc);
   }
-
+ 
   .top-bar {
     position: fixed;
     top: 16px;
@@ -35,7 +35,7 @@
     display: flex;
     gap: 6px;
   }
-
+ 
   .lang-btn {
     background: #2e2e2e;
     border: 1px solid rgba(255,255,255,0.1);
@@ -51,7 +51,7 @@
     gap: 5px;
   }
   .lang-btn.active { background: rgba(168,213,220,0.15); border-color: var(--bleu); color: var(--bleu); }
-
+ 
   .logo {
     font-family: 'DM Serif Display', serif;
     font-size: 2.2rem;
@@ -60,7 +60,7 @@
     margin-bottom: 6px;
     text-align: center;
   }
-
+ 
   .site-name {
     font-size: 0.85rem;
     color: rgba(255,255,255,0.45);
@@ -69,7 +69,7 @@
     text-align: center;
     margin-bottom: 40px;
   }
-
+ 
   .card {
     background: #242424;
     border-radius: 20px;
@@ -78,7 +78,7 @@
     max-width: 380px;
     border: 1px solid rgba(255,255,255,0.06);
   }
-
+ 
   .label {
     font-size: 0.75rem;
     text-transform: uppercase;
@@ -86,14 +86,14 @@
     color: rgba(255,255,255,0.4);
     margin-bottom: 10px;
   }
-
+ 
   .agent-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 10px;
     margin-bottom: 28px;
   }
-
+ 
   .agent-btn {
     background: #2e2e2e;
     border: 2px solid transparent;
@@ -109,7 +109,7 @@
   }
   .agent-btn:hover { background: #363636; border-color: var(--bleu); }
   .agent-btn.selected { background: rgba(168,213,220,0.12); border-color: var(--bleu); color: var(--bleu); }
-
+ 
   .loading-agents {
     text-align: center;
     color: rgba(255,255,255,0.3);
@@ -117,11 +117,11 @@
     padding: 20px 0;
     margin-bottom: 28px;
   }
-
+ 
   .divider { height: 1px; background: rgba(255,255,255,0.07); margin-bottom: 28px; }
-
+ 
   .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 28px; }
-
+ 
   .action-btn {
     border: none;
     border-radius: 14px;
@@ -137,7 +137,7 @@
     gap: 6px;
   }
   .action-btn .icon { font-size: 1.5rem; }
-
+ 
   .btn-arrivee {
     background: rgba(168,213,220,0.15);
     color: var(--bleu);
@@ -146,7 +146,7 @@
   .btn-arrivee:hover:not(:disabled), .btn-arrivee.selected {
     background: var(--bleu); color: var(--noir); border-color: var(--bleu);
   }
-
+ 
   .btn-depart {
     background: rgba(232,112,58,0.12);
     color: var(--orange);
@@ -155,9 +155,9 @@
   .btn-depart:hover:not(:disabled), .btn-depart.selected {
     background: var(--orange); color: white; border-color: var(--orange);
   }
-
+ 
   .action-btn:disabled { opacity: 0.25; cursor: not-allowed; }
-
+ 
   .status-badge {
     display: inline-flex;
     align-items: center;
@@ -177,7 +177,7 @@
     border-color: rgba(232,112,58,0.2);
     color: var(--orange);
   }
-
+ 
   .submit-btn {
     width: 100%;
     padding: 17px;
@@ -193,7 +193,7 @@
   }
   .submit-btn:hover { background: #d4612e; transform: translateY(-1px); }
   .submit-btn:disabled { background: #3a3a3a; color: rgba(255,255,255,0.3); cursor: not-allowed; transform: none; }
-
+ 
   .time-display {
     text-align: center;
     margin-bottom: 28px;
@@ -203,7 +203,7 @@
   }
   .time-display .time { font-size: 1.8rem; font-weight: 300; letter-spacing: 2px; }
   .time-display .date { font-size: 0.75rem; color: rgba(255,255,255,0.35); margin-top: 2px; text-transform: capitalize; }
-
+ 
   .success-card { display: none; text-align: center; padding: 40px 28px; }
   .success-icon {
     width: 72px; height: 72px;
@@ -216,7 +216,7 @@
   }
   .success-title { font-family: 'DM Serif Display', serif; font-size: 1.5rem; color: var(--bleu); margin-bottom: 8px; }
   .success-detail { font-size: 0.85rem; color: rgba(255,255,255,0.4); line-height: 1.6; }
-
+ 
   .reset-btn {
     margin-top: 24px;
     background: transparent;
@@ -230,7 +230,7 @@
     transition: all 0.15s;
   }
   .reset-btn:hover { border-color: rgba(255,255,255,0.4); color: var(--blanc); }
-
+ 
   .error-msg {
     background: rgba(232,112,58,0.15);
     border: 1px solid rgba(232,112,58,0.3);
@@ -242,33 +242,40 @@
     display: none;
     text-align: center;
   }
+ 
+  .site-error {
+    text-align: center;
+    padding: 40px 20px;
+    color: rgba(255,255,255,0.5);
+  }
+  .site-error h2 { color: var(--orange); margin-bottom: 10px; }
 </style>
 </head>
 <body>
-
+ 
 <div class="top-bar">
-  <button class="lang-btn active" onclick="setLang('fr')">🇫🇷 FR</button>
-  <button class="lang-btn" onclick="setLang('en')">🇬🇧 EN</button>
+  <button class="lang-btn active" id="btn-fr" onclick="setLang('fr')">🇫🇷 FR</button>
+  <button class="lang-btn" id="btn-en" onclick="setLang('en')">🇬🇧 EN</button>
 </div>
-
+ 
 <div class="logo">Alfred</div>
-<div class="site-name">19 Rue Daru</div>
-
+<div class="site-name" id="site-display">Chargement...</div>
+ 
 <div class="card" id="main-card">
   <div class="time-display">
     <div class="time" id="clock">--:--</div>
     <div class="date" id="dateDisplay"></div>
   </div>
-
+ 
   <div class="label" id="label-agent">Agent</div>
   <div id="agent-container">
     <div class="loading-agents" id="loading-msg">⏳ Chargement...</div>
     <div class="agent-grid" id="agent-grid" style="display:none"></div>
   </div>
-
+ 
   <div id="status-area"></div>
   <div class="divider"></div>
-
+ 
   <div class="label" id="label-action">Action</div>
   <div class="action-grid">
     <button class="action-btn btn-arrivee" id="btn-arrivee" onclick="selectAction('Arrivée')">
@@ -280,27 +287,68 @@
       <span id="txt-depart">Départ</span>
     </button>
   </div>
-
+ 
   <div class="error-msg" id="error-msg"></div>
   <button class="submit-btn" id="submit-btn" onclick="submitBadge()">Valider le badge</button>
 </div>
-
+ 
 <div class="card success-card" id="success-card">
   <div class="success-icon">✓</div>
   <div class="success-title" id="success-title"></div>
   <div class="success-detail" id="success-detail"></div>
   <button class="reset-btn" onclick="reset()" id="reset-btn">← Nouveau badge</button>
 </div>
-
+ 
 <script>
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby5GfqDkVWSoNOolviOccT70_kBD8gP00jqiLPQezhqyyJaE4SZqhMOnvjuISoBu2UA/exec";
-  const SITE = "19 Rue Daru";
-
+ 
+  // Correspondance paramètre URL → nom complet du site
+  const SITES = {
+    "daru":         "19 Rue Daru",
+    "montmartre":   "17 Rue du Faubourg Montmartre, 75009 Paris",
+    "stmarc":       "21 Rue St Marc, 75002 Paris",
+    "pepiniere":    "14 Rue de la Pépinière, 75008 Paris",
+    "haussmann":    "165 Boulevard Haussmann, 75008 Paris",
+    "poissoniere":  "70 Rue du Fbg Poissonière, 75002 Paris",
+    "murat":        "7 Rue Louis Murat, 75008 Paris",
+    "malesherbes":  "10 Blv Malesherbes, 75008 Paris",
+    "lisbonne":     "30 Rue de Lisbonne, 75008 Paris"
+  };
+ 
+  // Lit le paramètre ?site= dans l'URL
+  function getSiteFromURL() {
+    const params = new URLSearchParams(window.location.search);
+    const key = params.get("site");
+    return key ? { key, nom: SITES[key] || null } : null;
+  }
+ 
+  const siteInfo = getSiteFromURL();
+  const SITE = siteInfo && siteInfo.nom ? siteInfo.nom : null;
+ 
+  // Affiche le nom du site ou une erreur
+  if (SITE) {
+    document.getElementById('site-display').textContent = SITE;
+  } else if (siteInfo) {
+    document.getElementById('site-display').textContent = "Site inconnu";
+    document.getElementById('main-card').innerHTML = `
+      <div class="site-error">
+        <h2>⚠️ Site non reconnu</h2>
+        <p>Le paramètre "?site=${siteInfo.key}" n'existe pas.<br>Vérifie l'URL programmée dans le tag NFC.</p>
+      </div>`;
+  } else {
+    document.getElementById('site-display').textContent = "Site non défini";
+    document.getElementById('main-card').innerHTML = `
+      <div class="site-error">
+        <h2>⚠️ Aucun site détecté</h2>
+        <p>Cette page doit être ouverte via un tag NFC.<br>Exemple : ...badgeuse_alfred_1.html?site=daru</p>
+      </div>`;
+  }
+ 
   let selectedAgent = null;
   let selectedAction = null;
   let currentLang = "fr";
-  let agentStatus = {}; // "in" ou "out" par agent
-
+  let agentStatus = {};
+ 
   const T = {
     fr: {
       agent: "Agent", action: "Action",
@@ -329,8 +377,7 @@
       chargement: "⏳ Loading...",
     }
   };
-
-  // Horloge
+ 
   function updateClock() {
     const now = new Date();
     document.getElementById('clock').textContent =
@@ -341,19 +388,14 @@
   }
   setInterval(updateClock, 1000);
   updateClock();
-
-  // Charge les agents depuis Apps Script (doGet)
+ 
   async function loadAgents() {
     try {
       const res = await fetch(SCRIPT_URL);
       const data = await res.json();
       const agents = data.agents || [];
-
-      // Restaure les statuts depuis localStorage
-      agents.forEach(a => {
-        agentStatus[a] = localStorage.getItem("status_" + a) || "out";
-      });
-
+      agents.forEach(a => { agentStatus[a] = localStorage.getItem("status_" + a) || "out"; });
+ 
       const grid = document.getElementById('agent-grid');
       grid.innerHTML = "";
       agents.forEach(name => {
@@ -361,27 +403,26 @@
         btn.className = 'agent-btn';
         btn.textContent = name.split(' ')[0];
         btn.title = name;
-        btn.dataset.fullname = name;
         btn.onclick = () => selectAgent(name, btn);
         grid.appendChild(btn);
       });
-
+ 
       document.getElementById('loading-msg').style.display = 'none';
       grid.style.display = 'grid';
     } catch(err) {
       document.getElementById('loading-msg').textContent = "⚠️ Erreur de chargement";
     }
   }
-
-  loadAgents();
-
+ 
+  if (SITE) loadAgents();
+ 
   function setLang(lang) {
     currentLang = lang;
-    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-    event.target.classList.add('active');
+    document.getElementById('btn-fr').classList.toggle('active', lang === 'fr');
+    document.getElementById('btn-en').classList.toggle('active', lang === 'en');
     applyLang();
   }
-
+ 
   function applyLang() {
     const t = T[currentLang];
     document.getElementById('label-agent').textContent = t.agent;
@@ -395,7 +436,7 @@
     updateClock();
     updateStatusArea();
   }
-
+ 
   function selectAgent(name, btnEl) {
     selectedAgent = name;
     selectedAction = null;
@@ -406,16 +447,16 @@
     updateActionButtons();
     updateStatusArea();
   }
-
+ 
   function updateActionButtons() {
-    const btnIn = document.getElementById('btn-arrivee');
+    const btnIn  = document.getElementById('btn-arrivee');
     const btnOut = document.getElementById('btn-depart');
     if (!selectedAgent) { btnIn.disabled = false; btnOut.disabled = false; return; }
     const status = agentStatus[selectedAgent] || "out";
-    btnIn.disabled = status === "in";
+    btnIn.disabled  = status === "in";
     btnOut.disabled = status === "out";
   }
-
+ 
   function updateStatusArea() {
     const area = document.getElementById('status-area');
     if (!selectedAgent) { area.innerHTML = ''; return; }
@@ -428,16 +469,16 @@
       area.innerHTML = `<div class="status-badge">⚪ ${t.statut_out}</div>`;
     }
   }
-
+ 
   function selectAction(action) {
     selectedAction = action;
     document.querySelectorAll('.action-btn').forEach(b => b.classList.remove('selected'));
     event.currentTarget.classList.add('selected');
     hideError();
   }
-
+ 
   function hideError() { document.getElementById('error-msg').style.display = 'none'; }
-
+ 
   async function submitBadge() {
     if (!selectedAgent || !selectedAction) {
       document.getElementById('error-msg').style.display = 'block';
@@ -448,7 +489,7 @@
     const btn = document.getElementById('submit-btn');
     btn.disabled = true;
     btn.textContent = T[currentLang].enregistrement;
-
+ 
     try {
       await fetch(SCRIPT_URL, {
         method: 'POST',
@@ -457,8 +498,7 @@
         body: JSON.stringify({agent: selectedAgent, action: selectedAction, site: SITE, timestamp})
       });
     } catch(e) {}
-
-    // Mise à jour statut local
+ 
     if (selectedAction === "Arrivée") {
       agentStatus[selectedAgent] = "in";
       localStorage.setItem("status_" + selectedAgent, "in");
@@ -469,8 +509,7 @@
       localStorage.setItem("status_" + selectedAgent, "out");
       localStorage.removeItem("checkin_" + selectedAgent);
     }
-
-    // Affiche succès
+ 
     document.getElementById('main-card').style.display = 'none';
     document.getElementById('success-card').style.display = 'block';
     const t = T[currentLang];
@@ -480,7 +519,7 @@
       `<strong>${selectedAgent}</strong><br>${SITE}<br>${timestamp}`;
     document.getElementById('reset-btn').textContent = t.nouveau;
   }
-
+ 
   function reset() {
     selectedAgent = null;
     selectedAction = null;
@@ -493,8 +532,9 @@
     document.getElementById('status-area').innerHTML = '';
     updateActionButtons();
   }
-
+ 
   applyLang();
 </script>
 </body>
 </html>
+ 
