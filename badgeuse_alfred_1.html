@@ -300,8 +300,8 @@
  
   .reset-btn {
     background: transparent;
-    border: 1px solid rgba(255,255,255,0.15);
-    color: rgba(255,255,255,0.5);
+    border: 1px solid rgba(232,112,58,0.4);
+    color: var(--orange);
     padding: 10px 24px;
     border-radius: 30px;
     font-family: 'DM Sans', sans-serif;
@@ -309,16 +309,8 @@
     cursor: pointer;
     transition: all 0.15s;
     margin-bottom: 16px;
-    opacity: 0.4;
-    cursor: not-allowed;
   }
-  .reset-btn.unlocked {
-    opacity: 1;
-    cursor: pointer;
-    border-color: rgba(232,112,58,0.4);
-    color: var(--orange);
-  }
-  .reset-btn.unlocked:hover { background: rgba(232,112,58,0.1); }
+  .reset-btn:hover { background: rgba(232,112,58,0.1); }
  
   /* CHECKLIST */
   .checklist-wrap {
@@ -452,30 +444,7 @@
   }
  
   /* Bouton confirmation tâches */
-  .confirm-tasks-btn {
-    width: 100%;
-    padding: 16px;
-    background: rgba(168,213,220,0.15);
-    color: var(--bleu);
-    border: 1.5px solid rgba(168,213,220,0.4);
-    border-radius: 14px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.95rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.18s ease;
-    margin-top: 8px;
-  }
-  .confirm-tasks-btn:hover {
-    background: var(--bleu);
-    color: var(--noir);
-  }
-  .confirm-tasks-btn.done {
-    background: rgba(129,199,132,0.15);
-    border-color: rgba(129,199,132,0.4);
-    color: #81c784;
-    cursor: default;
-  }
+ 
  
   .site-error {
     text-align: center;
@@ -563,10 +532,7 @@
     <!-- Tâches quotidiennes -->
     <div id="daily-area"></div>
  
-    <!-- Bouton confirmation -->
-    <button class="confirm-tasks-btn" id="confirm-tasks-btn" onclick="confirmTasks()">
-      <span id="confirm-tasks-label">✋ J'ai pris connaissance des tâches à effectuer aujourd'hui</span>
-    </button>
+ 
   </div>
 </div>
  
@@ -936,9 +902,8 @@ function updateActionButtons() {
   const btnOut = document.getElementById('btn-depart');
   if (!selectedAgent) { btnIn.disabled = false; btnOut.disabled = false; return; }
   const status = agentStatus[selectedAgent] || "out";
-  const tasksDone = localStorage.getItem("tasks_confirmed_" + selectedAgent) === "yes";
   btnIn.disabled  = status === "in";
-  btnOut.disabled = status === "out" || !tasksDone;
+  btnOut.disabled = status === "out";
 }
  
 function updateStatusArea() {
@@ -1009,27 +974,23 @@ async function confirmBadge() {
     localStorage.setItem("status_" + selectedAgent, "in");
     localStorage.setItem("checkin_" + selectedAgent,
       now.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'}));
-    localStorage.removeItem("tasks_confirmed_" + selectedAgent);
- 
     document.getElementById('main-card').style.display = 'none';
     document.getElementById('success-area').style.display = 'block';
     document.getElementById('success-title').textContent = t.arrivee_ok;
     document.getElementById('success-detail').innerHTML = `<strong>${selectedAgent}</strong> — ${SITE}<br>${timestamp}`;
  
-    // Bouton départ verrouillé
+    // Bouton retour toujours accessible
     const resetBtn = document.getElementById('reset-btn');
-    resetBtn.classList.remove('unlocked');
-    document.getElementById('reset-label').textContent = t.depart_locked;
+    resetBtn.classList.add('unlocked');
+    document.getElementById('reset-label').textContent = t.nouveau;
  
     // Affiche checklist
-    afficherChecklist();
+    afficherChecklist(currentLang);
  
   } else {
     agentStatus[selectedAgent] = "out";
     localStorage.setItem("status_" + selectedAgent, "out");
     localStorage.removeItem("checkin_" + selectedAgent);
-    localStorage.removeItem("tasks_confirmed_" + selectedAgent);
- 
     document.getElementById('main-card').style.display = 'none';
     document.getElementById('checklist-wrap').style.display = 'none';
     document.getElementById('success-area').style.display = 'block';
@@ -1042,28 +1003,9 @@ async function confirmBadge() {
   }
 }
  
-function confirmTasks() {
-  if (!selectedAgent) return;
-  localStorage.setItem("tasks_confirmed_" + selectedAgent, "yes");
  
-  const btn = document.getElementById('confirm-tasks-btn');
-  btn.classList.add('done');
-  btn.querySelector('#confirm-tasks-label').textContent = T[currentLang].tasks_done;
-  btn.disabled = true;
- 
-  // Déverrouille le bouton départ
-  const resetBtn = document.getElementById('reset-btn');
-  resetBtn.classList.add('unlocked');
-  document.getElementById('reset-label').textContent = T[currentLang].nouveau;
-}
  
 function tryReset() {
-  const tasksDone = selectedAgent && localStorage.getItem("tasks_confirmed_" + selectedAgent) === "yes";
-  const status = selectedAgent ? (agentStatus[selectedAgent] || "out") : "out";
- 
-  // Si en session et tâches non confirmées → bloqué
-  if (status === "in" && !tasksDone) return;
- 
   reset();
 }
  
@@ -1092,10 +1034,10 @@ function getFrequencesActives(date) {
   return actives;
 }
  
-function afficherChecklist() {
+function afficherChecklist(lang) {
+  lang = lang || currentLang;
   const now = new Date();
   const freqs = getFrequencesActives(now);
-  const lang = currentLang;
   const t = T[lang];
   const excData = EXCEPTIONAL_TASKS[lang] || EXCEPTIONAL_TASKS.fr;
   const dailyData = DAILY_TASKS[lang] || DAILY_TASKS.fr;
@@ -1185,12 +1127,6 @@ function afficherChecklist() {
   }
  
   dailyArea.appendChild(dailyBlock);
- 
-  // Bouton confirmation tâches
-  const confirmBtn = document.getElementById('confirm-tasks-btn');
-  confirmBtn.classList.remove('done');
-  confirmBtn.disabled = false;
-  document.getElementById('confirm-tasks-label').textContent = t.confirm_tasks;
  
   document.getElementById('checklist-wrap').style.display = 'block';
 }
