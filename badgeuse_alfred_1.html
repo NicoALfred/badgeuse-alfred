@@ -12,6 +12,8 @@
     --orange: #E8703A;
     --noir: #1A1A1A;
     --blanc: #F8F6F2;
+    --rouge-pastel: #FADBD8;
+    --vert-pastel: #EAFAF1;
   }
  
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -74,7 +76,7 @@
     width: 100%;
     max-width: 420px;
     border: 1px solid rgba(255,255,255,0.06);
-    margin-bottom: 20px;
+    margin-bottom: 16px;
   }
  
   .label {
@@ -214,6 +216,73 @@
     text-align: center;
   }
  
+  /* MODAL CONFIRMATION */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .modal-overlay.visible { display: flex; }
+ 
+  .modal {
+    background: #2a2a2a;
+    border-radius: 20px;
+    padding: 32px 28px;
+    width: 100%;
+    max-width: 380px;
+    border: 1px solid rgba(255,255,255,0.1);
+    text-align: center;
+  }
+ 
+  .modal-icon { font-size: 2.5rem; margin-bottom: 12px; }
+  .modal-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.3rem;
+    color: var(--bleu);
+    margin-bottom: 10px;
+  }
+  .modal-text {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+  .modal-text strong { color: var(--blanc); }
+ 
+  .modal-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+ 
+  .modal-confirm {
+    padding: 14px;
+    background: var(--orange);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .modal-confirm:hover { background: #d4612e; }
+ 
+  .modal-cancel {
+    padding: 14px;
+    background: transparent;
+    color: rgba(255,255,255,0.5);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .modal-cancel:hover { border-color: rgba(255,255,255,0.4); color: var(--blanc); }
+ 
   /* SUCCESS */
   .success-banner {
     background: rgba(168,213,220,0.1);
@@ -221,7 +290,7 @@
     border-radius: 14px;
     padding: 16px 20px;
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
     width: 100%;
     max-width: 420px;
   }
@@ -239,19 +308,31 @@
     font-size: 0.85rem;
     cursor: pointer;
     transition: all 0.15s;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
+    opacity: 0.4;
+    cursor: not-allowed;
   }
-  .reset-btn:hover { border-color: rgba(255,255,255,0.4); color: var(--blanc); }
+  .reset-btn.unlocked {
+    opacity: 1;
+    cursor: pointer;
+    border-color: rgba(232,112,58,0.4);
+    color: var(--orange);
+  }
+  .reset-btn.unlocked:hover { background: rgba(232,112,58,0.1); }
  
   /* CHECKLIST */
+  .checklist-wrap {
+    width: 100%;
+    max-width: 420px;
+    display: none;
+  }
+ 
   .checklist-card {
     background: #242424;
     border-radius: 20px;
     padding: 28px;
-    width: 100%;
-    max-width: 420px;
     border: 1px solid rgba(255,255,255,0.06);
-    display: none;
+    margin-bottom: 16px;
   }
  
   .checklist-title {
@@ -260,7 +341,6 @@
     color: var(--bleu);
     margin-bottom: 4px;
   }
- 
   .checklist-date {
     font-size: 0.75rem;
     color: rgba(255,255,255,0.35);
@@ -268,58 +348,134 @@
     text-transform: capitalize;
   }
  
-  .zone-block {
+  /* Tâches exceptionnelles */
+  .exceptional-block {
+    background: rgba(250,219,216,0.1);
+    border: 1px solid rgba(250,219,216,0.3);
+    border-radius: 14px;
+    padding: 16px;
     margin-bottom: 20px;
   }
- 
-  .zone-title {
+  .exceptional-block.empty {
+    background: rgba(234,250,241,0.08);
+    border-color: rgba(168,213,168,0.2);
+  }
+  .exceptional-header {
     font-size: 0.8rem;
-    font-weight: 600;
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1.5px;
-    color: var(--orange);
-    margin-bottom: 8px;
-    padding-bottom: 6px;
-    border-bottom: 1px solid rgba(232,112,58,0.2);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #e57373;
+  }
+  .exceptional-header.empty { color: #81c784; }
+ 
+  .exceptional-zone { margin-bottom: 12px; }
+  .exceptional-zone:last-child { margin-bottom: 0; }
+  .exceptional-zone-title {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+ 
+  .exc-task {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 0;
+    font-size: 0.87rem;
+    color: rgba(255,255,255,0.85);
+  }
+ 
+  .freq-pill {
+    font-size: 0.65rem;
+    padding: 2px 7px;
+    border-radius: 10px;
+    margin-left: auto;
+    flex-shrink: 0;
+    font-weight: 600;
+  }
+  .freq-pill.hebdo { background: rgba(168,213,168,0.2); color: #a5d6a7; }
+  .freq-pill.mensuel { background: rgba(255,213,79,0.15); color: #ffd54f; }
+  .freq-pill.trimestriel { background: rgba(206,147,216,0.2); color: #ce93d8; }
+ 
+  /* Tâches quotidiennes */
+  .daily-block {
+    margin-bottom: 16px;
+  }
+  .daily-header {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--bleu);
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(168,213,220,0.2);
     display: flex;
     align-items: center;
     gap: 8px;
   }
  
-  .task-item {
+  .daily-zone { margin-bottom: 14px; }
+  .daily-zone-title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+ 
+  .daily-task {
     display: flex;
     align-items: flex-start;
-    gap: 10px;
-    padding: 6px 0;
-    font-size: 0.88rem;
-    color: rgba(255,255,255,0.8);
+    gap: 8px;
+    padding: 5px 0;
+    font-size: 0.87rem;
+    color: rgba(255,255,255,0.75);
     border-bottom: 1px solid rgba(255,255,255,0.04);
   }
-  .task-item:last-child { border-bottom: none; }
- 
-  .task-dot {
-    width: 6px;
-    height: 6px;
+  .daily-task:last-child { border-bottom: none; }
+  .task-bullet {
+    width: 5px; height: 5px;
     border-radius: 50%;
     background: var(--bleu);
-    margin-top: 6px;
+    margin-top: 7px;
     flex-shrink: 0;
   }
-  .task-dot.hebdo { background: #A8D5A8; }
-  .task-dot.mensuel { background: #D5C8A8; }
-  .task-dot.trimestriel { background: #D5A8C8; }
  
-  .freq-badge {
-    font-size: 0.65rem;
-    padding: 2px 6px;
-    border-radius: 10px;
-    margin-left: auto;
-    flex-shrink: 0;
-    opacity: 0.7;
+  /* Bouton confirmation tâches */
+  .confirm-tasks-btn {
+    width: 100%;
+    padding: 16px;
+    background: rgba(168,213,220,0.15);
+    color: var(--bleu);
+    border: 1.5px solid rgba(168,213,220,0.4);
+    border-radius: 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    margin-top: 8px;
   }
-  .freq-badge.hebdo { background: rgba(168,213,168,0.15); color: #A8D5A8; }
-  .freq-badge.mensuel { background: rgba(213,200,168,0.15); color: #D5C8A8; }
-  .freq-badge.trimestriel { background: rgba(213,168,200,0.15); color: #D5A8C8; }
+  .confirm-tasks-btn:hover {
+    background: var(--bleu);
+    color: var(--noir);
+  }
+  .confirm-tasks-btn.done {
+    background: rgba(129,199,132,0.15);
+    border-color: rgba(129,199,132,0.4);
+    color: #81c784;
+    cursor: default;
+  }
  
   .site-error {
     text-align: center;
@@ -332,13 +488,15 @@
 <body>
  
 <div class="top-bar">
-  <button class="lang-btn active" id="btn-fr" onclick="setLang('fr')">🇫🇷 FR</button>
-  <button class="lang-btn" id="btn-en" onclick="setLang('en')">🇬🇧 EN</button>
+  <button class="lang-btn active" id="btn-fr" onclick="setLang('fr')">🇫🇷</button>
+  <button class="lang-btn" id="btn-en" onclick="setLang('en')">🇬🇧</button>
+  <button class="lang-btn" id="btn-bn" onclick="setLang('bn')">🇧🇩</button>
 </div>
  
 <div class="logo">Alfred</div>
 <div class="site-name" id="site-display">Chargement...</div>
  
+<!-- CARTE PRINCIPALE -->
 <div class="card" id="main-card">
   <div class="time-display">
     <div class="time" id="clock">--:--</div>
@@ -367,24 +525,49 @@
   </div>
  
   <div class="error-msg" id="error-msg"></div>
-  <button class="submit-btn" id="submit-btn" onclick="submitBadge()">Valider le badge</button>
+  <button class="submit-btn" id="submit-btn" onclick="showConfirmModal()">Valider le badge</button>
 </div>
  
-<!-- Bannière succès -->
+<!-- MODAL CONFIRMATION BADGE -->
+<div class="modal-overlay" id="confirm-modal">
+  <div class="modal">
+    <div class="modal-icon" id="modal-icon">👋</div>
+    <div class="modal-title" id="modal-title"></div>
+    <div class="modal-text" id="modal-text"></div>
+    <div class="modal-btns">
+      <button class="modal-cancel" onclick="closeModal()" id="modal-cancel-btn">Annuler</button>
+      <button class="modal-confirm" onclick="confirmBadge()" id="modal-confirm-btn">Confirmer</button>
+    </div>
+  </div>
+</div>
+ 
+<!-- SUCCÈS -->
 <div id="success-area" style="display:none; width:100%; max-width:420px; text-align:center;">
   <div class="success-banner">
     <div class="check">✓</div>
     <div class="title" id="success-title"></div>
     <div class="detail" id="success-detail"></div>
   </div>
-  <button class="reset-btn" onclick="reset()" id="reset-btn">← Nouveau badge</button>
+  <button class="reset-btn" id="reset-btn" onclick="tryReset()">← <span id="reset-label">Nouveau badge</span></button>
 </div>
  
-<!-- Checklist -->
-<div class="checklist-card" id="checklist-card">
-  <div class="checklist-title" id="checklist-title">📋 Tâches du jour</div>
-  <div class="checklist-date" id="checklist-date"></div>
-  <div id="checklist-content"></div>
+<!-- CHECKLIST -->
+<div class="checklist-wrap" id="checklist-wrap">
+  <div class="checklist-card">
+    <div class="checklist-title" id="checklist-title">📋 Tâches du jour</div>
+    <div class="checklist-date" id="checklist-date"></div>
+ 
+    <!-- Tâches exceptionnelles -->
+    <div id="exceptional-area"></div>
+ 
+    <!-- Tâches quotidiennes -->
+    <div id="daily-area"></div>
+ 
+    <!-- Bouton confirmation -->
+    <button class="confirm-tasks-btn" id="confirm-tasks-btn" onclick="confirmTasks()">
+      <span id="confirm-tasks-label">✋ J'ai pris connaissance des tâches à effectuer aujourd'hui</span>
+    </button>
+  </div>
 </div>
  
 <script>
@@ -403,292 +586,250 @@ const SITES = {
   "sebastopol":   "74 Boulevard de Sébastopol, 75003 Paris"
 };
  
-// CHECKLIST complète FR / EN
-const CHECKLIST = {
+// Tâches quotidiennes simplifiées
+const DAILY_TASKS = {
   fr: [
     {
-      zone: "🏢 Accueil & Hall",
-      taches: [
-        { t: "Aération des locaux", f: "quotidien" },
-        { t: "Vidage des poubelles", f: "quotidien" },
-        { t: "Aspiration / Lavage des sols", f: "quotidien" },
-        { t: "Enlèvement des traces de doigts (portes, vitres, miroirs)", f: "quotidien" },
-        { t: "Nettoyage des poubelles", f: "hebdo" },
-        { t: "Dépoussiérage du mobilier", f: "hebdo" },
-        { t: "Dépoussiérage plinthes et fenêtres", f: "mensuel" },
-        { t: "Nettoyage intensif des vitres", f: "trimestriel" },
-      ]
-    },
-    {
-      zone: "🚪 Circulations",
-      taches: [
-        { t: "Vidage des poubelles", f: "quotidien" },
-        { t: "Aspiration / Lavage des sols", f: "quotidien" },
-        { t: "Dépoussiérage du mobilier", f: "quotidien" },
-        { t: "Nettoyage des poubelles", f: "quotidien" },
-        { t: "Dépoussiérage plinthes et fenêtres", f: "mensuel" },
-        { t: "Dépoussiérage des extincteurs", f: "trimestriel" },
-        { t: "Lessivage des portes", f: "trimestriel" },
-      ]
-    },
-    {
-      zone: "💼 Bureaux",
-      taches: [
-        { t: "Aération des locaux", f: "quotidien" },
-        { t: "Vidage des poubelles", f: "quotidien" },
-        { t: "Aspiration / Lavage des sols", f: "quotidien" },
-        { t: "Dépoussiérage du mobilier", f: "quotidien" },
-        { t: "Débarrassage des tasses et verres", f: "quotidien" },
-        { t: "Remise en place des chaises sous les tables", f: "quotidien" },
-        { t: "Nettoyage des poubelles", f: "quotidien" },
-        { t: "Dépoussiérage des luminaires", f: "hebdo" },
-        { t: "Dépoussiérage dessus d'armoires", f: "hebdo" },
-        { t: "Dépoussiérage des fauteuils et chaises", f: "hebdo" },
-        { t: "Dépoussiérage plinthes et fenêtres", f: "mensuel" },
-        { t: "Lessivage des portes", f: "trimestriel" },
-      ]
-    },
-    {
-      zone: "🤝 Salles de réunion",
-      taches: [
-        { t: "Aération des locaux", f: "quotidien" },
-        { t: "Vidage des poubelles", f: "quotidien" },
-        { t: "Aspiration / Lavage des sols", f: "quotidien" },
-        { t: "Dépoussiérage du mobilier", f: "quotidien" },
-        { t: "Débarrassage des tasses et verres", f: "quotidien" },
-        { t: "Remise en place des chaises sous les tables", f: "quotidien" },
-        { t: "Nettoyage des poubelles", f: "quotidien" },
-        { t: "Dépoussiérage des luminaires", f: "hebdo" },
-        { t: "Dépoussiérage dessus d'armoires", f: "hebdo" },
-        { t: "Dépoussiérage des fauteuils et chaises", f: "hebdo" },
-        { t: "Dépoussiérage plinthes et fenêtres", f: "mensuel" },
-        { t: "Lessivage des portes", f: "trimestriel" },
-      ]
-    },
-    {
-      zone: "🍽️ Cuisines",
-      taches: [
-        { t: "Aération des locaux", f: "quotidien" },
-        { t: "Vidage des poubelles", f: "quotidien" },
-        { t: "Aspiration / Lavage des sols", f: "quotidien" },
-        { t: "Nettoyage des tables et plans de travail", f: "quotidien" },
-        { t: "Remise en place des chaises sous les tables", f: "quotidien" },
-        { t: "Nettoyage machine à café et bouilloire", f: "quotidien" },
-        { t: "Remplissage, lancement, vidage lave-vaisselle", f: "quotidien" },
-        { t: "Dépoussiérage extérieur du mobilier", f: "quotidien" },
-        { t: "Dépoussiérage des fauteuils et chaises", f: "quotidien" },
-        { t: "Nettoyage des poubelles", f: "hebdo" },
-        { t: "Nettoyage micro-ondes", f: "hebdo" },
-        { t: "Dépoussiérage plinthes et fenêtres", f: "mensuel" },
-        { t: "Détartrage machines à cafés", f: "trimestriel" },
-        { t: "Nettoyage en profondeur du frigidaire", f: "trimestriel" },
-        { t: "Nettoyage du lave-vaisselle", f: "trimestriel" },
-        { t: "Vidange lave-vaisselle", f: "trimestriel" },
-        { t: "Dépoussiérage intérieur du mobilier", f: "trimestriel" },
-        { t: "Lessivage des portes", f: "trimestriel" },
+      zone: "🏢 Bureaux & Espaces communs",
+      tasks: [
+        "Aération des locaux",
+        "Vidage / Nettoyage des poubelles",
+        "Aspiration / Lavage des sols",
+        "Enlèvement des traces de doigts (portes, vitres, miroirs)",
+        "Dépoussiérage du mobilier",
+        "Débarrassage des tasses et verres",
+        "Remise en place des chaises sous les tables",
+        "Nettoyage des tables et plans de travail",
+        "Nettoyage machine à café et bouilloire",
+        "Remplissage, lancement, vidage lave-vaisselle",
       ]
     },
     {
       zone: "🚿 Sanitaires & Douches",
-      taches: [
-        { t: "Aération des sanitaires", f: "quotidien" },
-        { t: "Vidage et nettoyage des poubelles", f: "quotidien" },
-        { t: "Aspiration / Lavage des sols", f: "quotidien" },
-        { t: "Nettoyage des cuvettes, appareils, douches", f: "quotidien" },
-        { t: "Nettoyage robinetterie", f: "quotidien" },
-        { t: "Recharge des consommables", f: "quotidien" },
-        { t: "Enlèvement des traces sur les miroirs", f: "quotidien" },
-        { t: "Détartrage des WC", f: "trimestriel" },
+      tasks: [
+        "Aération des sanitaires",
+        "Vidage et nettoyage des poubelles",
+        "Aspiration / Lavage des sols",
+        "Nettoyage des cuvettes, appareils, douches",
+        "Nettoyage robinetterie",
+        "Recharge des consommables",
+        "Enlèvement des traces sur les miroirs",
       ]
     }
   ],
   en: [
     {
-      zone: "🏢 Reception & Hall",
-      taches: [
-        { t: "Room ventilation", f: "quotidien" },
-        { t: "Emptying garbage cans", f: "quotidien" },
-        { t: "Vacuum / Floor washing", f: "quotidien" },
-        { t: "Removal of fingerprints (doors, windows, mirrors)", f: "quotidien" },
-        { t: "Cleaning garbage cans", f: "hebdo" },
-        { t: "Furniture dusting", f: "hebdo" },
-        { t: "Dusting of baseboards and windows", f: "mensuel" },
-        { t: "Intensive window cleaning", f: "trimestriel" },
-      ]
-    },
-    {
-      zone: "🚪 Circulations",
-      taches: [
-        { t: "Emptying garbage cans", f: "quotidien" },
-        { t: "Vacuum / Floor washing", f: "quotidien" },
-        { t: "Furniture dusting", f: "quotidien" },
-        { t: "Cleaning garbage cans", f: "quotidien" },
-        { t: "Dusting of baseboards and windows", f: "mensuel" },
-        { t: "Dusting of fire extinguishers", f: "trimestriel" },
-        { t: "Leaching of doors", f: "trimestriel" },
-      ]
-    },
-    {
-      zone: "💼 Offices",
-      taches: [
-        { t: "Room ventilation", f: "quotidien" },
-        { t: "Emptying garbage cans", f: "quotidien" },
-        { t: "Vacuum / Floor washing", f: "quotidien" },
-        { t: "Furniture dusting", f: "quotidien" },
-        { t: "Clearance of cups and glasses", f: "quotidien" },
-        { t: "Replacing chairs under tables", f: "quotidien" },
-        { t: "Cleaning garbage cans", f: "quotidien" },
-        { t: "Dedusting of luminaires", f: "hebdo" },
-        { t: "Dusting uncluttered cabinet tops", f: "hebdo" },
-        { t: "Dusting of armchairs and chairs", f: "hebdo" },
-        { t: "Dusting of baseboards and windows", f: "mensuel" },
-        { t: "Leaching of doors", f: "trimestriel" },
-      ]
-    },
-    {
-      zone: "🤝 Meeting rooms",
-      taches: [
-        { t: "Room ventilation", f: "quotidien" },
-        { t: "Emptying garbage cans", f: "quotidien" },
-        { t: "Vacuum / Floor washing", f: "quotidien" },
-        { t: "Furniture dusting", f: "quotidien" },
-        { t: "Clearance of cups and glasses", f: "quotidien" },
-        { t: "Replacing chairs under tables", f: "quotidien" },
-        { t: "Cleaning garbage cans", f: "quotidien" },
-        { t: "Dedusting of luminaires", f: "hebdo" },
-        { t: "Dusting uncluttered cabinet tops", f: "hebdo" },
-        { t: "Dust removal from armchairs and chairs", f: "hebdo" },
-        { t: "Dusting of baseboards and windows", f: "mensuel" },
-        { t: "Leaching of doors", f: "trimestriel" },
-      ]
-    },
-    {
-      zone: "🍽️ Kitchens",
-      taches: [
-        { t: "Room ventilation", f: "quotidien" },
-        { t: "Emptying garbage cans", f: "quotidien" },
-        { t: "Vacuum / Floor washing", f: "quotidien" },
-        { t: "Cleaning of tables and worktops", f: "quotidien" },
-        { t: "Replacing chairs under tables", f: "quotidien" },
-        { t: "Cleaning coffee machine and kettle", f: "quotidien" },
-        { t: "Filling, launching, emptying the dishwasher", f: "quotidien" },
-        { t: "Exterior dusting of furniture", f: "quotidien" },
-        { t: "Dust removal from armchairs and chairs", f: "quotidien" },
-        { t: "Cleaning garbage cans", f: "hebdo" },
-        { t: "Microwave cleaning", f: "hebdo" },
-        { t: "Dusting of baseboards and windows", f: "mensuel" },
-        { t: "Coffee machine descaling", f: "trimestriel" },
-        { t: "Deep cleaning of the fridge", f: "trimestriel" },
-        { t: "Cleaning the dishwasher", f: "trimestriel" },
-        { t: "Dishwasher drain", f: "trimestriel" },
-        { t: "Interior dusting of furniture", f: "trimestriel" },
-        { t: "Leaching of doors", f: "trimestriel" },
+      zone: "🏢 Offices & Common areas",
+      tasks: [
+        "Room ventilation",
+        "Emptying / Cleaning garbage cans",
+        "Vacuum / Floor washing",
+        "Removal of fingerprints (doors, windows, mirrors)",
+        "Furniture dusting",
+        "Clearance of cups and glasses",
+        "Replacing chairs under tables",
+        "Cleaning of tables and worktops",
+        "Cleaning coffee machine and kettle",
+        "Filling, launching, emptying the dishwasher",
       ]
     },
     {
       zone: "🚿 Sanitary & Showers",
-      taches: [
-        { t: "Aeration of sanitary facilities", f: "quotidien" },
-        { t: "Emptying and cleaning of bins", f: "quotidien" },
-        { t: "Vacuum / Floor washing", f: "quotidien" },
-        { t: "Cleaning of toilet bowls, appliances, showers", f: "quotidien" },
-        { t: "Faucet cleaning", f: "quotidien" },
-        { t: "Refill consumables", f: "quotidien" },
-        { t: "Removal of traces on mirrors", f: "quotidien" },
-        { t: "WC descaling", f: "trimestriel" },
+      tasks: [
+        "Aeration of sanitary facilities",
+        "Emptying and cleaning of bins",
+        "Vacuum / Floor washing",
+        "Cleaning of toilet bowls, appliances, showers",
+        "Faucet cleaning",
+        "Refill consumables",
+        "Removal of traces on mirrors",
+      ]
+    }
+  ],
+  bn: [
+    {
+      zone: "🏢 অফিস ও সাধারণ এলাকা",
+      tasks: [
+        "ঘর বায়ুচলাচল করুন",
+        "ডাস্টবিন খালি করুন / পরিষ্কার করুন",
+        "মেঝে ভ্যাকুয়াম / ধোয়া করুন",
+        "দরজা, জানালা, আয়নার দাগ মুছুন",
+        "আসবাবপত্র ঝাড়া দিন",
+        "কাপ ও গ্লাস সরিয়ে ফেলুন",
+        "টেবিলের নিচে চেয়ার রাখুন",
+        "টেবিল ও কাজের জায়গা পরিষ্কার করুন",
+        "কফি মেশিন ও কেটলি পরিষ্কার করুন",
+        "ডিশওয়াশার ভরুন, চালু করুন ও খালি করুন",
+      ]
+    },
+    {
+      zone: "🚿 স্যানিটারি ও শাওয়ার",
+      tasks: [
+        "স্যানিটারি বায়ুচলাচল করুন",
+        "ডাস্টবিন খালি ও পরিষ্কার করুন",
+        "মেঝে ভ্যাকুয়াম / ধোয়া করুন",
+        "টয়লেট, যন্ত্রপাতি ও শাওয়ার পরিষ্কার করুন",
+        "কল পরিষ্কার করুন",
+        "সরবরাহ পুনরায় পূরণ করুন",
+        "আয়নার দাগ মুছুন",
       ]
     }
   ]
 };
  
-// Détermine quelles fréquences afficher selon la date
-function getFrequencesActives(date) {
-  const actives = ["quotidien"];
-  const jour = date.getDay(); // 0=dim, 1=lun
-  const dateNum = date.getDate();
-  const mois = date.getMonth(); // 0-11
- 
-  // Hebdo = lundi
-  if (jour === 1) actives.push("hebdo");
- 
-  // Mensuel = 1er du mois
-  if (dateNum === 1) actives.push("mensuel");
- 
-  // Trimestriel = 1er jan, avr, juil, oct
-  if (dateNum === 1 && [0, 3, 6, 9].includes(mois)) actives.push("trimestriel");
- 
-  return actives;
-}
- 
-function afficherChecklist(lang, action) {
-  if (action !== "Arrivée") return; // Checklist seulement à l'arrivée
- 
-  const now = new Date();
-  const freqs = getFrequencesActives(now);
-  const data = CHECKLIST[lang] || CHECKLIST.fr;
- 
-  const card = document.getElementById('checklist-card');
-  const content = document.getElementById('checklist-content');
-  const title = document.getElementById('checklist-title');
-  const dateEl = document.getElementById('checklist-date');
- 
-  title.textContent = lang === 'en' ? '📋 Today\'s tasks' : '📋 Tâches du jour';
-  dateEl.textContent = now.toLocaleDateString(lang === 'en' ? 'en-GB' : 'fr-FR', {
-    weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
-  });
- 
-  // Badge fréquences actives
-  const freqLabels = {
-    fr: { hebdo: 'hebdo', mensuel: 'mensuel', trimestriel: 'trimestriel' },
-    en: { hebdo: 'weekly', mensuel: 'monthly', trimestriel: 'quarterly' }
-  };
- 
-  content.innerHTML = '';
- 
-  for (const zone of data) {
-    const tachesFiltrees = zone.taches.filter(t => freqs.includes(t.f));
-    if (tachesFiltrees.length === 0) continue;
- 
-    const block = document.createElement('div');
-    block.className = 'zone-block';
- 
-    const zoneTitle = document.createElement('div');
-    zoneTitle.className = 'zone-title';
-    zoneTitle.textContent = zone.zone;
-    block.appendChild(zoneTitle);
- 
-    for (const tache of tachesFiltrees) {
-      const item = document.createElement('div');
-      item.className = 'task-item';
- 
-      const dot = document.createElement('div');
-      dot.className = 'task-dot ' + (tache.f !== 'quotidien' ? tache.f : '');
- 
-      const text = document.createElement('span');
-      text.textContent = tache.t;
-      text.style.flex = '1';
- 
-      item.appendChild(dot);
-      item.appendChild(text);
- 
-      if (tache.f !== 'quotidien') {
-        const badge = document.createElement('span');
-        badge.className = 'freq-badge ' + tache.f;
-        const lbl = freqLabels[lang] || freqLabels.fr;
-        badge.textContent = lbl[tache.f] || tache.f;
-        item.appendChild(badge);
-      }
- 
-      block.appendChild(item);
-    }
- 
-    content.appendChild(block);
+// Tâches exceptionnelles par fréquence et zone
+const EXCEPTIONAL_TASKS = {
+  fr: {
+    hebdo: [
+      { zone: "🏢 Accueil & Hall", tasks: ["Nettoyage des poubelles", "Dépoussiérage du mobilier"] },
+      { zone: "💼 Bureaux", tasks: ["Dépoussiérage des luminaires", "Dépoussiérage dessus d'armoires", "Dépoussiérage des fauteuils et chaises"] },
+      { zone: "🤝 Salles de réunion", tasks: ["Dépoussiérage des luminaires", "Dépoussiérage dessus d'armoires", "Dépoussiérage des fauteuils et chaises"] },
+      { zone: "🍽️ Cuisines", tasks: ["Nettoyage des poubelles", "Nettoyage micro-ondes"] },
+    ],
+    mensuel: [
+      { zone: "🏢 Accueil & Hall", tasks: ["Dépoussiérage plinthes et fenêtres"] },
+      { zone: "🚪 Circulations", tasks: ["Dépoussiérage plinthes et fenêtres"] },
+      { zone: "💼 Bureaux", tasks: ["Dépoussiérage plinthes et fenêtres"] },
+      { zone: "🍽️ Cuisines", tasks: ["Dépoussiérage plinthes et fenêtres"] },
+    ],
+    trimestriel: [
+      { zone: "🏢 Accueil & Hall", tasks: ["Nettoyage intensif des vitres"] },
+      { zone: "🚪 Circulations", tasks: ["Dépoussiérage des extincteurs", "Lessivage des portes"] },
+      { zone: "💼 Bureaux", tasks: ["Lessivage des portes"] },
+      { zone: "🍽️ Cuisines", tasks: ["Détartrage machines à cafés", "Nettoyage en profondeur du frigidaire", "Nettoyage du lave-vaisselle", "Vidange lave-vaisselle", "Dépoussiérage intérieur du mobilier", "Lessivage des portes"] },
+      { zone: "🚿 Sanitaires", tasks: ["Détartrage des WC"] },
+    ]
+  },
+  en: {
+    hebdo: [
+      { zone: "🏢 Reception & Hall", tasks: ["Cleaning garbage cans", "Furniture dusting"] },
+      { zone: "💼 Offices", tasks: ["Dedusting of luminaires", "Dusting uncluttered cabinet tops", "Dusting of armchairs and chairs"] },
+      { zone: "🤝 Meeting rooms", tasks: ["Dedusting of luminaires", "Dusting uncluttered cabinet tops", "Dust removal from armchairs and chairs"] },
+      { zone: "🍽️ Kitchens", tasks: ["Cleaning garbage cans", "Microwave cleaning"] },
+    ],
+    mensuel: [
+      { zone: "🏢 Reception & Hall", tasks: ["Dusting of baseboards and windows"] },
+      { zone: "🚪 Circulations", tasks: ["Dusting of baseboards and windows"] },
+      { zone: "💼 Offices", tasks: ["Dusting of baseboards and windows"] },
+      { zone: "🍽️ Kitchens", tasks: ["Dusting of baseboards and windows"] },
+    ],
+    trimestriel: [
+      { zone: "🏢 Reception & Hall", tasks: ["Intensive window cleaning"] },
+      { zone: "🚪 Circulations", tasks: ["Dusting of fire extinguishers", "Leaching of doors"] },
+      { zone: "💼 Offices", tasks: ["Leaching of doors"] },
+      { zone: "🍽️ Kitchens", tasks: ["Coffee machine descaling", "Deep cleaning of the fridge", "Cleaning the dishwasher", "Dishwasher drain", "Interior dusting of furniture", "Leaching of doors"] },
+      { zone: "🚿 Sanitary", tasks: ["WC descaling"] },
+    ]
+  },
+  bn: {
+    hebdo: [
+      { zone: "🏢 অভ্যর্থনা ও হল", tasks: ["ডাস্টবিন পরিষ্কার করুন", "আসবাবপত্র ঝাড়া দিন"] },
+      { zone: "💼 অফিস", tasks: ["লাইট ঝাড়া দিন", "আলমারির উপর ঝাড়া দিন", "চেয়ার ও আর্মচেয়ার ঝাড়া দিন"] },
+      { zone: "🍽️ রান্নাঘর", tasks: ["ডাস্টবিন পরিষ্কার করুন", "মাইক্রোওয়েভ পরিষ্কার করুন"] },
+    ],
+    mensuel: [
+      { zone: "সকল এলাকা", tasks: ["বেসবোর্ড ও জানালা ঝাড়া দিন"] },
+    ],
+    trimestriel: [
+      { zone: "🏢 অভ্যর্থনা", tasks: ["জানালা গভীরভাবে পরিষ্কার করুন"] },
+      { zone: "🚪 করিডোর", tasks: ["অগ্নিনির্বাপক ঝাড়া দিন", "দরজা ধোয়া করুন"] },
+      { zone: "🍽️ রান্নাঘর", tasks: ["কফি মেশিন ডিস্কেল করুন", "ফ্রিজ গভীরভাবে পরিষ্কার করুন", "ডিশওয়াশার পরিষ্কার করুন"] },
+      { zone: "🚿 স্যানিটারি", tasks: ["টয়লেট ডিস্কেল করুন"] },
+    ]
   }
+};
  
-  card.style.display = 'block';
-}
+const T = {
+  fr: {
+    agent: "Agent", action: "Action",
+    arrivee: "Arrivée", depart: "Départ",
+    valider: "Valider le badge",
+    erreur: "Veuillez sélectionner un agent et une action.",
+    enregistrement: "Enregistrement...",
+    arrivee_ok: "▶ Arrivée enregistrée",
+    depart_ok: "◼ Départ enregistré",
+    nouveau: "← Nouveau badge",
+    statut_in: "Session en cours depuis",
+    statut_out: "Pas de session en cours",
+    chargement: "⏳ Chargement...",
+    confirmer: "Confirmer",
+    annuler: "Annuler",
+    modal_arrivee_title: "Confirmer l'arrivée",
+    modal_depart_title: "Confirmer le départ",
+    modal_arrivee_text: (agent, site, heure) => `<strong>${agent}</strong>, vous confirmez votre arrivée au<br><strong>${site}</strong><br>à <strong>${heure}</strong> ?`,
+    modal_depart_text: (agent, site, heure) => `<strong>${agent}</strong>, vous confirmez votre départ du<br><strong>${site}</strong><br>à <strong>${heure}</strong> ?`,
+    checklist_title: "📋 Tâches du jour",
+    exc_title: "⚠️ Tâches prioritaires aujourd'hui",
+    exc_empty: "✅ Pas de tâches exceptionnelles aujourd'hui",
+    daily_title: "📌 Tâches quotidiennes",
+    confirm_tasks: "✋ J'ai pris connaissance des tâches à effectuer aujourd'hui",
+    tasks_done: "✅ Tâches prises en compte",
+    depart_locked: "← Confirmer les tâches pour badger le départ",
+    freq_hebdo: "hebdo",
+    freq_mensuel: "mensuel",
+    freq_trimestriel: "trimestriel",
+  },
+  en: {
+    agent: "Agent", action: "Action",
+    arrivee: "Clock In", depart: "Clock Out",
+    valider: "Submit",
+    erreur: "Please select an agent and an action.",
+    enregistrement: "Saving...",
+    arrivee_ok: "▶ Clocked In",
+    depart_ok: "◼ Clocked Out",
+    nouveau: "← New entry",
+    statut_in: "Session started at",
+    statut_out: "No active session",
+    chargement: "⏳ Loading...",
+    confirmer: "Confirm",
+    annuler: "Cancel",
+    modal_arrivee_title: "Confirm clock-in",
+    modal_depart_title: "Confirm clock-out",
+    modal_arrivee_text: (agent, site, heure) => `<strong>${agent}</strong>, confirm your arrival at<br><strong>${site}</strong><br>at <strong>${heure}</strong>?`,
+    modal_depart_text: (agent, site, heure) => `<strong>${agent}</strong>, confirm your departure from<br><strong>${site}</strong><br>at <strong>${heure}</strong>?`,
+    checklist_title: "📋 Today's tasks",
+    exc_title: "⚠️ Priority tasks today",
+    exc_empty: "✅ No exceptional tasks today",
+    daily_title: "📌 Daily tasks",
+    confirm_tasks: "✋ I have acknowledged today's tasks",
+    tasks_done: "✅ Tasks acknowledged",
+    depart_locked: "← Confirm tasks to clock out",
+    freq_hebdo: "weekly",
+    freq_mensuel: "monthly",
+    freq_trimestriel: "quarterly",
+  },
+  bn: {
+    agent: "এজেন্ট", action: "কার্যক্রম",
+    arrivee: "আগমন", depart: "প্রস্থান",
+    valider: "ব্যাজ নিশ্চিত করুন",
+    erreur: "একজন এজেন্ট এবং একটি কার্যক্রম বেছে নিন।",
+    enregistrement: "সংরক্ষণ হচ্ছে...",
+    arrivee_ok: "▶ আগমন নিবন্ধিত",
+    depart_ok: "◼ প্রস্থান নিবন্ধিত",
+    nouveau: "← নতুন ব্যাজ",
+    statut_in: "সেশন শুরু হয়েছে",
+    statut_out: "কোনো সক্রিয় সেশন নেই",
+    chargement: "⏳ লোড হচ্ছে...",
+    confirmer: "নিশ্চিত করুন",
+    annuler: "বাতিল করুন",
+    modal_arrivee_title: "আগমন নিশ্চিত করুন",
+    modal_depart_title: "প্রস্থান নিশ্চিত করুন",
+    modal_arrivee_text: (agent, site, heure) => `<strong>${agent}</strong>, আপনি কি <strong>${site}</strong>-এ <strong>${heure}</strong> সময়ে আগমন নিশ্চিত করছেন?`,
+    modal_depart_text: (agent, site, heure) => `<strong>${agent}</strong>, আপনি কি <strong>${site}</strong> থেকে <strong>${heure}</strong> সময়ে প্রস্থান নিশ্চিত করছেন?`,
+    checklist_title: "📋 আজকের কাজ",
+    exc_title: "⚠️ আজকের অগ্রাধিকার কাজ",
+    exc_empty: "✅ আজ কোনো বিশেষ কাজ নেই",
+    daily_title: "📌 দৈনিক কাজ",
+    confirm_tasks: "✋ আমি আজকের কাজগুলো সম্পর্কে অবহিত হয়েছি",
+    tasks_done: "✅ কাজ স্বীকার করা হয়েছে",
+    depart_locked: "← প্রস্থানের আগে কাজ নিশ্চিত করুন",
+    freq_hebdo: "সাপ্তাহিক",
+    freq_mensuel: "মাসিক",
+    freq_trimestriel: "ত্রৈমাসিক",
+  }
+};
  
-// ===== SITE =====
+// Site
 function getSiteFromURL() {
   const params = new URLSearchParams(window.location.search);
   const key = params.get("site");
@@ -712,42 +853,14 @@ let selectedAgent = null;
 let selectedAction = null;
 let currentLang = "fr";
 let agentStatus = {};
- 
-const T = {
-  fr: {
-    agent: "Agent", action: "Action",
-    arrivee: "Arrivée", depart: "Départ",
-    valider: "Valider le badge",
-    erreur: "Veuillez sélectionner un agent et une action.",
-    enregistrement: "Enregistrement...",
-    arrivee_ok: "▶ Arrivée enregistrée",
-    depart_ok: "◼ Départ enregistré",
-    nouveau: "← Nouveau badge",
-    statut_in: "Session en cours depuis",
-    statut_out: "Pas de session en cours",
-    chargement: "⏳ Chargement...",
-  },
-  en: {
-    agent: "Agent", action: "Action",
-    arrivee: "Clock In", depart: "Clock Out",
-    valider: "Submit",
-    erreur: "Please select an agent and an action.",
-    enregistrement: "Saving...",
-    arrivee_ok: "▶ Clocked In",
-    depart_ok: "◼ Clocked Out",
-    nouveau: "← New entry",
-    statut_in: "Session started at",
-    statut_out: "No active session",
-    chargement: "⏳ Loading...",
-  }
-};
+let tasksConfirmed = false;
  
 function updateClock() {
   const now = new Date();
   document.getElementById('clock').textContent =
     now.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
   document.getElementById('dateDisplay').textContent =
-    now.toLocaleDateString(currentLang === 'fr' ? 'fr-FR' : 'en-GB',
+    now.toLocaleDateString(currentLang === 'en' ? 'en-GB' : 'fr-FR',
       {weekday:'long', day:'numeric', month:'long'});
 }
 setInterval(updateClock, 1000);
@@ -772,7 +885,7 @@ async function loadAgents() {
     document.getElementById('loading-msg').style.display = 'none';
     grid.style.display = 'grid';
   } catch(err) {
-    document.getElementById('loading-msg').textContent = "⚠️ Erreur de chargement";
+    document.getElementById('loading-msg').textContent = "⚠️ Erreur";
   }
 }
  
@@ -780,21 +893,29 @@ if (SITE) loadAgents();
  
 function setLang(lang) {
   currentLang = lang;
-  document.getElementById('btn-fr').classList.toggle('active', lang === 'fr');
-  document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+  ['fr','en','bn'].forEach(l => {
+    document.getElementById('btn-' + l).classList.toggle('active', l === lang);
+  });
   applyLang();
 }
  
 function applyLang() {
   const t = T[currentLang];
-  document.getElementById('label-agent').textContent = t.agent;
-  document.getElementById('label-action').textContent = t.action;
-  document.getElementById('txt-arrivee').textContent = t.arrivee;
-  document.getElementById('txt-depart').textContent = t.depart;
-  document.getElementById('submit-btn').textContent = t.valider;
-  document.getElementById('reset-btn').textContent = t.nouveau;
-  document.getElementById('error-msg').textContent = t.erreur;
-  document.getElementById('loading-msg').textContent = t.chargement;
+  const els = {
+    'label-agent': t.agent,
+    'label-action': t.action,
+    'txt-arrivee': t.arrivee,
+    'txt-depart': t.depart,
+    'submit-btn': t.valider,
+    'error-msg': t.erreur,
+    'loading-msg': t.chargement,
+    'modal-cancel-btn': t.annuler,
+    'modal-confirm-btn': t.confirmer,
+  };
+  Object.entries(els).forEach(([id, val]) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = val;
+  });
   updateClock();
   updateStatusArea();
 }
@@ -815,8 +936,9 @@ function updateActionButtons() {
   const btnOut = document.getElementById('btn-depart');
   if (!selectedAgent) { btnIn.disabled = false; btnOut.disabled = false; return; }
   const status = agentStatus[selectedAgent] || "out";
+  const tasksDone = localStorage.getItem("tasks_confirmed_" + selectedAgent) === "yes";
   btnIn.disabled  = status === "in";
-  btnOut.disabled = status === "out";
+  btnOut.disabled = status === "out" || !tasksDone;
 }
  
 function updateStatusArea() {
@@ -841,11 +963,30 @@ function selectAction(action) {
  
 function hideError() { document.getElementById('error-msg').style.display = 'none'; }
  
-async function submitBadge() {
+function showConfirmModal() {
   if (!selectedAgent || !selectedAction) {
     document.getElementById('error-msg').style.display = 'block';
     return;
   }
+  const t = T[currentLang];
+  const now = new Date();
+  const heure = now.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
+ 
+  document.getElementById('modal-icon').textContent = selectedAction === 'Arrivée' ? '👋' : '👋';
+  document.getElementById('modal-title').textContent = selectedAction === 'Arrivée' ? t.modal_arrivee_title : t.modal_depart_title;
+  document.getElementById('modal-text').innerHTML = selectedAction === 'Arrivée'
+    ? t.modal_arrivee_text(selectedAgent, SITE, heure)
+    : t.modal_depart_text(selectedAgent, SITE, heure);
+ 
+  document.getElementById('confirm-modal').classList.add('visible');
+}
+ 
+function closeModal() {
+  document.getElementById('confirm-modal').classList.remove('visible');
+}
+ 
+async function confirmBadge() {
+  closeModal();
   const now = new Date();
   const timestamp = now.toLocaleString('fr-FR');
   const btn = document.getElementById('submit-btn');
@@ -861,29 +1002,69 @@ async function submitBadge() {
     });
   } catch(e) {}
  
+  const t = T[currentLang];
+ 
   if (selectedAction === "Arrivée") {
     agentStatus[selectedAgent] = "in";
     localStorage.setItem("status_" + selectedAgent, "in");
     localStorage.setItem("checkin_" + selectedAgent,
       now.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'}));
+    localStorage.removeItem("tasks_confirmed_" + selectedAgent);
+ 
+    document.getElementById('main-card').style.display = 'none';
+    document.getElementById('success-area').style.display = 'block';
+    document.getElementById('success-title').textContent = t.arrivee_ok;
+    document.getElementById('success-detail').innerHTML = `<strong>${selectedAgent}</strong> — ${SITE}<br>${timestamp}`;
+ 
+    // Bouton départ verrouillé
+    const resetBtn = document.getElementById('reset-btn');
+    resetBtn.classList.remove('unlocked');
+    document.getElementById('reset-label').textContent = t.depart_locked;
+ 
+    // Affiche checklist
+    afficherChecklist();
+ 
   } else {
     agentStatus[selectedAgent] = "out";
     localStorage.setItem("status_" + selectedAgent, "out");
     localStorage.removeItem("checkin_" + selectedAgent);
+    localStorage.removeItem("tasks_confirmed_" + selectedAgent);
+ 
+    document.getElementById('main-card').style.display = 'none';
+    document.getElementById('checklist-wrap').style.display = 'none';
+    document.getElementById('success-area').style.display = 'block';
+    document.getElementById('success-title').textContent = t.depart_ok;
+    document.getElementById('success-detail').innerHTML = `<strong>${selectedAgent}</strong> — ${SITE}<br>${timestamp}`;
+ 
+    const resetBtn = document.getElementById('reset-btn');
+    resetBtn.classList.add('unlocked');
+    document.getElementById('reset-label').textContent = t.nouveau;
   }
+}
  
-  // Affiche le succès
-  document.getElementById('main-card').style.display = 'none';
-  document.getElementById('success-area').style.display = 'block';
-  const t = T[currentLang];
-  document.getElementById('success-title').textContent =
-    selectedAction === 'Arrivée' ? t.arrivee_ok : t.depart_ok;
-  document.getElementById('success-detail').innerHTML =
-    `<strong>${selectedAgent}</strong> — ${SITE}<br>${timestamp}`;
-  document.getElementById('reset-btn').textContent = t.nouveau;
+function confirmTasks() {
+  if (!selectedAgent) return;
+  localStorage.setItem("tasks_confirmed_" + selectedAgent, "yes");
  
-  // Affiche la checklist uniquement à l'arrivée
-  afficherChecklist(currentLang, selectedAction);
+  const btn = document.getElementById('confirm-tasks-btn');
+  btn.classList.add('done');
+  btn.querySelector('#confirm-tasks-label').textContent = T[currentLang].tasks_done;
+  btn.disabled = true;
+ 
+  // Déverrouille le bouton départ
+  const resetBtn = document.getElementById('reset-btn');
+  resetBtn.classList.add('unlocked');
+  document.getElementById('reset-label').textContent = T[currentLang].nouveau;
+}
+ 
+function tryReset() {
+  const tasksDone = selectedAgent && localStorage.getItem("tasks_confirmed_" + selectedAgent) === "yes";
+  const status = selectedAgent ? (agentStatus[selectedAgent] || "out") : "out";
+ 
+  // Si en session et tâches non confirmées → bloqué
+  if (status === "in" && !tasksDone) return;
+ 
+  reset();
 }
  
 function reset() {
@@ -891,13 +1072,127 @@ function reset() {
   selectedAction = null;
   document.getElementById('main-card').style.display = 'block';
   document.getElementById('success-area').style.display = 'none';
-  document.getElementById('checklist-card').style.display = 'none';
+  document.getElementById('checklist-wrap').style.display = 'none';
   document.querySelectorAll('.agent-btn, .action-btn').forEach(b => b.classList.remove('selected'));
   const btn = document.getElementById('submit-btn');
   btn.disabled = false;
   btn.textContent = T[currentLang].valider;
   document.getElementById('status-area').innerHTML = '';
   updateActionButtons();
+}
+ 
+function getFrequencesActives(date) {
+  const actives = [];
+  const jour = date.getDay();
+  const dateNum = date.getDate();
+  const mois = date.getMonth();
+  if (jour === 1) actives.push("hebdo");
+  if (dateNum === 1) actives.push("mensuel");
+  if (dateNum === 1 && [0,3,6,9].includes(mois)) actives.push("trimestriel");
+  return actives;
+}
+ 
+function afficherChecklist() {
+  const now = new Date();
+  const freqs = getFrequencesActives(now);
+  const lang = currentLang;
+  const t = T[lang];
+  const excData = EXCEPTIONAL_TASKS[lang] || EXCEPTIONAL_TASKS.fr;
+  const dailyData = DAILY_TASKS[lang] || DAILY_TASKS.fr;
+ 
+  document.getElementById('checklist-title').textContent = t.checklist_title;
+  document.getElementById('checklist-date').textContent = now.toLocaleDateString(
+    lang === 'en' ? 'en-GB' : 'fr-FR',
+    {weekday:'long', day:'numeric', month:'long', year:'numeric'}
+  );
+ 
+  // ---- Tâches exceptionnelles ----
+  const excArea = document.getElementById('exceptional-area');
+  excArea.innerHTML = '';
+ 
+  const block = document.createElement('div');
+ 
+  if (freqs.length === 0) {
+    block.className = 'exceptional-block empty';
+    const header = document.createElement('div');
+    header.className = 'exceptional-header empty';
+    header.textContent = t.exc_empty;
+    block.appendChild(header);
+  } else {
+    block.className = 'exceptional-block';
+    const header = document.createElement('div');
+    header.className = 'exceptional-header';
+    header.textContent = t.exc_title;
+    block.appendChild(header);
+ 
+    for (const freq of freqs) {
+      const freqData = excData[freq] || [];
+      const freqLabel = freq === 'hebdo' ? t.freq_hebdo : freq === 'mensuel' ? t.freq_mensuel : t.freq_trimestriel;
+      const freqClass = freq;
+ 
+      for (const zone of freqData) {
+        const zoneEl = document.createElement('div');
+        zoneEl.className = 'exceptional-zone';
+ 
+        const zTitle = document.createElement('div');
+        zTitle.className = 'exceptional-zone-title';
+        zTitle.textContent = zone.zone;
+        zoneEl.appendChild(zTitle);
+ 
+        for (const task of zone.tasks) {
+          const item = document.createElement('div');
+          item.className = 'exc-task';
+          item.innerHTML = `<span style="flex:1">${task}</span><span class="freq-pill ${freqClass}">${freqLabel}</span>`;
+          zoneEl.appendChild(item);
+        }
+ 
+        block.appendChild(zoneEl);
+      }
+    }
+  }
+ 
+  excArea.appendChild(block);
+ 
+  // ---- Tâches quotidiennes ----
+  const dailyArea = document.getElementById('daily-area');
+  dailyArea.innerHTML = '';
+ 
+  const dailyBlock = document.createElement('div');
+  dailyBlock.className = 'daily-block';
+ 
+  const dailyHeader = document.createElement('div');
+  dailyHeader.className = 'daily-header';
+  dailyHeader.textContent = t.daily_title;
+  dailyBlock.appendChild(dailyHeader);
+ 
+  for (const zone of dailyData) {
+    const zoneEl = document.createElement('div');
+    zoneEl.className = 'daily-zone';
+ 
+    const zTitle = document.createElement('div');
+    zTitle.className = 'daily-zone-title';
+    zTitle.textContent = zone.zone;
+    zoneEl.appendChild(zTitle);
+ 
+    for (const task of zone.tasks) {
+      const item = document.createElement('div');
+      item.className = 'daily-task';
+      item.innerHTML = `<div class="task-bullet"></div><span>${task}</span>`;
+      zoneEl.appendChild(item);
+    }
+ 
+    dailyBlock.appendChild(zoneEl);
+  }
+ 
+  dailyArea.appendChild(dailyBlock);
+ 
+  // Bouton confirmation tâches
+  const confirmBtn = document.getElementById('confirm-tasks-btn');
+  confirmBtn.classList.remove('done');
+  confirmBtn.disabled = false;
+  document.getElementById('confirm-tasks-label').textContent = t.confirm_tasks;
+ 
+  document.getElementById('checklist-wrap').style.display = 'block';
 }
  
 applyLang();
