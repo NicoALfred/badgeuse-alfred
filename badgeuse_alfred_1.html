@@ -23,8 +23,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 24px;
+    padding: 24px 24px 60px;
     color: var(--blanc);
   }
  
@@ -34,6 +33,7 @@
     right: 16px;
     display: flex;
     gap: 6px;
+    z-index: 100;
   }
  
   .lang-btn {
@@ -46,9 +46,6 @@
     font-size: 0.8rem;
     cursor: pointer;
     transition: all 0.15s;
-    display: flex;
-    align-items: center;
-    gap: 5px;
   }
   .lang-btn.active { background: rgba(168,213,220,0.15); border-color: var(--bleu); color: var(--bleu); }
  
@@ -56,9 +53,9 @@
     font-family: 'DM Serif Display', serif;
     font-size: 2.2rem;
     color: var(--bleu);
-    letter-spacing: -0.5px;
     margin-bottom: 6px;
     text-align: center;
+    margin-top: 20px;
   }
  
   .site-name {
@@ -67,7 +64,7 @@
     text-transform: uppercase;
     letter-spacing: 2px;
     text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
   }
  
   .card {
@@ -75,8 +72,9 @@
     border-radius: 20px;
     padding: 32px 28px;
     width: 100%;
-    max-width: 380px;
+    max-width: 420px;
     border: 1px solid rgba(255,255,255,0.06);
+    margin-bottom: 20px;
   }
  
   .label {
@@ -204,33 +202,6 @@
   .time-display .time { font-size: 1.8rem; font-weight: 300; letter-spacing: 2px; }
   .time-display .date { font-size: 0.75rem; color: rgba(255,255,255,0.35); margin-top: 2px; text-transform: capitalize; }
  
-  .success-card { display: none; text-align: center; padding: 40px 28px; }
-  .success-icon {
-    width: 72px; height: 72px;
-    background: rgba(168,213,220,0.15);
-    border: 2px solid var(--bleu);
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 2rem;
-    margin: 0 auto 20px;
-  }
-  .success-title { font-family: 'DM Serif Display', serif; font-size: 1.5rem; color: var(--bleu); margin-bottom: 8px; }
-  .success-detail { font-size: 0.85rem; color: rgba(255,255,255,0.4); line-height: 1.6; }
- 
-  .reset-btn {
-    margin-top: 24px;
-    background: transparent;
-    border: 1px solid rgba(255,255,255,0.15);
-    color: rgba(255,255,255,0.5);
-    padding: 10px 24px;
-    border-radius: 30px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.85rem;
-    cursor: pointer;
-    transition: all 0.15s;
-  }
-  .reset-btn:hover { border-color: rgba(255,255,255,0.4); color: var(--blanc); }
- 
   .error-msg {
     background: rgba(232,112,58,0.15);
     border: 1px solid rgba(232,112,58,0.3);
@@ -242,6 +213,113 @@
     display: none;
     text-align: center;
   }
+ 
+  /* SUCCESS */
+  .success-banner {
+    background: rgba(168,213,220,0.1);
+    border: 1px solid rgba(168,213,220,0.3);
+    border-radius: 14px;
+    padding: 16px 20px;
+    text-align: center;
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 420px;
+  }
+  .success-banner .check { font-size: 2rem; margin-bottom: 6px; }
+  .success-banner .title { font-family: 'DM Serif Display', serif; font-size: 1.3rem; color: var(--bleu); }
+  .success-banner .detail { font-size: 0.8rem; color: rgba(255,255,255,0.4); margin-top: 4px; }
+ 
+  .reset-btn {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.5);
+    padding: 10px 24px;
+    border-radius: 30px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-bottom: 20px;
+  }
+  .reset-btn:hover { border-color: rgba(255,255,255,0.4); color: var(--blanc); }
+ 
+  /* CHECKLIST */
+  .checklist-card {
+    background: #242424;
+    border-radius: 20px;
+    padding: 28px;
+    width: 100%;
+    max-width: 420px;
+    border: 1px solid rgba(255,255,255,0.06);
+    display: none;
+  }
+ 
+  .checklist-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.2rem;
+    color: var(--bleu);
+    margin-bottom: 4px;
+  }
+ 
+  .checklist-date {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.35);
+    margin-bottom: 20px;
+    text-transform: capitalize;
+  }
+ 
+  .zone-block {
+    margin-bottom: 20px;
+  }
+ 
+  .zone-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--orange);
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid rgba(232,112,58,0.2);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+ 
+  .task-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 6px 0;
+    font-size: 0.88rem;
+    color: rgba(255,255,255,0.8);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .task-item:last-child { border-bottom: none; }
+ 
+  .task-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--bleu);
+    margin-top: 6px;
+    flex-shrink: 0;
+  }
+  .task-dot.hebdo { background: #A8D5A8; }
+  .task-dot.mensuel { background: #D5C8A8; }
+  .task-dot.trimestriel { background: #D5A8C8; }
+ 
+  .freq-badge {
+    font-size: 0.65rem;
+    padding: 2px 6px;
+    border-radius: 10px;
+    margin-left: auto;
+    flex-shrink: 0;
+    opacity: 0.7;
+  }
+  .freq-badge.hebdo { background: rgba(168,213,168,0.15); color: #A8D5A8; }
+  .freq-badge.mensuel { background: rgba(213,200,168,0.15); color: #D5C8A8; }
+  .freq-badge.trimestriel { background: rgba(213,168,200,0.15); color: #D5A8C8; }
  
   .site-error {
     text-align: center;
@@ -292,249 +370,537 @@
   <button class="submit-btn" id="submit-btn" onclick="submitBadge()">Valider le badge</button>
 </div>
  
-<div class="card success-card" id="success-card">
-  <div class="success-icon">✓</div>
-  <div class="success-title" id="success-title"></div>
-  <div class="success-detail" id="success-detail"></div>
+<!-- Bannière succès -->
+<div id="success-area" style="display:none; width:100%; max-width:420px; text-align:center;">
+  <div class="success-banner">
+    <div class="check">✓</div>
+    <div class="title" id="success-title"></div>
+    <div class="detail" id="success-detail"></div>
+  </div>
   <button class="reset-btn" onclick="reset()" id="reset-btn">← Nouveau badge</button>
 </div>
  
+<!-- Checklist -->
+<div class="checklist-card" id="checklist-card">
+  <div class="checklist-title" id="checklist-title">📋 Tâches du jour</div>
+  <div class="checklist-date" id="checklist-date"></div>
+  <div id="checklist-content"></div>
+</div>
+ 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby5GfqDkVWSoNOolviOccT70_kBD8gP00jqiLPQezhqyyJaE4SZqhMOnvjuISoBu2UA/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby5GfqDkVWSoNOolviOccT70_kBD8gP00jqiLPQezhqyyJaE4SZqhMOnvjuISoBu2UA/exec";
  
-  // Correspondance paramètre URL → nom complet du site
-  const SITES = {
-    "daru":         "19 Rue Daru",
-    "montmartre":   "17 Rue du Faubourg Montmartre, 75009 Paris",
-    "stmarc":       "21 Rue St Marc, 75002 Paris",
-    "pepiniere":    "14 Rue de la Pépinière, 75008 Paris",
-    "haussmann":    "165 Boulevard Haussmann, 75008 Paris",
-    "poissoniere":  "70 Rue du Fbg Poissonière, 75002 Paris",
-    "murat":        "7 Rue Louis Murat, 75008 Paris",
-    "malesherbes":  "10 Blv Malesherbes, 75008 Paris",
-    "lisbonne":     "30 Rue de Lisbonne, 75008 Paris",
-    "sebastopol":   "74 Boulevard de Sébastopol, 75003 Paris"
-  };
+const SITES = {
+  "daru":         "19 Rue Daru",
+  "montmartre":   "17 Rue du Faubourg Montmartre, 75009 Paris",
+  "stmarc":       "21 Rue St Marc, 75002 Paris",
+  "pepiniere":    "14 Rue de la Pépinière, 75008 Paris",
+  "haussmann":    "165 Boulevard Haussmann, 75008 Paris",
+  "poissoniere":  "70 Rue du Fbg Poissonière, 75002 Paris",
+  "murat":        "7 Rue Louis Murat, 75008 Paris",
+  "malesherbes":  "10 Blv Malesherbes, 75008 Paris",
+  "lisbonne":     "30 Rue de Lisbonne, 75008 Paris",
+  "sebastopol":   "74 Boulevard de Sébastopol, 75003 Paris"
+};
  
-  // Lit le paramètre ?site= dans l'URL
-  function getSiteFromURL() {
-    const params = new URLSearchParams(window.location.search);
-    const key = params.get("site");
-    return key ? { key, nom: SITES[key] || null } : null;
-  }
- 
-  const siteInfo = getSiteFromURL();
-  const SITE = siteInfo && siteInfo.nom ? siteInfo.nom : null;
- 
-  // Affiche le nom du site ou une erreur
-  if (SITE) {
-    document.getElementById('site-display').textContent = SITE;
-  } else if (siteInfo) {
-    document.getElementById('site-display').textContent = "Site inconnu";
-    document.getElementById('main-card').innerHTML = `
-      <div class="site-error">
-        <h2>⚠️ Site non reconnu</h2>
-        <p>Le paramètre "?site=${siteInfo.key}" n'existe pas.<br>Vérifie l'URL programmée dans le tag NFC.</p>
-      </div>`;
-  } else {
-    document.getElementById('site-display').textContent = "Site non défini";
-    document.getElementById('main-card').innerHTML = `
-      <div class="site-error">
-        <h2>⚠️ Aucun site détecté</h2>
-        <p>Cette page doit être ouverte via un tag NFC.<br>Exemple : ...badgeuse_alfred_1.html?site=daru</p>
-      </div>`;
-  }
- 
-  let selectedAgent = null;
-  let selectedAction = null;
-  let currentLang = "fr";
-  let agentStatus = {};
- 
-  const T = {
-    fr: {
-      agent: "Agent", action: "Action",
-      arrivee: "Arrivée", depart: "Départ",
-      valider: "Valider le badge",
-      erreur: "Veuillez sélectionner un agent et une action.",
-      enregistrement: "Enregistrement...",
-      arrivee_ok: "▶ Arrivée enregistrée",
-      depart_ok: "◼ Départ enregistré",
-      nouveau: "← Nouveau badge",
-      statut_in: "Session en cours depuis",
-      statut_out: "Pas de session en cours",
-      chargement: "⏳ Chargement...",
+// CHECKLIST complète FR / EN
+const CHECKLIST = {
+  fr: [
+    {
+      zone: "🏢 Accueil & Hall",
+      taches: [
+        { t: "Aération des locaux", f: "quotidien" },
+        { t: "Vidage des poubelles", f: "quotidien" },
+        { t: "Aspiration / Lavage des sols", f: "quotidien" },
+        { t: "Enlèvement des traces de doigts (portes, vitres, miroirs)", f: "quotidien" },
+        { t: "Nettoyage des poubelles", f: "hebdo" },
+        { t: "Dépoussiérage du mobilier", f: "hebdo" },
+        { t: "Dépoussiérage plinthes et fenêtres", f: "mensuel" },
+        { t: "Nettoyage intensif des vitres", f: "trimestriel" },
+      ]
     },
-    en: {
-      agent: "Agent", action: "Action",
-      arrivee: "Clock In", depart: "Clock Out",
-      valider: "Submit",
-      erreur: "Please select an agent and an action.",
-      enregistrement: "Saving...",
-      arrivee_ok: "▶ Clocked In",
-      depart_ok: "◼ Clocked Out",
-      nouveau: "← New entry",
-      statut_in: "Session started at",
-      statut_out: "No active session",
-      chargement: "⏳ Loading...",
+    {
+      zone: "🚪 Circulations",
+      taches: [
+        { t: "Vidage des poubelles", f: "quotidien" },
+        { t: "Aspiration / Lavage des sols", f: "quotidien" },
+        { t: "Dépoussiérage du mobilier", f: "quotidien" },
+        { t: "Nettoyage des poubelles", f: "quotidien" },
+        { t: "Dépoussiérage plinthes et fenêtres", f: "mensuel" },
+        { t: "Dépoussiérage des extincteurs", f: "trimestriel" },
+        { t: "Lessivage des portes", f: "trimestriel" },
+      ]
+    },
+    {
+      zone: "💼 Bureaux",
+      taches: [
+        { t: "Aération des locaux", f: "quotidien" },
+        { t: "Vidage des poubelles", f: "quotidien" },
+        { t: "Aspiration / Lavage des sols", f: "quotidien" },
+        { t: "Dépoussiérage du mobilier", f: "quotidien" },
+        { t: "Débarrassage des tasses et verres", f: "quotidien" },
+        { t: "Remise en place des chaises sous les tables", f: "quotidien" },
+        { t: "Nettoyage des poubelles", f: "quotidien" },
+        { t: "Dépoussiérage des luminaires", f: "hebdo" },
+        { t: "Dépoussiérage dessus d'armoires", f: "hebdo" },
+        { t: "Dépoussiérage des fauteuils et chaises", f: "hebdo" },
+        { t: "Dépoussiérage plinthes et fenêtres", f: "mensuel" },
+        { t: "Lessivage des portes", f: "trimestriel" },
+      ]
+    },
+    {
+      zone: "🤝 Salles de réunion",
+      taches: [
+        { t: "Aération des locaux", f: "quotidien" },
+        { t: "Vidage des poubelles", f: "quotidien" },
+        { t: "Aspiration / Lavage des sols", f: "quotidien" },
+        { t: "Dépoussiérage du mobilier", f: "quotidien" },
+        { t: "Débarrassage des tasses et verres", f: "quotidien" },
+        { t: "Remise en place des chaises sous les tables", f: "quotidien" },
+        { t: "Nettoyage des poubelles", f: "quotidien" },
+        { t: "Dépoussiérage des luminaires", f: "hebdo" },
+        { t: "Dépoussiérage dessus d'armoires", f: "hebdo" },
+        { t: "Dépoussiérage des fauteuils et chaises", f: "hebdo" },
+        { t: "Dépoussiérage plinthes et fenêtres", f: "mensuel" },
+        { t: "Lessivage des portes", f: "trimestriel" },
+      ]
+    },
+    {
+      zone: "🍽️ Cuisines",
+      taches: [
+        { t: "Aération des locaux", f: "quotidien" },
+        { t: "Vidage des poubelles", f: "quotidien" },
+        { t: "Aspiration / Lavage des sols", f: "quotidien" },
+        { t: "Nettoyage des tables et plans de travail", f: "quotidien" },
+        { t: "Remise en place des chaises sous les tables", f: "quotidien" },
+        { t: "Nettoyage machine à café et bouilloire", f: "quotidien" },
+        { t: "Remplissage, lancement, vidage lave-vaisselle", f: "quotidien" },
+        { t: "Dépoussiérage extérieur du mobilier", f: "quotidien" },
+        { t: "Dépoussiérage des fauteuils et chaises", f: "quotidien" },
+        { t: "Nettoyage des poubelles", f: "hebdo" },
+        { t: "Nettoyage micro-ondes", f: "hebdo" },
+        { t: "Dépoussiérage plinthes et fenêtres", f: "mensuel" },
+        { t: "Détartrage machines à cafés", f: "trimestriel" },
+        { t: "Nettoyage en profondeur du frigidaire", f: "trimestriel" },
+        { t: "Nettoyage du lave-vaisselle", f: "trimestriel" },
+        { t: "Vidange lave-vaisselle", f: "trimestriel" },
+        { t: "Dépoussiérage intérieur du mobilier", f: "trimestriel" },
+        { t: "Lessivage des portes", f: "trimestriel" },
+      ]
+    },
+    {
+      zone: "🚿 Sanitaires & Douches",
+      taches: [
+        { t: "Aération des sanitaires", f: "quotidien" },
+        { t: "Vidage et nettoyage des poubelles", f: "quotidien" },
+        { t: "Aspiration / Lavage des sols", f: "quotidien" },
+        { t: "Nettoyage des cuvettes, appareils, douches", f: "quotidien" },
+        { t: "Nettoyage robinetterie", f: "quotidien" },
+        { t: "Recharge des consommables", f: "quotidien" },
+        { t: "Enlèvement des traces sur les miroirs", f: "quotidien" },
+        { t: "Détartrage des WC", f: "trimestriel" },
+      ]
     }
+  ],
+  en: [
+    {
+      zone: "🏢 Reception & Hall",
+      taches: [
+        { t: "Room ventilation", f: "quotidien" },
+        { t: "Emptying garbage cans", f: "quotidien" },
+        { t: "Vacuum / Floor washing", f: "quotidien" },
+        { t: "Removal of fingerprints (doors, windows, mirrors)", f: "quotidien" },
+        { t: "Cleaning garbage cans", f: "hebdo" },
+        { t: "Furniture dusting", f: "hebdo" },
+        { t: "Dusting of baseboards and windows", f: "mensuel" },
+        { t: "Intensive window cleaning", f: "trimestriel" },
+      ]
+    },
+    {
+      zone: "🚪 Circulations",
+      taches: [
+        { t: "Emptying garbage cans", f: "quotidien" },
+        { t: "Vacuum / Floor washing", f: "quotidien" },
+        { t: "Furniture dusting", f: "quotidien" },
+        { t: "Cleaning garbage cans", f: "quotidien" },
+        { t: "Dusting of baseboards and windows", f: "mensuel" },
+        { t: "Dusting of fire extinguishers", f: "trimestriel" },
+        { t: "Leaching of doors", f: "trimestriel" },
+      ]
+    },
+    {
+      zone: "💼 Offices",
+      taches: [
+        { t: "Room ventilation", f: "quotidien" },
+        { t: "Emptying garbage cans", f: "quotidien" },
+        { t: "Vacuum / Floor washing", f: "quotidien" },
+        { t: "Furniture dusting", f: "quotidien" },
+        { t: "Clearance of cups and glasses", f: "quotidien" },
+        { t: "Replacing chairs under tables", f: "quotidien" },
+        { t: "Cleaning garbage cans", f: "quotidien" },
+        { t: "Dedusting of luminaires", f: "hebdo" },
+        { t: "Dusting uncluttered cabinet tops", f: "hebdo" },
+        { t: "Dusting of armchairs and chairs", f: "hebdo" },
+        { t: "Dusting of baseboards and windows", f: "mensuel" },
+        { t: "Leaching of doors", f: "trimestriel" },
+      ]
+    },
+    {
+      zone: "🤝 Meeting rooms",
+      taches: [
+        { t: "Room ventilation", f: "quotidien" },
+        { t: "Emptying garbage cans", f: "quotidien" },
+        { t: "Vacuum / Floor washing", f: "quotidien" },
+        { t: "Furniture dusting", f: "quotidien" },
+        { t: "Clearance of cups and glasses", f: "quotidien" },
+        { t: "Replacing chairs under tables", f: "quotidien" },
+        { t: "Cleaning garbage cans", f: "quotidien" },
+        { t: "Dedusting of luminaires", f: "hebdo" },
+        { t: "Dusting uncluttered cabinet tops", f: "hebdo" },
+        { t: "Dust removal from armchairs and chairs", f: "hebdo" },
+        { t: "Dusting of baseboards and windows", f: "mensuel" },
+        { t: "Leaching of doors", f: "trimestriel" },
+      ]
+    },
+    {
+      zone: "🍽️ Kitchens",
+      taches: [
+        { t: "Room ventilation", f: "quotidien" },
+        { t: "Emptying garbage cans", f: "quotidien" },
+        { t: "Vacuum / Floor washing", f: "quotidien" },
+        { t: "Cleaning of tables and worktops", f: "quotidien" },
+        { t: "Replacing chairs under tables", f: "quotidien" },
+        { t: "Cleaning coffee machine and kettle", f: "quotidien" },
+        { t: "Filling, launching, emptying the dishwasher", f: "quotidien" },
+        { t: "Exterior dusting of furniture", f: "quotidien" },
+        { t: "Dust removal from armchairs and chairs", f: "quotidien" },
+        { t: "Cleaning garbage cans", f: "hebdo" },
+        { t: "Microwave cleaning", f: "hebdo" },
+        { t: "Dusting of baseboards and windows", f: "mensuel" },
+        { t: "Coffee machine descaling", f: "trimestriel" },
+        { t: "Deep cleaning of the fridge", f: "trimestriel" },
+        { t: "Cleaning the dishwasher", f: "trimestriel" },
+        { t: "Dishwasher drain", f: "trimestriel" },
+        { t: "Interior dusting of furniture", f: "trimestriel" },
+        { t: "Leaching of doors", f: "trimestriel" },
+      ]
+    },
+    {
+      zone: "🚿 Sanitary & Showers",
+      taches: [
+        { t: "Aeration of sanitary facilities", f: "quotidien" },
+        { t: "Emptying and cleaning of bins", f: "quotidien" },
+        { t: "Vacuum / Floor washing", f: "quotidien" },
+        { t: "Cleaning of toilet bowls, appliances, showers", f: "quotidien" },
+        { t: "Faucet cleaning", f: "quotidien" },
+        { t: "Refill consumables", f: "quotidien" },
+        { t: "Removal of traces on mirrors", f: "quotidien" },
+        { t: "WC descaling", f: "trimestriel" },
+      ]
+    }
+  ]
+};
+ 
+// Détermine quelles fréquences afficher selon la date
+function getFrequencesActives(date) {
+  const actives = ["quotidien"];
+  const jour = date.getDay(); // 0=dim, 1=lun
+  const dateNum = date.getDate();
+  const mois = date.getMonth(); // 0-11
+ 
+  // Hebdo = lundi
+  if (jour === 1) actives.push("hebdo");
+ 
+  // Mensuel = 1er du mois
+  if (dateNum === 1) actives.push("mensuel");
+ 
+  // Trimestriel = 1er jan, avr, juil, oct
+  if (dateNum === 1 && [0, 3, 6, 9].includes(mois)) actives.push("trimestriel");
+ 
+  return actives;
+}
+ 
+function afficherChecklist(lang, action) {
+  if (action !== "Arrivée") return; // Checklist seulement à l'arrivée
+ 
+  const now = new Date();
+  const freqs = getFrequencesActives(now);
+  const data = CHECKLIST[lang] || CHECKLIST.fr;
+ 
+  const card = document.getElementById('checklist-card');
+  const content = document.getElementById('checklist-content');
+  const title = document.getElementById('checklist-title');
+  const dateEl = document.getElementById('checklist-date');
+ 
+  title.textContent = lang === 'en' ? '📋 Today\'s tasks' : '📋 Tâches du jour';
+  dateEl.textContent = now.toLocaleDateString(lang === 'en' ? 'en-GB' : 'fr-FR', {
+    weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+  });
+ 
+  // Badge fréquences actives
+  const freqLabels = {
+    fr: { hebdo: 'hebdo', mensuel: 'mensuel', trimestriel: 'trimestriel' },
+    en: { hebdo: 'weekly', mensuel: 'monthly', trimestriel: 'quarterly' }
   };
  
-  function updateClock() {
-    const now = new Date();
-    document.getElementById('clock').textContent =
-      now.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
-    document.getElementById('dateDisplay').textContent =
-      now.toLocaleDateString(currentLang === 'fr' ? 'fr-FR' : 'en-GB',
-        {weekday:'long', day:'numeric', month:'long'});
-  }
-  setInterval(updateClock, 1000);
-  updateClock();
+  content.innerHTML = '';
  
-  async function loadAgents() {
-    try {
-      const res = await fetch(SCRIPT_URL);
-      const data = await res.json();
-      const agents = data.agents || [];
-      agents.forEach(a => { agentStatus[a] = localStorage.getItem("status_" + a) || "out"; });
+  for (const zone of data) {
+    const tachesFiltrees = zone.taches.filter(t => freqs.includes(t.f));
+    if (tachesFiltrees.length === 0) continue;
  
-      const grid = document.getElementById('agent-grid');
-      grid.innerHTML = "";
-      agents.forEach(name => {
-        const btn = document.createElement('button');
-        btn.className = 'agent-btn';
-        btn.textContent = name.split(' ')[0];
-        btn.title = name;
-        btn.onclick = () => selectAgent(name, btn);
-        grid.appendChild(btn);
-      });
+    const block = document.createElement('div');
+    block.className = 'zone-block';
  
-      document.getElementById('loading-msg').style.display = 'none';
-      grid.style.display = 'grid';
-    } catch(err) {
-      document.getElementById('loading-msg').textContent = "⚠️ Erreur de chargement";
-    }
-  }
+    const zoneTitle = document.createElement('div');
+    zoneTitle.className = 'zone-title';
+    zoneTitle.textContent = zone.zone;
+    block.appendChild(zoneTitle);
  
-  if (SITE) loadAgents();
+    for (const tache of tachesFiltrees) {
+      const item = document.createElement('div');
+      item.className = 'task-item';
  
-  function setLang(lang) {
-    currentLang = lang;
-    document.getElementById('btn-fr').classList.toggle('active', lang === 'fr');
-    document.getElementById('btn-en').classList.toggle('active', lang === 'en');
-    applyLang();
-  }
+      const dot = document.createElement('div');
+      dot.className = 'task-dot ' + (tache.f !== 'quotidien' ? tache.f : '');
  
-  function applyLang() {
-    const t = T[currentLang];
-    document.getElementById('label-agent').textContent = t.agent;
-    document.getElementById('label-action').textContent = t.action;
-    document.getElementById('txt-arrivee').textContent = t.arrivee;
-    document.getElementById('txt-depart').textContent = t.depart;
-    document.getElementById('submit-btn').textContent = t.valider;
-    document.getElementById('reset-btn').textContent = t.nouveau;
-    document.getElementById('error-msg').textContent = t.erreur;
-    document.getElementById('loading-msg').textContent = t.chargement;
-    updateClock();
-    updateStatusArea();
-  }
+      const text = document.createElement('span');
+      text.textContent = tache.t;
+      text.style.flex = '1';
  
-  function selectAgent(name, btnEl) {
-    selectedAgent = name;
-    selectedAction = null;
-    document.querySelectorAll('.agent-btn').forEach(b => b.classList.remove('selected'));
-    btnEl.classList.add('selected');
-    document.querySelectorAll('.action-btn').forEach(b => b.classList.remove('selected'));
-    hideError();
-    updateActionButtons();
-    updateStatusArea();
-  }
+      item.appendChild(dot);
+      item.appendChild(text);
  
-  function updateActionButtons() {
-    const btnIn  = document.getElementById('btn-arrivee');
-    const btnOut = document.getElementById('btn-depart');
-    if (!selectedAgent) { btnIn.disabled = false; btnOut.disabled = false; return; }
-    const status = agentStatus[selectedAgent] || "out";
-    btnIn.disabled  = status === "in";
-    btnOut.disabled = status === "out";
-  }
+      if (tache.f !== 'quotidien') {
+        const badge = document.createElement('span');
+        badge.className = 'freq-badge ' + tache.f;
+        const lbl = freqLabels[lang] || freqLabels.fr;
+        badge.textContent = lbl[tache.f] || tache.f;
+        item.appendChild(badge);
+      }
  
-  function updateStatusArea() {
-    const area = document.getElementById('status-area');
-    if (!selectedAgent) { area.innerHTML = ''; return; }
-    const status = agentStatus[selectedAgent] || "out";
-    const t = T[currentLang];
-    if (status === "in") {
-      const since = localStorage.getItem("checkin_" + selectedAgent) || "";
-      area.innerHTML = `<div class="status-badge active">🟠 ${t.statut_in} ${since}</div>`;
-    } else {
-      area.innerHTML = `<div class="status-badge">⚪ ${t.statut_out}</div>`;
-    }
-  }
- 
-  function selectAction(action) {
-    selectedAction = action;
-    document.querySelectorAll('.action-btn').forEach(b => b.classList.remove('selected'));
-    event.currentTarget.classList.add('selected');
-    hideError();
-  }
- 
-  function hideError() { document.getElementById('error-msg').style.display = 'none'; }
- 
-  async function submitBadge() {
-    if (!selectedAgent || !selectedAction) {
-      document.getElementById('error-msg').style.display = 'block';
-      return;
-    }
-    const now = new Date();
-    const timestamp = now.toLocaleString('fr-FR');
-    const btn = document.getElementById('submit-btn');
-    btn.disabled = true;
-    btn.textContent = T[currentLang].enregistrement;
- 
-    try {
-      await fetch(SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({agent: selectedAgent, action: selectedAction, site: SITE, timestamp})
-      });
-    } catch(e) {}
- 
-    if (selectedAction === "Arrivée") {
-      agentStatus[selectedAgent] = "in";
-      localStorage.setItem("status_" + selectedAgent, "in");
-      localStorage.setItem("checkin_" + selectedAgent,
-        now.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'}));
-    } else {
-      agentStatus[selectedAgent] = "out";
-      localStorage.setItem("status_" + selectedAgent, "out");
-      localStorage.removeItem("checkin_" + selectedAgent);
+      block.appendChild(item);
     }
  
-    document.getElementById('main-card').style.display = 'none';
-    document.getElementById('success-card').style.display = 'block';
-    const t = T[currentLang];
-    document.getElementById('success-title').textContent =
-      selectedAction === 'Arrivée' ? t.arrivee_ok : t.depart_ok;
-    document.getElementById('success-detail').innerHTML =
-      `<strong>${selectedAgent}</strong><br>${SITE}<br>${timestamp}`;
-    document.getElementById('reset-btn').textContent = t.nouveau;
+    content.appendChild(block);
   }
  
-  function reset() {
-    selectedAgent = null;
-    selectedAction = null;
-    document.getElementById('main-card').style.display = 'block';
-    document.getElementById('success-card').style.display = 'none';
-    document.querySelectorAll('.agent-btn, .action-btn').forEach(b => b.classList.remove('selected'));
-    const btn = document.getElementById('submit-btn');
-    btn.disabled = false;
-    btn.textContent = T[currentLang].valider;
-    document.getElementById('status-area').innerHTML = '';
-    updateActionButtons();
-  }
+  card.style.display = 'block';
+}
  
+// ===== SITE =====
+function getSiteFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  const key = params.get("site");
+  return key ? { key, nom: SITES[key] || null } : null;
+}
+ 
+const siteInfo = getSiteFromURL();
+const SITE = siteInfo && siteInfo.nom ? siteInfo.nom : null;
+ 
+if (SITE) {
+  document.getElementById('site-display').textContent = SITE;
+} else if (siteInfo) {
+  document.getElementById('site-display').textContent = "Site inconnu";
+  document.getElementById('main-card').innerHTML = `<div class="site-error"><h2>⚠️ Site non reconnu</h2><p>Paramètre "?site=${siteInfo.key}" inconnu.</p></div>`;
+} else {
+  document.getElementById('site-display').textContent = "Site non défini";
+  document.getElementById('main-card').innerHTML = `<div class="site-error"><h2>⚠️ Aucun site détecté</h2><p>Cette page doit être ouverte via un tag NFC.</p></div>`;
+}
+ 
+let selectedAgent = null;
+let selectedAction = null;
+let currentLang = "fr";
+let agentStatus = {};
+ 
+const T = {
+  fr: {
+    agent: "Agent", action: "Action",
+    arrivee: "Arrivée", depart: "Départ",
+    valider: "Valider le badge",
+    erreur: "Veuillez sélectionner un agent et une action.",
+    enregistrement: "Enregistrement...",
+    arrivee_ok: "▶ Arrivée enregistrée",
+    depart_ok: "◼ Départ enregistré",
+    nouveau: "← Nouveau badge",
+    statut_in: "Session en cours depuis",
+    statut_out: "Pas de session en cours",
+    chargement: "⏳ Chargement...",
+  },
+  en: {
+    agent: "Agent", action: "Action",
+    arrivee: "Clock In", depart: "Clock Out",
+    valider: "Submit",
+    erreur: "Please select an agent and an action.",
+    enregistrement: "Saving...",
+    arrivee_ok: "▶ Clocked In",
+    depart_ok: "◼ Clocked Out",
+    nouveau: "← New entry",
+    statut_in: "Session started at",
+    statut_out: "No active session",
+    chargement: "⏳ Loading...",
+  }
+};
+ 
+function updateClock() {
+  const now = new Date();
+  document.getElementById('clock').textContent =
+    now.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+  document.getElementById('dateDisplay').textContent =
+    now.toLocaleDateString(currentLang === 'fr' ? 'fr-FR' : 'en-GB',
+      {weekday:'long', day:'numeric', month:'long'});
+}
+setInterval(updateClock, 1000);
+updateClock();
+ 
+async function loadAgents() {
+  try {
+    const res = await fetch(SCRIPT_URL);
+    const data = await res.json();
+    const agents = data.agents || [];
+    agents.forEach(a => { agentStatus[a] = localStorage.getItem("status_" + a) || "out"; });
+    const grid = document.getElementById('agent-grid');
+    grid.innerHTML = "";
+    agents.forEach(name => {
+      const btn = document.createElement('button');
+      btn.className = 'agent-btn';
+      btn.textContent = name.split(' ')[0];
+      btn.title = name;
+      btn.onclick = () => selectAgent(name, btn);
+      grid.appendChild(btn);
+    });
+    document.getElementById('loading-msg').style.display = 'none';
+    grid.style.display = 'grid';
+  } catch(err) {
+    document.getElementById('loading-msg').textContent = "⚠️ Erreur de chargement";
+  }
+}
+ 
+if (SITE) loadAgents();
+ 
+function setLang(lang) {
+  currentLang = lang;
+  document.getElementById('btn-fr').classList.toggle('active', lang === 'fr');
+  document.getElementById('btn-en').classList.toggle('active', lang === 'en');
   applyLang();
+}
+ 
+function applyLang() {
+  const t = T[currentLang];
+  document.getElementById('label-agent').textContent = t.agent;
+  document.getElementById('label-action').textContent = t.action;
+  document.getElementById('txt-arrivee').textContent = t.arrivee;
+  document.getElementById('txt-depart').textContent = t.depart;
+  document.getElementById('submit-btn').textContent = t.valider;
+  document.getElementById('reset-btn').textContent = t.nouveau;
+  document.getElementById('error-msg').textContent = t.erreur;
+  document.getElementById('loading-msg').textContent = t.chargement;
+  updateClock();
+  updateStatusArea();
+}
+ 
+function selectAgent(name, btnEl) {
+  selectedAgent = name;
+  selectedAction = null;
+  document.querySelectorAll('.agent-btn').forEach(b => b.classList.remove('selected'));
+  btnEl.classList.add('selected');
+  document.querySelectorAll('.action-btn').forEach(b => b.classList.remove('selected'));
+  hideError();
+  updateActionButtons();
+  updateStatusArea();
+}
+ 
+function updateActionButtons() {
+  const btnIn  = document.getElementById('btn-arrivee');
+  const btnOut = document.getElementById('btn-depart');
+  if (!selectedAgent) { btnIn.disabled = false; btnOut.disabled = false; return; }
+  const status = agentStatus[selectedAgent] || "out";
+  btnIn.disabled  = status === "in";
+  btnOut.disabled = status === "out";
+}
+ 
+function updateStatusArea() {
+  const area = document.getElementById('status-area');
+  if (!selectedAgent) { area.innerHTML = ''; return; }
+  const status = agentStatus[selectedAgent] || "out";
+  const t = T[currentLang];
+  if (status === "in") {
+    const since = localStorage.getItem("checkin_" + selectedAgent) || "";
+    area.innerHTML = `<div class="status-badge active">🟠 ${t.statut_in} ${since}</div>`;
+  } else {
+    area.innerHTML = `<div class="status-badge">⚪ ${t.statut_out}</div>`;
+  }
+}
+ 
+function selectAction(action) {
+  selectedAction = action;
+  document.querySelectorAll('.action-btn').forEach(b => b.classList.remove('selected'));
+  event.currentTarget.classList.add('selected');
+  hideError();
+}
+ 
+function hideError() { document.getElementById('error-msg').style.display = 'none'; }
+ 
+async function submitBadge() {
+  if (!selectedAgent || !selectedAction) {
+    document.getElementById('error-msg').style.display = 'block';
+    return;
+  }
+  const now = new Date();
+  const timestamp = now.toLocaleString('fr-FR');
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  btn.textContent = T[currentLang].enregistrement;
+ 
+  try {
+    await fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({agent: selectedAgent, action: selectedAction, site: SITE, timestamp})
+    });
+  } catch(e) {}
+ 
+  if (selectedAction === "Arrivée") {
+    agentStatus[selectedAgent] = "in";
+    localStorage.setItem("status_" + selectedAgent, "in");
+    localStorage.setItem("checkin_" + selectedAgent,
+      now.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'}));
+  } else {
+    agentStatus[selectedAgent] = "out";
+    localStorage.setItem("status_" + selectedAgent, "out");
+    localStorage.removeItem("checkin_" + selectedAgent);
+  }
+ 
+  // Affiche le succès
+  document.getElementById('main-card').style.display = 'none';
+  document.getElementById('success-area').style.display = 'block';
+  const t = T[currentLang];
+  document.getElementById('success-title').textContent =
+    selectedAction === 'Arrivée' ? t.arrivee_ok : t.depart_ok;
+  document.getElementById('success-detail').innerHTML =
+    `<strong>${selectedAgent}</strong> — ${SITE}<br>${timestamp}`;
+  document.getElementById('reset-btn').textContent = t.nouveau;
+ 
+  // Affiche la checklist uniquement à l'arrivée
+  afficherChecklist(currentLang, selectedAction);
+}
+ 
+function reset() {
+  selectedAgent = null;
+  selectedAction = null;
+  document.getElementById('main-card').style.display = 'block';
+  document.getElementById('success-area').style.display = 'none';
+  document.getElementById('checklist-card').style.display = 'none';
+  document.querySelectorAll('.agent-btn, .action-btn').forEach(b => b.classList.remove('selected'));
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = false;
+  btn.textContent = T[currentLang].valider;
+  document.getElementById('status-area').innerHTML = '';
+  updateActionButtons();
+}
+ 
+applyLang();
 </script>
 </body>
 </html>
