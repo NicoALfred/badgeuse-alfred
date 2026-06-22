@@ -893,6 +893,12 @@ function setLang(lang) {
     document.getElementById('btn-' + l).classList.toggle('active', l === lang);
   });
   applyLang();
+
+  // Régénère la checklist si elle est visible
+  const checklistVisible = document.getElementById('checklist-wrap').style.display === 'block';
+  if (checklistVisible) {
+    afficherChecklist(lang);
+  }
 }
 
 function applyLang() {
