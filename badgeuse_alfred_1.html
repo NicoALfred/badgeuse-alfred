@@ -6,7 +6,7 @@
 <title>Badgeuse Alfred</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap');
- 
+
   :root {
     --bleu: #A8D5DC;
     --orange: #E8703A;
@@ -15,9 +15,9 @@
     --rouge-pastel: #FADBD8;
     --vert-pastel: #EAFAF1;
   }
- 
+
   * { margin: 0; padding: 0; box-sizing: border-box; }
- 
+
   body {
     font-family: 'DM Sans', sans-serif;
     background: var(--noir);
@@ -28,7 +28,7 @@
     padding: 24px 24px 60px;
     color: var(--blanc);
   }
- 
+
   .top-bar {
     position: fixed;
     top: 16px;
@@ -37,7 +37,7 @@
     gap: 6px;
     z-index: 100;
   }
- 
+
   .lang-btn {
     background: #2e2e2e;
     border: 1px solid rgba(255,255,255,0.1);
@@ -50,7 +50,7 @@
     transition: all 0.15s;
   }
   .lang-btn.active { background: rgba(168,213,220,0.15); border-color: var(--bleu); color: var(--bleu); }
- 
+
   .logo {
     font-family: 'DM Serif Display', serif;
     font-size: 2.2rem;
@@ -59,7 +59,7 @@
     text-align: center;
     margin-top: 20px;
   }
- 
+
   .site-name {
     font-size: 0.85rem;
     color: rgba(255,255,255,0.45);
@@ -68,7 +68,7 @@
     text-align: center;
     margin-bottom: 30px;
   }
- 
+
   .card {
     background: #242424;
     border-radius: 20px;
@@ -78,7 +78,7 @@
     border: 1px solid rgba(255,255,255,0.06);
     margin-bottom: 16px;
   }
- 
+
   .label {
     font-size: 0.75rem;
     text-transform: uppercase;
@@ -86,14 +86,14 @@
     color: rgba(255,255,255,0.4);
     margin-bottom: 10px;
   }
- 
+
   .agent-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 10px;
     margin-bottom: 28px;
   }
- 
+
   .agent-btn {
     background: #2e2e2e;
     border: 2px solid transparent;
@@ -109,7 +109,7 @@
   }
   .agent-btn:hover { background: #363636; border-color: var(--bleu); }
   .agent-btn.selected { background: rgba(168,213,220,0.12); border-color: var(--bleu); color: var(--bleu); }
- 
+
   .loading-agents {
     text-align: center;
     color: rgba(255,255,255,0.3);
@@ -117,11 +117,11 @@
     padding: 20px 0;
     margin-bottom: 28px;
   }
- 
+
   .divider { height: 1px; background: rgba(255,255,255,0.07); margin-bottom: 28px; }
- 
+
   .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 28px; }
- 
+
   .action-btn {
     border: none;
     border-radius: 14px;
@@ -137,7 +137,7 @@
     gap: 6px;
   }
   .action-btn .icon { font-size: 1.5rem; }
- 
+
   .btn-arrivee {
     background: rgba(168,213,220,0.15);
     color: var(--bleu);
@@ -146,7 +146,7 @@
   .btn-arrivee:hover:not(:disabled), .btn-arrivee.selected {
     background: var(--bleu); color: var(--noir); border-color: var(--bleu);
   }
- 
+
   .btn-depart {
     background: rgba(232,112,58,0.12);
     color: var(--orange);
@@ -155,9 +155,9 @@
   .btn-depart:hover:not(:disabled), .btn-depart.selected {
     background: var(--orange); color: white; border-color: var(--orange);
   }
- 
+
   .action-btn:disabled { opacity: 0.25; cursor: not-allowed; }
- 
+
   .status-badge {
     display: inline-flex;
     align-items: center;
@@ -177,7 +177,7 @@
     border-color: rgba(232,112,58,0.2);
     color: var(--orange);
   }
- 
+
   .submit-btn {
     width: 100%;
     padding: 17px;
@@ -193,7 +193,7 @@
   }
   .submit-btn:hover { background: #d4612e; transform: translateY(-1px); }
   .submit-btn:disabled { background: #3a3a3a; color: rgba(255,255,255,0.3); cursor: not-allowed; transform: none; }
- 
+
   .time-display {
     text-align: center;
     margin-bottom: 28px;
@@ -203,7 +203,7 @@
   }
   .time-display .time { font-size: 1.8rem; font-weight: 300; letter-spacing: 2px; }
   .time-display .date { font-size: 0.75rem; color: rgba(255,255,255,0.35); margin-top: 2px; text-transform: capitalize; }
- 
+
   .error-msg {
     background: rgba(232,112,58,0.15);
     border: 1px solid rgba(232,112,58,0.3);
@@ -215,7 +215,7 @@
     display: none;
     text-align: center;
   }
- 
+
   /* MODAL CONFIRMATION */
   .modal-overlay {
     display: none;
@@ -228,7 +228,7 @@
     padding: 24px;
   }
   .modal-overlay.visible { display: flex; }
- 
+
   .modal {
     background: #2a2a2a;
     border-radius: 20px;
@@ -238,7 +238,7 @@
     border: 1px solid rgba(255,255,255,0.1);
     text-align: center;
   }
- 
+
   .modal-icon { font-size: 2.5rem; margin-bottom: 12px; }
   .modal-title {
     font-family: 'DM Serif Display', serif;
@@ -253,9 +253,9 @@
     margin-bottom: 24px;
   }
   .modal-text strong { color: var(--blanc); }
- 
+
   .modal-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
- 
+
   .modal-confirm {
     padding: 14px;
     background: var(--orange);
@@ -269,7 +269,7 @@
     transition: all 0.15s;
   }
   .modal-confirm:hover { background: #d4612e; }
- 
+
   .modal-cancel {
     padding: 14px;
     background: transparent;
@@ -282,7 +282,7 @@
     transition: all 0.15s;
   }
   .modal-cancel:hover { border-color: rgba(255,255,255,0.4); color: var(--blanc); }
- 
+
   /* SUCCESS */
   .success-banner {
     background: rgba(168,213,220,0.1);
@@ -297,7 +297,7 @@
   .success-banner .check { font-size: 2rem; margin-bottom: 6px; }
   .success-banner .title { font-family: 'DM Serif Display', serif; font-size: 1.3rem; color: var(--bleu); }
   .success-banner .detail { font-size: 0.8rem; color: rgba(255,255,255,0.4); margin-top: 4px; }
- 
+
   .reset-btn {
     background: transparent;
     border: 1px solid rgba(232,112,58,0.4);
@@ -311,14 +311,14 @@
     margin-bottom: 16px;
   }
   .reset-btn:hover { background: rgba(232,112,58,0.1); }
- 
+
   /* CHECKLIST */
   .checklist-wrap {
     width: 100%;
     max-width: 420px;
     display: none;
   }
- 
+
   .checklist-card {
     background: #242424;
     border-radius: 20px;
@@ -326,7 +326,7 @@
     border: 1px solid rgba(255,255,255,0.06);
     margin-bottom: 16px;
   }
- 
+
   .checklist-title {
     font-family: 'DM Serif Display', serif;
     font-size: 1.2rem;
@@ -339,7 +339,7 @@
     margin-bottom: 20px;
     text-transform: capitalize;
   }
- 
+
   /* Tâches exceptionnelles */
   .exceptional-block {
     background: rgba(250,219,216,0.1);
@@ -364,7 +364,7 @@
     color: #e57373;
   }
   .exceptional-header.empty { color: #81c784; }
- 
+
   .exceptional-zone { margin-bottom: 12px; }
   .exceptional-zone:last-child { margin-bottom: 0; }
   .exceptional-zone-title {
@@ -375,7 +375,7 @@
     text-transform: uppercase;
     letter-spacing: 1px;
   }
- 
+
   .exc-task {
     display: flex;
     align-items: center;
@@ -384,7 +384,7 @@
     font-size: 0.87rem;
     color: rgba(255,255,255,0.85);
   }
- 
+
   .freq-pill {
     font-size: 0.65rem;
     padding: 2px 7px;
@@ -396,7 +396,7 @@
   .freq-pill.hebdo { background: rgba(168,213,168,0.2); color: #a5d6a7; }
   .freq-pill.mensuel { background: rgba(255,213,79,0.15); color: #ffd54f; }
   .freq-pill.trimestriel { background: rgba(206,147,216,0.2); color: #ce93d8; }
- 
+
   /* Tâches quotidiennes */
   .daily-block {
     margin-bottom: 16px;
@@ -414,7 +414,7 @@
     align-items: center;
     gap: 8px;
   }
- 
+
   .daily-zone { margin-bottom: 14px; }
   .daily-zone-title {
     font-size: 0.75rem;
@@ -424,7 +424,7 @@
     text-transform: uppercase;
     letter-spacing: 1px;
   }
- 
+
   .daily-task {
     display: flex;
     align-items: flex-start;
@@ -442,10 +442,10 @@
     margin-top: 7px;
     flex-shrink: 0;
   }
- 
+
   /* Bouton confirmation tâches */
- 
- 
+
+
   .site-error {
     text-align: center;
     padding: 40px 20px;
@@ -455,32 +455,32 @@
 </style>
 </head>
 <body>
- 
+
 <div class="top-bar">
   <button class="lang-btn active" id="btn-fr" onclick="setLang('fr')">🇫🇷</button>
   <button class="lang-btn" id="btn-en" onclick="setLang('en')">🇬🇧</button>
   <button class="lang-btn" id="btn-bn" onclick="setLang('bn')">🇧🇩</button>
 </div>
- 
+
 <div class="logo">Alfred</div>
 <div class="site-name" id="site-display">Chargement...</div>
- 
+
 <!-- CARTE PRINCIPALE -->
 <div class="card" id="main-card">
   <div class="time-display">
     <div class="time" id="clock">--:--</div>
     <div class="date" id="dateDisplay"></div>
   </div>
- 
+
   <div class="label" id="label-agent">Agent</div>
   <div id="agent-container">
     <div class="loading-agents" id="loading-msg">⏳ Chargement...</div>
     <div class="agent-grid" id="agent-grid" style="display:none"></div>
   </div>
- 
+
   <div id="status-area"></div>
   <div class="divider"></div>
- 
+
   <div class="label" id="label-action">Action</div>
   <div class="action-grid">
     <button class="action-btn btn-arrivee" id="btn-arrivee" onclick="selectAction('Arrivée')">
@@ -492,11 +492,11 @@
       <span id="txt-depart">Départ</span>
     </button>
   </div>
- 
+
   <div class="error-msg" id="error-msg"></div>
   <button class="submit-btn" id="submit-btn" onclick="showConfirmModal()">Valider le badge</button>
 </div>
- 
+
 <!-- MODAL CONFIRMATION BADGE -->
 <div class="modal-overlay" id="confirm-modal">
   <div class="modal">
@@ -509,7 +509,7 @@
     </div>
   </div>
 </div>
- 
+
 <!-- SUCCÈS -->
 <div id="success-area" style="display:none; width:100%; max-width:420px; text-align:center;">
   <div class="success-banner">
@@ -519,39 +519,69 @@
   </div>
   <button class="reset-btn" id="reset-btn" onclick="tryReset()">← <span id="reset-label">Nouveau badge</span></button>
 </div>
- 
+
 <!-- CHECKLIST -->
 <div class="checklist-wrap" id="checklist-wrap">
   <div class="checklist-card">
     <div class="checklist-title" id="checklist-title">📋 Tâches du jour</div>
     <div class="checklist-date" id="checklist-date"></div>
- 
+
     <!-- Tâches exceptionnelles -->
     <div id="exceptional-area"></div>
- 
+
     <!-- Tâches quotidiennes -->
     <div id="daily-area"></div>
- 
- 
+
+
   </div>
 </div>
- 
+
 <script>
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby5GfqDkVWSoNOolviOccT70_kBD8gP00jqiLPQezhqyyJaE4SZqhMOnvjuISoBu2UA/exec";
- 
+
 const SITES = {
-  "daru":         "19 Rue Daru",
-  "montmartre":   "17 Rue du Faubourg Montmartre, 75009 Paris",
-  "stmarc":       "21 Rue St Marc, 75002 Paris",
-  "pepiniere":    "14 Rue de la Pépinière, 75008 Paris",
-  "haussmann":    "165 Boulevard Haussmann, 75008 Paris",
-  "poissoniere":  "70 Rue du Fbg Poissonière, 75002 Paris",
-  "murat":        "7 Rue Louis Murat, 75008 Paris",
-  "malesherbes":  "10 Blv Malesherbes, 75008 Paris",
-  "lisbonne":     "30 Rue de Lisbonne, 75008 Paris",
-  "sebastopol":   "74 Boulevard de Sébastopol, 75003 Paris"
+  "daru":             "19 Rue Daru",
+  "montmartre":       "17 Rue du Faubourg Montmartre, 75009 Paris",
+  "stmarc":           "21 Rue St Marc, 75002 Paris",
+  "pepiniere":        "14 Rue de la Pépinière, 75008 Paris",
+  "haussmann":        "165 Boulevard Haussmann, 75008 Paris",
+  "poissoniere":      "70 Rue du Fbg Poissonière, 75002 Paris",
+  "murat":            "7 Rue Louis Murat, 75008 Paris",
+  "malesherbes":      "10 Blv Malesherbes, 75008 Paris",
+  "lisbonne":         "30 Rue de Lisbonne, 75008 Paris",
+  "sebastopol":       "74 Boulevard de Sébastopol, 75003 Paris",
+  "colisee":          "17 Rue du Colisée, 75008 Paris",
+  "treillard":        "18 Rue Treillard, 75008 Paris",
+  "poincare":         "81 Rue Raymond Poincarré, 75016 Paris",
+  "alsace":           "25 Rue d'Alsace, 75010 Paris",
+  "amsterdam33":      "33 Rue d'Amsterdam, 75008 Paris",
+  "villiers":         "41 rue de Villiers, 92200 Neuilly Sur Seine",
+  "bastille":         "12 Place de la Bastille, 75012 Paris",
+  "arras":            "18 Rue d'Arras, 92000 Nanterre",
+  "sampaix":          "44 Rue Lucien Sampaix, 75010 Paris",
+  "fgpoissoniere8":   "8 Rue du Faubourg Poissonière, 75010 Paris",
+  "provence":         "46 Rue de Provence, 75009 Paris",
+  "amsterdam65":      "65 Rue d'Amsterdam, 75009 Paris",
+  "appert":           "10 Rue Nicolas Appert, 75011 Paris",
+  "malesherbes7":     "7 Boulevard Malesherbes, 75008 Paris",
+  "fgpoissoniere24":  "24 Rue du Faubourg Poissonière, 75010 Paris",
+  "blanche":          "33 Rue Blanche, 75009 Paris",
+  "laugier":          "12 Rue Laugier, 75017 Paris",
+  "douai61":          "61 Rue Douai, 75009 Paris",
+  "bordeaux":         "29 Rue Boudet, 33000 Bordeaux",
+  "douai61bis":       "61 Rue de Douai, 75009 Paris",
+  "berri":            "4 Rue de Berri, 75008 Paris",
+  "haussmann122":     "122 Haussmann, 75008 Paris",
+  "haussmann32":      "32 Bis Haussmann, 75008 Paris",
+  "peretti":          "177 Avenue Achille Peretti, 92200 Neuilly",
+  "champselysees":    "76 Avenue des Champs Élysées, 75008 Paris",
+  "louvre":           "15 Rue du Louvre, 75001 Paris",
+  "tronchet":         "31 Rue Tronchet, 75008 Paris",
+  "rouquier":         "17 Rue Louis Rouquier, 92300 Neuilly sur Seine",
+  "dubail":           "9 Passage Dubail, 75010 Paris",
+  "montmartre142":    "142 Rue Montmartre 75002 Paris",
 };
- 
+
 // Tâches quotidiennes simplifiées
 const DAILY_TASKS = {
   fr: [
@@ -642,7 +672,7 @@ const DAILY_TASKS = {
     }
   ]
 };
- 
+
 // Tâches exceptionnelles par fréquence et zone
 const EXCEPTIONAL_TASKS = {
   fr: {
@@ -704,7 +734,7 @@ const EXCEPTIONAL_TASKS = {
     ]
   }
 };
- 
+
 const T = {
   fr: {
     agent: "Agent", action: "Action",
@@ -794,17 +824,17 @@ const T = {
     freq_trimestriel: "ত্রৈমাসিক",
   }
 };
- 
+
 // Site
 function getSiteFromURL() {
   const params = new URLSearchParams(window.location.search);
   const key = params.get("site");
   return key ? { key, nom: SITES[key] || null } : null;
 }
- 
+
 const siteInfo = getSiteFromURL();
 const SITE = siteInfo && siteInfo.nom ? siteInfo.nom : null;
- 
+
 if (SITE) {
   document.getElementById('site-display').textContent = SITE;
 } else if (siteInfo) {
@@ -814,13 +844,13 @@ if (SITE) {
   document.getElementById('site-display').textContent = "Site non défini";
   document.getElementById('main-card').innerHTML = `<div class="site-error"><h2>⚠️ Aucun site détecté</h2><p>Cette page doit être ouverte via un tag NFC.</p></div>`;
 }
- 
+
 let selectedAgent = null;
 let selectedAction = null;
 let currentLang = "fr";
 let agentStatus = {};
 let tasksConfirmed = false;
- 
+
 function updateClock() {
   const now = new Date();
   document.getElementById('clock').textContent =
@@ -831,7 +861,7 @@ function updateClock() {
 }
 setInterval(updateClock, 1000);
 updateClock();
- 
+
 async function loadAgents() {
   try {
     const res = await fetch(SCRIPT_URL);
@@ -854,9 +884,9 @@ async function loadAgents() {
     document.getElementById('loading-msg').textContent = "⚠️ Erreur";
   }
 }
- 
+
 if (SITE) loadAgents();
- 
+
 function setLang(lang) {
   currentLang = lang;
   ['fr','en','bn'].forEach(l => {
@@ -864,7 +894,7 @@ function setLang(lang) {
   });
   applyLang();
 }
- 
+
 function applyLang() {
   const t = T[currentLang];
   const els = {
@@ -885,7 +915,7 @@ function applyLang() {
   updateClock();
   updateStatusArea();
 }
- 
+
 function selectAgent(name, btnEl) {
   selectedAgent = name;
   selectedAction = null;
@@ -896,7 +926,7 @@ function selectAgent(name, btnEl) {
   updateActionButtons();
   updateStatusArea();
 }
- 
+
 function updateActionButtons() {
   const btnIn  = document.getElementById('btn-arrivee');
   const btnOut = document.getElementById('btn-depart');
@@ -905,7 +935,7 @@ function updateActionButtons() {
   btnIn.disabled  = status === "in";
   btnOut.disabled = status === "out";
 }
- 
+
 function updateStatusArea() {
   const area = document.getElementById('status-area');
   if (!selectedAgent) { area.innerHTML = ''; return; }
@@ -918,16 +948,16 @@ function updateStatusArea() {
     area.innerHTML = `<div class="status-badge">⚪ ${t.statut_out}</div>`;
   }
 }
- 
+
 function selectAction(action) {
   selectedAction = action;
   document.querySelectorAll('.action-btn').forEach(b => b.classList.remove('selected'));
   event.currentTarget.classList.add('selected');
   hideError();
 }
- 
+
 function hideError() { document.getElementById('error-msg').style.display = 'none'; }
- 
+
 function showConfirmModal() {
   if (!selectedAgent || !selectedAction) {
     document.getElementById('error-msg').style.display = 'block';
@@ -936,20 +966,20 @@ function showConfirmModal() {
   const t = T[currentLang];
   const now = new Date();
   const heure = now.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
- 
+
   document.getElementById('modal-icon').textContent = selectedAction === 'Arrivée' ? '👋' : '👋';
   document.getElementById('modal-title').textContent = selectedAction === 'Arrivée' ? t.modal_arrivee_title : t.modal_depart_title;
   document.getElementById('modal-text').innerHTML = selectedAction === 'Arrivée'
     ? t.modal_arrivee_text(selectedAgent, SITE, heure)
     : t.modal_depart_text(selectedAgent, SITE, heure);
- 
+
   document.getElementById('confirm-modal').classList.add('visible');
 }
- 
+
 function closeModal() {
   document.getElementById('confirm-modal').classList.remove('visible');
 }
- 
+
 async function confirmBadge() {
   closeModal();
   const now = new Date();
@@ -957,7 +987,7 @@ async function confirmBadge() {
   const btn = document.getElementById('submit-btn');
   btn.disabled = true;
   btn.textContent = T[currentLang].enregistrement;
- 
+
   try {
     await fetch(SCRIPT_URL, {
       method: 'POST',
@@ -966,9 +996,9 @@ async function confirmBadge() {
       body: JSON.stringify({agent: selectedAgent, action: selectedAction, site: SITE, timestamp})
     });
   } catch(e) {}
- 
+
   const t = T[currentLang];
- 
+
   if (selectedAction === "Arrivée") {
     agentStatus[selectedAgent] = "in";
     localStorage.setItem("status_" + selectedAgent, "in");
@@ -978,15 +1008,15 @@ async function confirmBadge() {
     document.getElementById('success-area').style.display = 'block';
     document.getElementById('success-title').textContent = t.arrivee_ok;
     document.getElementById('success-detail').innerHTML = `<strong>${selectedAgent}</strong> — ${SITE}<br>${timestamp}`;
- 
+
     // Bouton retour toujours accessible
     const resetBtn = document.getElementById('reset-btn');
     resetBtn.classList.add('unlocked');
     document.getElementById('reset-label').textContent = t.nouveau;
- 
+
     // Affiche checklist
     afficherChecklist(currentLang);
- 
+
   } else {
     agentStatus[selectedAgent] = "out";
     localStorage.setItem("status_" + selectedAgent, "out");
@@ -996,19 +1026,19 @@ async function confirmBadge() {
     document.getElementById('success-area').style.display = 'block';
     document.getElementById('success-title').textContent = t.depart_ok;
     document.getElementById('success-detail').innerHTML = `<strong>${selectedAgent}</strong> — ${SITE}<br>${timestamp}`;
- 
+
     const resetBtn = document.getElementById('reset-btn');
     resetBtn.classList.add('unlocked');
     document.getElementById('reset-label').textContent = t.nouveau;
   }
 }
- 
- 
- 
+
+
+
 function tryReset() {
   reset();
 }
- 
+
 function reset() {
   selectedAgent = null;
   selectedAction = null;
@@ -1022,7 +1052,7 @@ function reset() {
   document.getElementById('status-area').innerHTML = '';
   updateActionButtons();
 }
- 
+
 function getFrequencesActives(date) {
   const actives = [];
   const jour = date.getDay();
@@ -1033,7 +1063,7 @@ function getFrequencesActives(date) {
   if (dateNum === 1 && [0,3,6,9].includes(mois)) actives.push("trimestriel");
   return actives;
 }
- 
+
 function afficherChecklist(lang) {
   lang = lang || currentLang;
   const now = new Date();
@@ -1041,19 +1071,19 @@ function afficherChecklist(lang) {
   const t = T[lang];
   const excData = EXCEPTIONAL_TASKS[lang] || EXCEPTIONAL_TASKS.fr;
   const dailyData = DAILY_TASKS[lang] || DAILY_TASKS.fr;
- 
+
   document.getElementById('checklist-title').textContent = t.checklist_title;
   document.getElementById('checklist-date').textContent = now.toLocaleDateString(
     lang === 'en' ? 'en-GB' : 'fr-FR',
     {weekday:'long', day:'numeric', month:'long', year:'numeric'}
   );
- 
+
   // ---- Tâches exceptionnelles ----
   const excArea = document.getElementById('exceptional-area');
   excArea.innerHTML = '';
- 
+
   const block = document.createElement('div');
- 
+
   if (freqs.length === 0) {
     block.className = 'exceptional-block empty';
     const header = document.createElement('div');
@@ -1066,73 +1096,72 @@ function afficherChecklist(lang) {
     header.className = 'exceptional-header';
     header.textContent = t.exc_title;
     block.appendChild(header);
- 
+
     for (const freq of freqs) {
       const freqData = excData[freq] || [];
       const freqLabel = freq === 'hebdo' ? t.freq_hebdo : freq === 'mensuel' ? t.freq_mensuel : t.freq_trimestriel;
       const freqClass = freq;
- 
+
       for (const zone of freqData) {
         const zoneEl = document.createElement('div');
         zoneEl.className = 'exceptional-zone';
- 
+
         const zTitle = document.createElement('div');
         zTitle.className = 'exceptional-zone-title';
         zTitle.textContent = zone.zone;
         zoneEl.appendChild(zTitle);
- 
+
         for (const task of zone.tasks) {
           const item = document.createElement('div');
           item.className = 'exc-task';
           item.innerHTML = `<span style="flex:1">${task}</span><span class="freq-pill ${freqClass}">${freqLabel}</span>`;
           zoneEl.appendChild(item);
         }
- 
+
         block.appendChild(zoneEl);
       }
     }
   }
- 
+
   excArea.appendChild(block);
- 
+
   // ---- Tâches quotidiennes ----
   const dailyArea = document.getElementById('daily-area');
   dailyArea.innerHTML = '';
- 
+
   const dailyBlock = document.createElement('div');
   dailyBlock.className = 'daily-block';
- 
+
   const dailyHeader = document.createElement('div');
   dailyHeader.className = 'daily-header';
   dailyHeader.textContent = t.daily_title;
   dailyBlock.appendChild(dailyHeader);
- 
+
   for (const zone of dailyData) {
     const zoneEl = document.createElement('div');
     zoneEl.className = 'daily-zone';
- 
+
     const zTitle = document.createElement('div');
     zTitle.className = 'daily-zone-title';
     zTitle.textContent = zone.zone;
     zoneEl.appendChild(zTitle);
- 
+
     for (const task of zone.tasks) {
       const item = document.createElement('div');
       item.className = 'daily-task';
       item.innerHTML = `<div class="task-bullet"></div><span>${task}</span>`;
       zoneEl.appendChild(item);
     }
- 
+
     dailyBlock.appendChild(zoneEl);
   }
- 
+
   dailyArea.appendChild(dailyBlock);
- 
+
   document.getElementById('checklist-wrap').style.display = 'block';
 }
- 
+
 applyLang();
 </script>
 </body>
 </html>
- 
