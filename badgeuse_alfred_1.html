@@ -580,7 +580,20 @@ const SITES = {
   "rouquier":         "17 Rue Louis Rouquier, 92300 Neuilly sur Seine",
   "dubail":           "9 Passage Dubail, 75010 Paris",
   "montmartre142":    "142 Rue Montmartre 75002 Paris",
+  "magnum":           "Magnum 150cl — 1 Rue de Phalsbourg, 75017 Paris",
+  "grillroom":        "The Grill Room — 103 Bd Malesherbes, 75008 Paris",
 };
+
+// Type de checklist par site
+const SITE_TYPE = {
+  "magnum":    "magnum",
+  "grillroom": "grillroom",
+};
+function getSiteType(key) {
+  const params = new URLSearchParams(window.location.search);
+  const k = params.get("site") || "";
+  return SITE_TYPE[k] || "bureaux";
+}
 
 // Tâches quotidiennes simplifiées
 const DAILY_TASKS = {
@@ -1070,8 +1083,244 @@ function getFrequencesActives(date) {
   return actives;
 }
 
+
+// =============================================
+// CHECKLISTS RESTAURANTS
+// =============================================
+
+// Jour JS : 0=dim, 1=lun, 2=mar, 3=mer, 4=jeu, 5=ven, 6=sam
+const CHECKLIST_GRILLROOM = {
+  fr: {
+    quotidien: [
+      { heure: "7h00–7h30",  tache: "🪑 Mise en place terrasse" },
+      { heure: "7h30–7h50",  tache: "🧹 Nettoyage sols (4 zones)" },
+      { heure: "7h50–8h20",  tache: "🚽 Nettoyage toilettes (3 zones)" },
+    ],
+    hebdo: {
+      1: "🌿 Poussières boiseries entrée",
+      2: "🌿 Poussières coffee shop",
+      3: "🌿 Poussières bars + consoles",
+      4: "🌿 Poussières véranda",
+      5: "🛋️ Banquettes & canapés + vitres",
+      6: "🪑 Pieds chaises & tables",
+      0: "🚽 Toilettes approfondies + escalier",
+    }
+  },
+  en: {
+    quotidien: [
+      { heure: "7h00–7h30",  tache: "🪑 Terrace setup" },
+      { heure: "7h30–7h50",  tache: "🧹 Floor cleaning (4 zones)" },
+      { heure: "7h50–8h20",  tache: "🚽 Toilet cleaning (3 zones)" },
+    ],
+    hebdo: {
+      1: "🌿 Dust entrance woodwork",
+      2: "🌿 Dust coffee shop",
+      3: "🌿 Dust bars + consoles",
+      4: "🌿 Dust veranda",
+      5: "🛋️ Banquettes & sofas + windows",
+      6: "🪑 Chair & table legs",
+      0: "🚽 Deep toilet cleaning + staircase",
+    }
+  },
+  bn: {
+    quotidien: [
+      { heure: "7h00–7h30",  tache: "🪑 টেরেস সাজানো" },
+      { heure: "7h30–7h50",  tache: "🧹 মেঝে পরিষ্কার (৪ জোন)" },
+      { heure: "7h50–8h20",  tache: "🚽 টয়লেট পরিষ্কার (৩ জোন)" },
+    ],
+    hebdo: {
+      1: "🌿 প্রবেশদ্বার কাঠ ঝাড়া",
+      2: "🌿 কফি শপ ঝাড়া",
+      3: "🌿 বার ও কনসোল ঝাড়া",
+      4: "🌿 ভেরান্ডা ঝাড়া",
+      5: "🛋️ ব্যাঙ্কেট ও জানালা",
+      6: "🪑 চেয়ার ও টেবিলের পা",
+      0: "🚽 টয়লেট গভীর পরিষ্কার + সিঁড়ি",
+    }
+  }
+};
+
+const CHECKLIST_MAGNUM = {
+  fr: {
+    quotidien: [
+      { heure: "8h00–8h20",  tache: "🪑 Mise en place terrasse" },
+      { heure: "8h20–8h40",  tache: "🧹 Aspirateur salle principale" },
+      { heure: "8h40–9h00",  tache: "🚽 Nettoyage toilettes" },
+    ],
+    hebdo: {
+      1: "🌿 Zone 1 – Poussières + miroirs + vins",
+      2: "🌿 Zone 2 – Poussières + arrière bar",
+      3: "🌿 Zone 3 – Poussières + surfaces bar",
+      4: "🌿 Zone 4 – Mobilier & déco",
+      5: "🌿 Zone 5 – Finitions bar + vitres",
+      6: "🛋️ Banquettes & coussins",
+      0: "✨ Lustres + finitions générales",
+    },
+    // Shampouineuse : 1 fois par mois, le 24 de chaque mois (alerte J-2 = le 22)
+    mensuel: {
+      dateJ: 24, // jour du mois où la shampouineuse est prévue
+      tache: "🧼 Shampouineuse (banquettes / tissus / sol)",
+    }
+  },
+  en: {
+    quotidien: [
+      { heure: "8h00–8h20",  tache: "🪑 Terrace setup" },
+      { heure: "8h20–8h40",  tache: "🧹 Vacuum main room" },
+      { heure: "8h40–9h00",  tache: "🚽 Toilet cleaning" },
+    ],
+    hebdo: {
+      1: "🌿 Zone 1 – Dust + mirrors + wines",
+      2: "🌿 Zone 2 – Dust + back bar",
+      3: "🌿 Zone 3 – Dust + bar surfaces",
+      4: "🌿 Zone 4 – Furniture & decor",
+      5: "🌿 Zone 5 – Bar finishes + windows",
+      6: "🛋️ Banquettes & cushions",
+      0: "✨ Chandeliers + general finishing",
+    },
+    mensuel: {
+      dateJ: 24,
+      tache: "🧼 Shampooing machine (banquettes / fabrics / floor)",
+    }
+  },
+  bn: {
+    quotidien: [
+      { heure: "8h00–8h20",  tache: "🪑 টেরেস সাজানো" },
+      { heure: "8h20–8h40",  tache: "🧹 মূল হল ভ্যাকুয়াম" },
+      { heure: "8h40–9h00",  tache: "🚽 টয়লেট পরিষ্কার" },
+    ],
+    hebdo: {
+      1: "🌿 জোন ১ – ঝাড়া + আয়না + ওয়াইন",
+      2: "🌿 জোন ২ – ঝাড়া + বার পেছন",
+      3: "🌿 জোন ৩ – ঝাড়া + বার সারফেস",
+      4: "🌿 জোন ৪ – আসবাব ও সাজসজ্জা",
+      5: "🌿 জোন ৫ – বার ফিনিশ + জানালা",
+      6: "🛋️ ব্যাঙ্কেট ও কুশন",
+      0: "✨ ঝাড়বাতি + সাধারণ ফিনিশিং",
+    },
+    mensuel: {
+      dateJ: 24,
+      tache: "🧼 শ্যাম্পু মেশিন (ব্যাঙ্কেট / কাপড় / মেঝে)",
+    }
+  }
+};
+
+const ALERT_LABELS = {
+  fr: {
+    shampoo_j2: "⚠️ Dans 2 jours : Shampouineuse prévue — préparez le matériel !",
+    shampoo_j1: "⚠️ Demain : Shampouineuse — préparez le matériel !",
+    shampoo_j0: "🚨 AUJOURD'HUI : Shampouineuse à effectuer !",
+    vitres_j0:  "🪟 AUJOURD'HUI : Nettoyage intensif des vitres !",
+    hebdo_title: "📅 Tâche du jour",
+    daily_title: "📌 Tâches quotidiennes",
+    checklist_title: "📋 Tâches du jour",
+  },
+  en: {
+    shampoo_j2: "⚠️ In 2 days: Shampooing machine scheduled — prepare the equipment!",
+    shampoo_j1: "⚠️ Tomorrow: Shampooing machine — prepare the equipment!",
+    shampoo_j0: "🚨 TODAY: Shampooing machine to be done!",
+    vitres_j0:  "🪟 TODAY: Intensive window cleaning!",
+    hebdo_title: "📅 Task of the day",
+    daily_title: "📌 Daily tasks",
+    checklist_title: "📋 Today's tasks",
+  },
+  bn: {
+    shampoo_j2: "⚠️ ২ দিন পরে: শ্যাম্পু মেশিন — সরঞ্জাম প্রস্তুত করুন!",
+    shampoo_j1: "⚠️ আগামীকাল: শ্যাম্পু মেশিন — সরঞ্জাম প্রস্তুত করুন!",
+    shampoo_j0: "🚨 আজ: শ্যাম্পু মেশিন করতে হবে!",
+    vitres_j0:  "🪟 আজ: জানালা গভীরভাবে পরিষ্কার করুন!",
+    hebdo_title: "📅 আজকের কাজ",
+    daily_title: "📌 দৈনিক কাজ",
+    checklist_title: "📋 আজকের কাজ",
+  }
+};
+
+function afficherChecklistResto(lang, type) {
+  const now = new Date();
+  const jour = now.getDay();
+  const dateNum = now.getDate();
+  const mois = now.getMonth();
+  const data = type === "grillroom"
+    ? (CHECKLIST_GRILLROOM[lang] || CHECKLIST_GRILLROOM.fr)
+    : (CHECKLIST_MAGNUM[lang] || CHECKLIST_MAGNUM.fr);
+  const labels = ALERT_LABELS[lang] || ALERT_LABELS.fr;
+
+  document.getElementById('checklist-title').textContent = labels.checklist_title;
+  document.getElementById('checklist-date').textContent = now.toLocaleDateString(
+    lang === 'en' ? 'en-GB' : 'fr-FR',
+    {weekday:'long', day:'numeric', month:'long', year:'numeric'}
+  );
+
+  const excArea = document.getElementById('exceptional-area');
+  const dailyArea = document.getElementById('daily-area');
+  excArea.innerHTML = '';
+  dailyArea.innerHTML = '';
+
+  // ---- ALERTES MENSUELLES (shampouineuse) ----
+  if (type === "magnum" && data.mensuel) {
+    const dateJ = data.mensuel.dateJ;
+    const diff = dateJ - dateNum;
+    let alertMsg = null;
+    let alertClass = '';
+
+    if (diff === 2) { alertMsg = labels.shampoo_j2; alertClass = 'warn'; }
+    else if (diff === 1) { alertMsg = labels.shampoo_j1; alertClass = 'warn'; }
+    else if (diff === 0) { alertMsg = labels.shampoo_j0; alertClass = 'urgent'; }
+
+    if (alertMsg) {
+      const alertEl = document.createElement('div');
+      alertEl.style.cssText = alertClass === 'urgent'
+        ? 'background:#7f1d1d;border:2px solid #ef4444;border-radius:14px;padding:18px;margin-bottom:16px;text-align:center;font-weight:700;font-size:1rem;color:#fca5a5;'
+        : 'background:rgba(250,219,216,0.15);border:2px solid #f97316;border-radius:14px;padding:16px;margin-bottom:16px;text-align:center;font-weight:600;font-size:0.92rem;color:#fb923c;';
+      alertEl.textContent = alertMsg;
+      excArea.appendChild(alertEl);
+    }
+  }
+
+  // ---- TÂCHE HEBDO DU JOUR ----
+  const tacheHebdo = data.hebdo[jour];
+  if (tacheHebdo) {
+    const block = document.createElement('div');
+    block.style.cssText = 'background:rgba(168,213,220,0.1);border:1px solid rgba(168,213,220,0.3);border-radius:14px;padding:16px;margin-bottom:16px;';
+    const h = document.createElement('div');
+    h.style.cssText = 'font-size:0.75rem;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,0.4);margin-bottom:8px;';
+    h.textContent = labels.hebdo_title;
+    const t = document.createElement('div');
+    t.style.cssText = 'font-size:1rem;font-weight:600;color:var(--bleu);';
+    t.textContent = tacheHebdo;
+    block.appendChild(h);
+    block.appendChild(t);
+    excArea.appendChild(block);
+  }
+
+  // ---- TÂCHES QUOTIDIENNES ----
+  const dailyBlock = document.createElement('div');
+  dailyBlock.className = 'daily-block';
+  const dailyHeader = document.createElement('div');
+  dailyHeader.className = 'daily-header';
+  dailyHeader.textContent = labels.daily_title;
+  dailyBlock.appendChild(dailyHeader);
+
+  for (const item of data.quotidien) {
+    const row = document.createElement('div');
+    row.className = 'daily-task';
+    row.innerHTML = `<div class="task-bullet"></div><span style="flex:1">${item.tache}</span><span style="font-size:0.75rem;color:rgba(255,255,255,0.3);margin-left:8px;">${item.heure}</span>`;
+    dailyBlock.appendChild(row);
+  }
+
+  dailyArea.appendChild(dailyBlock);
+  document.getElementById('checklist-wrap').style.display = 'block';
+}
+
 function afficherChecklist(lang) {
   lang = lang || currentLang;
+
+  // Router vers la checklist resto si applicable
+  const siteType = getSiteType();
+  if (siteType === "grillroom" || siteType === "magnum") {
+    afficherChecklistResto(lang, siteType);
+    return;
+  }
+
   const now = new Date();
   const freqs = getFrequencesActives(now);
   const t = T[lang];
