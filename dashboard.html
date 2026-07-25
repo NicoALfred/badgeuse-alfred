@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alfred — Dashboard</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap');
+
+  :root {
+    --bleu: #A8D5DC;
+    --orange: #E8703A;
+    --noir: #111111;
+    --surface: #1C1C1C;
+    --surface2: #242424;
+    --border: rgba(255,255,255,0.07);
+    --blanc: #F8F6F2;
+    --gris: rgba(255,255,255,0.4);
+    --vert: #81C784;
+    --rouge: #E57373;
+    --jaune: #FFD54F;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--noir);
+    color: var(--blanc);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    padding: 20px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: var(--noir);
+    z-index: 100;
+  }
+
+  .logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.6rem;
+    color: var(--bleu);
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .live-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    color: var(--vert);
+    background: rgba(129,199,132,0.1);
+    border: 1px solid rgba(129,199,132,0.2);
+    padding: 4px 10px;
+    border-radius: 20px;
+  }
+
+  .live-dot {
+    width: 6px; height: 6px;
+    background: var(--vert);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .last-update {
+    font-size: 0.75rem;
+    color: var(--gris);
+  }
+
+  .refresh-btn {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--gris);
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .refresh-btn:hover { color: var(--blanc); border-color: rgba(255,255,255,0.2); }
+
+  /* TABS */
+  .tabs {
+    display: flex;
+    gap: 0;
+    padding: 0 32px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .tab {
+    padding: 14px 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--gris);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s;
+  }
+  .tab:hover { color: var(--blanc); }
+  .tab.active { color: var(--bleu); border-bottom-color: var(--bleu); }
+
+  /* MAIN */
+  main { padding: 28px 32px; max-width: 1200px; margin: 0 auto; }
+
+  /* STATS ROW */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+  }
+
+  .stat-label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--gris);
+    margin-bottom: 8px;
+  }
+
+  .stat-value {
+    font-size: 2rem;
+    font-weight: 600;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .stat-sub {
+    font-size: 0.75rem;
+    color: var(--gris);
+  }
+
+  .stat-value.vert { color: var(--vert); }
+  .stat-value.orange { color: var(--orange); }
+  .stat-value.rouge { color: var(--rouge); }
+  .stat-value.bleu { color: var(--bleu); }
+
+  /* SECTION */
+  .section-title {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--gris);
+    margin-bottom: 12px;
+  }
+
+  /* AGENT CARDS */
+  .agents-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .agent-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    transition: border-color 0.15s;
+  }
+  .agent-card:hover { border-color: rgba(255,255,255,0.15); }
+
+  .agent-card.on-site { border-color: rgba(168,213,220,0.3); }
+  .agent-card.alerte { border-color: rgba(229,115,115,0.3); }
+
+  .agent-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+
+  .agent-name {
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+
+  .agent-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+
+  .agent-status.on-site {
+    background: rgba(168,213,220,0.1);
+    color: var(--bleu);
+    border: 1px solid rgba(168,213,220,0.2);
+  }
+
+  .agent-status.done {
+    background: rgba(129,199,132,0.1);
+    color: var(--vert);
+    border: 1px solid rgba(129,199,132,0.2);
+  }
+
+  .agent-status.idle {
+    background: rgba(255,255,255,0.05);
+    color: var(--gris);
+    border: 1px solid var(--border);
+  }
+
+  .agent-status.alerte {
+    background: rgba(229,115,115,0.1);
+    color: var(--rouge);
+    border: 1px solid rgba(229,115,115,0.2);
+  }
+
+  .agent-badges {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .badge-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    background: var(--surface2);
+    border-radius: 10px;
+    font-size: 0.82rem;
+  }
+
+  .badge-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .badge-dot.arrivee { background: var(--bleu); }
+  .badge-dot.depart { background: var(--orange); }
+  .badge-dot.alerte { background: var(--rouge); }
+
+  .badge-site {
+    flex: 1;
+    color: rgba(255,255,255,0.7);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .badge-time {
+    color: var(--gris);
+    font-size: 0.75rem;
+    flex-shrink: 0;
+  }
+
+  .badge-duree {
+    font-size: 0.72rem;
+    padding: 2px 6px;
+    border-radius: 6px;
+    flex-shrink: 0;
+  }
+  .badge-duree.ok { background: rgba(129,199,132,0.15); color: var(--vert); }
+  .badge-duree.insuffisant { background: rgba(229,115,115,0.15); color: var(--rouge); }
+  .badge-duree.en-cours { background: rgba(168,213,220,0.15); color: var(--bleu); }
+
+  .no-badges {
+    font-size: 0.82rem;
+    color: var(--gris);
+    text-align: center;
+    padding: 12px;
+  }
+
+  /* MONTHLY TABLE */
+  .monthly-table {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 28px;
+  }
+
+  .monthly-table table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .monthly-table th {
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--gris);
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .monthly-table td {
+    padding: 12px 16px;
+    font-size: 0.85rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .monthly-table tr:last-child td { border-bottom: none; }
+  .monthly-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+  .progress-bar {
+    height: 4px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-top: 4px;
+  }
+
+  .progress-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.3s;
+  }
+  .progress-fill.ok { background: var(--vert); }
+  .progress-fill.warn { background: var(--jaune); }
+  .progress-fill.bad { background: var(--rouge); }
+
+  .pill {
+    display: inline-block;
+    font-size: 0.72rem;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+  }
+  .pill.ok { background: rgba(129,199,132,0.15); color: var(--vert); }
+  .pill.warn { background: rgba(255,213,79,0.15); color: var(--jaune); }
+  .pill.bad { background: rgba(229,115,115,0.15); color: var(--rouge); }
+  .pill.pending { background: rgba(255,255,255,0.05); color: var(--gris); }
+
+  /* LOADING */
+  .loading {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--gris);
+    font-size: 0.9rem;
+  }
+
+  .spinner {
+    display: inline-block;
+    width: 20px; height: 20px;
+    border: 2px solid var(--border);
+    border-top-color: var(--bleu);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-bottom: 12px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ERROR */
+  .error-banner {
+    background: rgba(229,115,115,0.1);
+    border: 1px solid rgba(229,115,115,0.2);
+    border-radius: 12px;
+    padding: 16px 20px;
+    color: var(--rouge);
+    font-size: 0.85rem;
+    margin-bottom: 20px;
+    display: none;
+  }
+
+  /* TABS CONTENT */
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* Alerte dépassement */
+  .alerte-banner {
+    background: rgba(229,115,115,0.08);
+    border: 1px solid rgba(229,115,115,0.2);
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    font-size: 0.82rem;
+    color: var(--rouge);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 40px;
+    color: var(--gris);
+    font-size: 0.85rem;
+  }
+
+  @media (max-width: 768px) {
+    header { padding: 16px; }
+    main { padding: 16px; }
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+    .tabs { padding: 0 16px; overflow-x: auto; }
+    .agents-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Alfred</div>
+  <div class="header-right">
+    <div class="live-badge"><div class="live-dot"></div> Live</div>
+    <span class="last-update" id="last-update">—</span>
+    <button class="refresh-btn" onclick="loadData()">↻ Actualiser</button>
+  </div>
+</header>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('today')">Aujourd'hui</div>
+  <div class="tab" onclick="switchTab('month')">Ce mois</div>
+</div>
+
+<main>
+  <div class="error-banner" id="error-banner">⚠️ Impossible de charger les données. Vérifiez votre connexion.</div>
+
+  <!-- AUJOURD'HUI -->
+  <div class="tab-content active" id="tab-today">
+    <div class="stats-row" id="stats-today">
+      <div class="stat-card">
+        <div class="stat-label">Sur site</div>
+        <div class="stat-value bleu" id="stat-onsite">—</div>
+        <div class="stat-sub">en ce moment</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Terminé</div>
+        <div class="stat-value vert" id="stat-done">—</div>
+        <div class="stat-sub">passages complétés</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Pas encore badgé</div>
+        <div class="stat-value" style="color:var(--gris)" id="stat-idle">—</div>
+        <div class="stat-sub">agents</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Alertes</div>
+        <div class="stat-value rouge" id="stat-alerts">—</div>
+        <div class="stat-sub">durées insuffisantes</div>
+      </div>
+    </div>
+
+    <div class="section-title">Agents — <span id="date-today"></span></div>
+    <div id="agents-today">
+      <div class="loading"><div class="spinner"></div><br>Chargement...</div>
+    </div>
+  </div>
+
+  <!-- CE MOIS -->
+  <div class="tab-content" id="tab-month">
+    <div class="section-title" id="month-title">Mois en cours</div>
+    <div id="month-content">
+      <div class="loading"><div class="spinner"></div><br>Chargement...</div>
+    </div>
+  </div>
+</main>
+
+<script>
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby5GfqDkVWSoNOolviOccT70_kBD8gP00jqiLPQezhqyyJaE4SZqhMOnvjuISoBu2UA/exec";
+
+const SITE_MIN = {
+  "19 Rue Daru": 60,
+  "236 Rue du Faubourg St Martin, 75010 Paris": 119,
+  "17 Rue du Faubourg Montmartre, 75009 Paris": 89,
+  "21 Rue St Marc, 75002 Paris": 362,
+  "14 Rue de la Pépinière, 75008 Paris": 89,
+  "165 Boulevard Haussmann, 75008 Paris": 60,
+  "70 Rue du Fbg Poissonière, 75002 Paris": 89,
+  "7 Rue Louis Murat, 75008 Paris": 89,
+  "10 Blv Malesherbes, 75008 Paris": 179,
+  "30 Rue de Lisbonne, 75008 Paris": 120,
+  "74 Boulevard de Sébastopol, 75003 Paris": 60,
+  "17 Rue du Colisée, 75008 Paris": 28,
+  "18 Rue Treillard, 75008 Paris": 177,
+  "81 Rue Raymond Poincarré, 75016 Paris": 119,
+  "25 Rue d'Alsace, 75010 Paris": 83,
+  "33 Rue d'Amsterdam, 75008 Paris": 60,
+  "41 rue de Villiers, 92200 Neuilly Sur Seine": 168,
+  "12 Place de la Bastille, 75012 Paris": 60,
+  "18 Rue d'Arras, 92000 Nanterre": 453,
+  "44 Rue Lucien Sampaix, 75010 Paris": 89,
+  "8 Rue du Faubourg Poissonière, 75010 Paris": 60,
+  "65 Rue d'Amsterdam, 75009 Paris": 120,
+  "10 Rue Nicolas Appert, 75011 Paris": 120,
+  "7 Boulevard Malesherbes, 75008 Paris": 60,
+  "61 Rue Douai, 75009 Paris": 60,
+  "61 Rue de Douai, 75009 Paris": 89,
+  "4 Rue de Berri, 75008 Paris": 120,
+  "122 Haussmann, 75008 Paris": 45,
+  "32 Bis Haussmann, 75008 Paris": 48,
+  "177 Avenue Achille Peretti, 92200 Neuilly": 90,
+  "76 Avenue des Champs Élysées, 75008 Paris": 60,
+  "15 Rue du Louvre, 75001 Paris": 60,
+  "31 Rue Tronchet, 75008 Paris": 120,
+  "17 Rue Louis Rouquier, 92300 Neuilly sur Seine": 72,
+  "9 Passage Dubail, 75010 Paris": 90,
+  "142 Rue Montmartre 75002 Paris": 120,
+  "Magnum 150cl — 1 Rue de Phalsbourg, 75017 Paris": 60,
+  "The Grill Room — 103 Bd Malesherbes, 75008 Paris": 60,
+};
+
+const TOLERANCE = 15; // minutes de tolérance
+const ALERTE_SITE_H = 3; // heures avant alerte si pas de départ
+
+let allAgents = [];
+let logData = [];
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', ['today','month'][i] === tab));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+}
+
+function formatTime(ts) {
+  if (!ts) return '—';
+  const d = new Date(ts);
+  return d.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
+}
+
+function formatDuree(min) {
+  if (!min && min !== 0) return null;
+  const h = Math.floor(min / 60);
+  const m = min % 60;
+  return h > 0 ? `${h}h${String(m).padStart(2,'0')}` : `${m}min`;
+}
+
+function isToday(ts) {
+  if (!ts) return false;
+  const d = new Date(ts);
+  const now = new Date();
+  return d.getDate() === now.getDate() &&
+    d.getMonth() === now.getMonth() &&
+    d.getFullYear() === now.getFullYear();
+}
+
+function isThisMonth(ts) {
+  if (!ts) return false;
+  const d = new Date(ts);
+  const now = new Date();
+  return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+}
+
+function parseTS(ts) {
+  if (!ts) return null;
+  if (ts instanceof Date) return ts;
+  // Format "dd/mm/yyyy, hh:mm:ss" ou "dd/mm/yyyy hh:mm:ss"
+  const m = String(ts).match(/(\d{2})\/(\d{2})\/(\d{4}),?\s+(\d{2}:\d{2}:\d{2})/);
+  if (m) return new Date(`${m[3]}-${m[2]}-${m[1]}T${m[4]}`);
+  return new Date(ts);
+}
+
+async function loadData() {
+  document.getElementById('last-update').textContent = 'Chargement...';
+  document.getElementById('error-banner').style.display = 'none';
+
+  try {
+    // Charge agents depuis doGet
+    const res = await fetch(SCRIPT_URL);
+    const data = await res.json();
+    allAgents = data.agents || [];
+
+    // Charge LOG depuis doGet avec param
+    const resLog = await fetch(SCRIPT_URL + '?action=log');
+    const dataLog = await resLog.json();
+    logData = dataLog.log || [];
+
+    renderToday();
+    renderMonth();
+
+    const now = new Date();
+    document.getElementById('last-update').textContent =
+      'Mis à jour à ' + now.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
+
+  } catch(err) {
+    document.getElementById('error-banner').style.display = 'block';
+    document.getElementById('last-update').textContent = 'Erreur';
+  }
+}
+
+function renderToday() {
+  const now = new Date();
+  document.getElementById('date-today').textContent =
+    now.toLocaleDateString('fr-FR', {weekday:'long', day:'numeric', month:'long'});
+
+  // Filtre badges du jour
+  const todayLog = logData.filter(r => isToday(parseTS(r.timestamp)));
+
+  // Par agent : ses badges du jour
+  const agentBadges = {};
+  allAgents.forEach(a => { agentBadges[a] = []; });
+  todayLog.forEach(r => {
+    if (!agentBadges[r.agent]) agentBadges[r.agent] = [];
+    agentBadges[r.agent].push(r);
+  });
+
+  // Stats
+  let onSite = 0, done = 0, idle = 0, alerts = 0;
+
+  allAgents.forEach(agent => {
+    const badges = agentBadges[agent] || [];
+    const lastBadge = badges[badges.length - 1];
+    const hasArrivee = badges.some(b => b.action === 'Arrivée');
+    const lastIsArrivee = lastBadge && lastBadge.action === 'Arrivée';
+    const hasInsufficiant = badges.some(b => b.statut && b.statut.includes('Insuffisant'));
+
+    if (badges.length === 0) idle++;
+    else if (lastIsArrivee) onSite++;
+    else done++;
+    if (hasInsufficiant) alerts++;
+  });
+
+  document.getElementById('stat-onsite').textContent = onSite;
+  document.getElementById('stat-done').textContent = done;
+  document.getElementById('stat-idle').textContent = idle;
+  document.getElementById('stat-alerts').textContent = alerts;
+
+  // Render agent cards
+  const container = document.getElementById('agents-today');
+  container.innerHTML = '';
+  const grid = document.createElement('div');
+  grid.className = 'agents-grid';
+
+  // Tri : sur site en premier, puis terminé, puis idle
+  const sorted = [...allAgents].sort((a, b) => {
+    const getScore = (ag) => {
+      const badges = agentBadges[ag] || [];
+      if (badges.length === 0) return 3;
+      const last = badges[badges.length-1];
+      if (last.action === 'Arrivée') return 1;
+      return 2;
+    };
+    return getScore(a) - getScore(b);
+  });
+
+  sorted.forEach(agent => {
+    const badges = agentBadges[agent] || [];
+    const lastBadge = badges[badges.length - 1];
+    const lastIsArrivee = lastBadge && lastBadge.action === 'Arrivée';
+    const hasAlerte = badges.some(b => b.statut && b.statut.includes('Insuffisant'));
+
+    // Vérifie si sur site depuis trop longtemps
+    let alerteTemps = false;
+    if (lastIsArrivee) {
+      const arrTs = parseTS(lastBadge.timestamp);
+      const diffH = (new Date() - arrTs) / 3600000;
+      if (diffH > ALERTE_SITE_H) alerteTemps = true;
+    }
+
+    const card = document.createElement('div');
+    card.className = 'agent-card' +
+      (lastIsArrivee ? ' on-site' : '') +
+      (hasAlerte || alerteTemps ? ' alerte' : '');
+
+    // Header
+    let statusClass = 'idle', statusText = '⚪ Pas encore badgé';
+    if (lastIsArrivee) {
+      if (alerteTemps) { statusClass = 'alerte'; statusText = '⚠️ Sur site depuis longtemps'; }
+      else { statusClass = 'on-site'; statusText = '🟢 Sur site'; }
+    } else if (badges.length > 0) {
+      statusClass = 'done'; statusText = '✅ Terminé';
+    }
+
+    card.innerHTML = `
+      <div class="agent-header">
+        <div class="agent-name">${agent}</div>
+        <div class="agent-status ${statusClass}">${statusText}</div>
+      </div>
+      <div class="agent-badges" id="badges-${agent.replace(/\s/g,'_')}"></div>
+    `;
+
+    grid.appendChild(card);
+
+    const badgesContainer = card.querySelector('.agent-badges');
+
+    if (badges.length === 0) {
+      badgesContainer.innerHTML = '<div class="no-badges">Aucun badge aujourd\'hui</div>';
+    } else {
+      // Groupe par paires arrivée/départ
+      const pairs = [];
+      let currentArrivee = null;
+      badges.forEach(b => {
+        if (b.action === 'Arrivée') {
+          currentArrivee = b;
+        } else if (b.action === 'Départ' && currentArrivee) {
+          pairs.push({ arrivee: currentArrivee, depart: b });
+          currentArrivee = null;
+        }
+      });
+      if (currentArrivee) pairs.push({ arrivee: currentArrivee, depart: null });
+
+      pairs.forEach(pair => {
+        const site = pair.arrivee.site || '—';
+        const shortSite = site.split(',')[0];
+        const dureeMin = pair.depart ? parseFloat(pair.depart.duree_min) || 0 : null;
+        const minRequis = (SITE_MIN[site] || 60) - TOLERANCE;
+        const isOk = dureeMin !== null ? dureeMin >= minRequis : null;
+        const enCours = pair.depart === null;
+
+        const row = document.createElement('div');
+        row.className = 'badge-row';
+
+        let dureeHTML = '';
+        if (enCours) {
+          const diff = Math.round((new Date() - parseTS(pair.arrivee.timestamp)) / 60000);
+          dureeHTML = `<span class="badge-duree en-cours">${formatDuree(diff)} ⏱</span>`;
+        } else if (isOk !== null) {
+          dureeHTML = `<span class="badge-duree ${isOk ? 'ok' : 'insuffisant'}">${formatDuree(dureeMin)}</span>`;
+        }
+
+        row.innerHTML = `
+          <div class="badge-dot ${enCours ? 'arrivee' : (isOk ? 'depart' : 'alerte')}"></div>
+          <div class="badge-site" title="${site}">${shortSite}</div>
+          <div class="badge-time">${formatTime(pair.arrivee.timestamp)}${pair.depart ? ' → ' + formatTime(pair.depart.timestamp) : ' →'}</div>
+          ${dureeHTML}
+        `;
+        badgesContainer.appendChild(row);
+      });
+    }
+  });
+
+  container.appendChild(grid);
+}
+
+function renderMonth() {
+  const now = new Date();
+  const nomMois = now.toLocaleDateString('fr-FR', {month:'long', year:'numeric'});
+  document.getElementById('month-title').textContent =
+    nomMois.charAt(0).toUpperCase() + nomMois.slice(1);
+
+  // Filtre badges du mois
+  const monthLog = logData.filter(r => isThisMonth(parseTS(r.timestamp)));
+
+  // Heures réelles par agent
+  const hReelles = {};
+  const alertesAgent = {};
+  allAgents.forEach(a => { hReelles[a] = 0; alertesAgent[a] = 0; });
+
+  monthLog.forEach(r => {
+    if (r.action === 'Départ') {
+      const min = parseFloat(r.duree_min) || 0;
+      if (!hReelles[r.agent]) hReelles[r.agent] = 0;
+      hReelles[r.agent] += min / 60;
+
+      const minRequis = (SITE_MIN[r.site] || 60) - TOLERANCE;
+      if (min < minRequis) {
+        if (!alertesAgent[r.agent]) alertesAgent[r.agent] = 0;
+        alertesAgent[r.agent]++;
+      }
+    }
+  });
+
+  const container = document.getElementById('month-content');
+  container.innerHTML = '';
+
+  // Table
+  const tableWrap = document.createElement('div');
+  tableWrap.className = 'monthly-table';
+
+  const table = document.createElement('table');
+  table.innerHTML = `
+    <thead>
+      <tr>
+        <th>Agent</th>
+        <th>H. Réelles</th>
+        <th>Passages</th>
+        <th>Alertes durée</th>
+        <th>Statut</th>
+      </tr>
+    </thead>
+    <tbody id="month-tbody"></tbody>
+  `;
+  tableWrap.appendChild(table);
+  container.appendChild(tableWrap);
+
+  const tbody = table.querySelector('#month-tbody');
+
+  // Compte passages par agent
+  const passages = {};
+  allAgents.forEach(a => { passages[a] = 0; });
+  monthLog.forEach(r => {
+    if (r.action === 'Départ') {
+      if (!passages[r.agent]) passages[r.agent] = 0;
+      passages[r.agent]++;
+    }
+  });
+
+  allAgents.forEach(agent => {
+    const h = Math.round(hReelles[agent] * 100) / 100;
+    const p = passages[agent] || 0;
+    const al = alertesAgent[agent] || 0;
+
+    let statut, pillClass;
+    if (p === 0) { statut = '⏳ Aucun badge'; pillClass = 'pending'; }
+    else if (al === 0) { statut = '✅ OK'; pillClass = 'ok'; }
+    else if (al <= 2) { statut = '⚠️ Quelques alertes'; pillClass = 'warn'; }
+    else { statut = '🔴 Nombreuses alertes'; pillClass = 'bad'; }
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><strong>${agent}</strong></td>
+      <td>
+        <div style="font-weight:600">${h.toFixed(2)}h</div>
+      </td>
+      <td>${p} passage${p > 1 ? 's' : ''}</td>
+      <td>${al > 0 ? `<span style="color:var(--rouge)">${al} ⚠️</span>` : '<span style="color:var(--gris)">—</span>'}</td>
+      <td><span class="pill ${pillClass}">${statut}</span></td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  // Note Skello
+  const note = document.createElement('div');
+  note.style.cssText = 'margin-top:16px;font-size:0.78rem;color:var(--gris);text-align:center;';
+  note.textContent = '💡 Les heures planifiées Skello seront disponibles après l\'export mensuel';
+  container.appendChild(note);
+}
+
+// Auto-refresh toutes les 2 minutes
+loadData();
+setInterval(loadData, 120000);
+</script>
+</body>
+</html>
