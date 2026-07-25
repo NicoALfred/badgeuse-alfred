@@ -409,6 +409,38 @@
     font-size: 0.85rem;
   }
 
+
+  .date-picker-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .date-input {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 14px;
+    color: var(--blanc);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+  .date-input:focus { outline: none; border-color: var(--bleu); }
+  .date-shortcut {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 12px;
+    color: var(--gris);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .date-shortcut:hover { color: var(--blanc); border-color: rgba(255,255,255,0.2); }
+  .date-shortcut.active { color: var(--bleu); border-color: var(--bleu); background: rgba(168,213,220,0.08); }
   @media (max-width: 768px) {
     header { padding: 16px; }
     main { padding: 16px; }
@@ -442,6 +474,7 @@
 <div class="tabs">
   <div class="tab active" onclick="switchTab('today')">Aujourd'hui</div>
   <div class="tab" onclick="switchTab('month')">Ce mois</div>
+  <div class="tab" onclick="switchTab('date')">Par date</div>
 </div>
 
 <main>
@@ -484,6 +517,17 @@
     <div id="month-content">
       <div class="loading"><div class="spinner"></div><br>Chargement...</div>
     </div>
+  </div>
+  <!-- PAR DATE -->
+  <div class="tab-content" id="tab-date">
+    <div class="date-picker-wrap">
+      <input type="date" class="date-input" id="date-picker" onchange="onDateChange()">
+      <button class="date-shortcut active" id="sc-today" onclick="setDateShortcut('today')">Aujourd'hui</button>
+      <button class="date-shortcut" id="sc-yesterday" onclick="setDateShortcut('yesterday')">Hier</button>
+      <button class="date-shortcut" id="sc-week" onclick="setDateShortcut('week')">7 derniers jours</button>
+    </div>
+    <div class="section-title" id="date-section-title">Sélectionne une date</div>
+    <div id="date-content"><div class="empty-state">Sélectionne une date ci-dessus</div></div>
   </div>
 </main>
 
@@ -538,9 +582,170 @@ let allAgents = [];
 let logData = [];
 
 function switchTab(tab) {
-  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', ['today','month'][i] === tab));
+  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', ['today','month','date'][i] === tab));
   document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
   document.getElementById('tab-' + tab).classList.add('active');
+  if (tab === 'date') {
+    const picker = document.getElementById('date-picker');
+    if (!picker.value) {
+      picker.value = new Date().toISOString().split('T')[0];
+      document.getElementById('sc-today').classList.add('active');
+    }
+    renderDate();
+  }
+}
+
+let currentDateMode = 'today';
+
+function setDateShortcut(type) {
+  document.querySelectorAll('.date-shortcut').forEach(b => b.classList.remove('active'));
+  document.getElementById('sc-' + type).classList.add('active');
+  currentDateMode = type;
+  const now = new Date();
+  const picker = document.getElementById('date-picker');
+  if (type === 'today') {
+    picker.value = now.toISOString().split('T')[0];
+  } else if (type === 'yesterday') {
+    const y = new Date(now); y.setDate(y.getDate() - 1);
+    picker.value = y.toISOString().split('T')[0];
+  } else if (type === 'week') {
+    const w = new Date(now); w.setDate(w.getDate() - 6);
+    picker.value = w.toISOString().split('T')[0];
+  }
+  renderDate();
+}
+
+function onDateChange() {
+  currentDateMode = 'custom';
+  document.querySelectorAll('.date-shortcut').forEach(b => b.classList.remove('active'));
+  renderDate();
+}
+
+function renderDate() {
+  const picker = document.getElementById('date-picker');
+  const val = picker.value;
+  if (!val) return;
+  const [year, month, day] = val.split('-').map(Number);
+  const startDate = new Date(year, month - 1, day);
+
+  let filteredLog, titleText;
+  if (currentDateMode === 'week') {
+    const endDate = new Date(startDate);
+    endDate.setDate(endDate.getDate() + 6);
+    filteredLog = logData.filter(r => {
+      const d = parseTS(r.timestamp);
+      return d && d >= startDate && d < new Date(endDate.getTime() + 86400000);
+    });
+    titleText = 'Du ' + startDate.toLocaleDateString('fr-FR', {day:'numeric', month:'long'}) +
+      ' au ' + endDate.toLocaleDateString('fr-FR', {day:'numeric', month:'long', year:'numeric'});
+  } else {
+    filteredLog = logData.filter(r => {
+      const d = parseTS(r.timestamp);
+      return d && d.getFullYear() === year && d.getMonth() === month - 1 && d.getDate() === day;
+    });
+    titleText = startDate.toLocaleDateString('fr-FR', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+  }
+
+  const cap = titleText.charAt(0).toUpperCase() + titleText.slice(1);
+  document.getElementById('date-section-title').textContent = cap;
+
+  const container = document.getElementById('date-content');
+  container.innerHTML = '';
+
+  const passages = filteredLog.filter(r => r.action === 'Depart' || r.action === 'Départ').length;
+  const alertes = filteredLog.filter(r => r.statut && r.statut.includes('Insuffisant')).length;
+  const agentsActifs = [...new Set(filteredLog.map(r => r.agent))].filter(Boolean).length;
+  const totalMin = filteredLog
+    .filter(r => r.action === 'Départ' || r.action === 'Depart')
+    .reduce((s, r) => s + (parseFloat(r.duree_min) || 0), 0);
+
+  const statsDiv = document.createElement('div');
+  statsDiv.className = 'stats-row';
+  statsDiv.style.marginBottom = '24px';
+  statsDiv.innerHTML =
+    '<div class="stat-card"><div class="stat-label">Agents actifs</div><div class="stat-value bleu">' + agentsActifs + '</div></div>' +
+    '<div class="stat-card"><div class="stat-label">Passages</div><div class="stat-value vert">' + passages + '</div></div>' +
+    '<div class="stat-card"><div class="stat-label">Heures totales</div><div class="stat-value" style="color:var(--blanc)">' + (totalMin/60).toFixed(1) + 'h</div></div>' +
+    '<div class="stat-card"><div class="stat-label">Alertes</div><div class="stat-value rouge">' + alertes + '</div></div>';
+  container.appendChild(statsDiv);
+
+  if (filteredLog.length === 0) {
+    const empty = document.createElement('div');
+    empty.className = 'empty-state';
+    empty.textContent = 'Aucun badge pour cette période';
+    container.appendChild(empty);
+    return;
+  }
+
+  const agentBadges = {};
+  allAgents.forEach(a => { agentBadges[a] = []; });
+  filteredLog.forEach(r => {
+    if (r.agent && !agentBadges[r.agent]) agentBadges[r.agent] = [];
+    if (r.agent) agentBadges[r.agent].push(r);
+  });
+
+  const grid = document.createElement('div');
+  grid.className = 'agents-grid';
+
+  allAgents.forEach(function(agent) {
+    const badges = agentBadges[agent] || [];
+    if (badges.length === 0) return;
+    const hasAlerte = badges.some(b => b.statut && b.statut.includes('Insuffisant'));
+    const card = document.createElement('div');
+    card.className = 'agent-card' + (hasAlerte ? ' alerte' : '');
+
+    const pairs = [];
+    let currentArrivee = null;
+    badges.forEach(b => {
+      if (b.action === 'Arrivée') { currentArrivee = b; }
+      else if ((b.action === 'Départ' || b.action === 'Depart') && currentArrivee) {
+        pairs.push({ arrivee: currentArrivee, depart: b });
+        currentArrivee = null;
+      }
+    });
+    if (currentArrivee) pairs.push({ arrivee: currentArrivee, depart: null });
+
+    const totalH = badges
+      .filter(b => b.action === 'Départ' || b.action === 'Depart')
+      .reduce((s, b) => s + (parseFloat(b.duree_min) || 0), 0) / 60;
+
+    card.innerHTML =
+      '<div class="agent-header">' +
+        '<div class="agent-name">' + agent + '</div>' +
+        '<div class="agent-status ' + (hasAlerte ? 'alerte' : 'done') + '">' +
+          (hasAlerte ? '⚠️ Alerte' : '✅ OK') + ' · ' + totalH.toFixed(2) + 'h' +
+        '</div>' +
+      '</div>' +
+      '<div class="agent-badges" id="dbadges-' + agent.replace(/ /g, '_') + '"></div>';
+    grid.appendChild(card);
+
+    const bc = card.querySelector('#dbadges-' + agent.replace(/ /g, '_'));
+    pairs.forEach(function(pair) {
+      const site = pair.arrivee.site || '—';
+      const shortSite = site.split(',')[0];
+      const dureeMin = pair.depart ? parseFloat(pair.depart.duree_min) || 0 : null;
+      const minRequis = (SITE_MIN[site] || 60) - TOLERANCE;
+      const isOk = dureeMin !== null ? dureeMin >= minRequis : null;
+      const enCours = pair.depart === null;
+      const showDate = currentDateMode === 'week';
+      const datePrefix = showDate ? parseTS(pair.arrivee.timestamp).toLocaleDateString('fr-FR', {weekday:'short', day:'numeric'}) + ' · ' : '';
+
+      let dureeHTML = '';
+      if (enCours) dureeHTML = '<span class="badge-duree en-cours">En cours</span>';
+      else if (isOk !== null) dureeHTML = '<span class="badge-duree ' + (isOk ? 'ok' : 'insuffisant') + '">' + formatDuree(dureeMin) + '</span>';
+
+      const row = document.createElement('div');
+      row.className = 'badge-row';
+      row.innerHTML =
+        '<div class="badge-dot ' + (enCours ? 'arrivee' : (isOk ? 'depart' : 'alerte')) + '"></div>' +
+        '<div class="badge-site" title="' + site + '">' + datePrefix + shortSite + '</div>' +
+        '<div class="badge-time">' + formatTime(pair.arrivee.timestamp) + (pair.depart ? ' → ' + formatTime(pair.depart.timestamp) : ' →') + '</div>' +
+        dureeHTML;
+      bc.appendChild(row);
+    });
+  });
+
+  container.appendChild(grid);
 }
 
 function formatTime(ts) {
