@@ -929,17 +929,20 @@ const TUSHAR_NAME = "Tushar";
 function updateTusharBtn() {
   const btn = document.getElementById('tushar-btn');
   if (!btn) return;
-  // Affiche le bouton uniquement si Tushar est sélectionné
   if (selectedAgent && selectedAgent.toLowerCase().includes('tushar')) {
-    btn.style.display = 'block';
+    btn.classList.add('visible');
   } else {
-    btn.style.display = 'none';
+    btn.classList.remove('visible');
   }
 }
 
 async function openTusharTasks() {
+  const lang = currentLang || 'fr';
+  const titles = { fr: '📋 Tâches de la semaine', en: '📋 Tasks of the week', bn: '📋 এই সপ্তাহের কাজ' };
+  const loadings = { fr: '⏳ Chargement des tâches...', en: '⏳ Loading tasks...', bn: '⏳ লোড হচ্ছে...' };
+  document.getElementById('tushar-modal-title').textContent = titles[lang] || titles.fr;
   document.getElementById('tushar-modal').classList.add('visible');
-  document.getElementById('tushar-content').innerHTML = '<div class="tushar-loading">⏳ Chargement des tâches...</div>';
+  document.getElementById('tushar-content').innerHTML = '<div class="tushar-loading">' + (loadings[lang] || loadings.fr) + '</div>';
 
   try {
     const res = await fetch(SCRIPT_URL + '?action=tushar');
@@ -957,52 +960,97 @@ function closeTusharTasks() {
 
 function renderTusharTasks(tasks) {
   const container = document.getElementById('tushar-content');
+  const lang = currentLang || 'fr';
+
+  const TT = {
+    fr: { empty: '✅ Aucune tâche en cours.', subtitle: 'Tâches à effectuer cette semaine', cafe: '☕ Cafés & consommables', autre: '📦 Autres tâches', sites: 'site', sitePlural: 'sites' },
+    en: { empty: '✅ No tasks at the moment.', subtitle: 'Tasks for this week', cafe: '☕ Coffee & supplies', autre: '📦 Other tasks', sites: 'site', sitePlural: 'sites' },
+    bn: { empty: '✅ এই মুহূর্তে কোনো কাজ নেই।', subtitle: 'এই সপ্তাহের কাজ', cafe: '☕ কফি ও সরবরাহ', autre: '📦 অন্যান্য কাজ', sites: 'সাইট', sitePlural: 'সাইট' }
+  };
+  const t = TT[lang] || TT.fr;
 
   if (!tasks || tasks.length === 0) {
-    container.innerHTML = '<div class="tushar-empty">✅ Aucune tâche en cours.</div>';
+    container.innerHTML = '<div class="tushar-empty">' + t.empty + '</div>';
     return;
   }
 
   container.innerHTML = '';
 
+  // Sous-titre
+  const sub = document.createElement('div');
+  sub.className = 'tushar-subtitle';
+  sub.textContent = tasks.length + ' ' + (tasks.length > 1 ? t.sitePlural : t.sites) + ' — ' + t.subtitle;
+  container.appendChild(sub);
+
   for (const site of tasks) {
     const siteEl = document.createElement('div');
     siteEl.className = 'tushar-site';
 
+    // Header avec compteur
+    const cafeCount = site.items.filter(i => i.type === 'cafe').length;
+    const autreCount = site.items.filter(i => i.type !== 'cafe').length;
+    const total = site.items.length;
+
     const header = document.createElement('div');
     header.className = 'tushar-site-header';
-    header.textContent = site.adresse;
+    header.innerHTML = '📍 ' + site.adresse + '<span class="tushar-site-count">' + total + ' tâche' + (total > 1 ? 's' : '') + '</span>';
     siteEl.appendChild(header);
 
-    for (const item of site.items) {
-      const row = document.createElement('div');
-      row.className = 'tushar-item';
+    // Cafés
+    const cafeItems = site.items.filter(i => i.type === 'cafe');
+    if (cafeItems.length > 0) {
+      const typeLabel = document.createElement('div');
+      typeLabel.className = 'tushar-type-label';
+      typeLabel.textContent = t.cafe;
+      siteEl.appendChild(typeLabel);
 
-      const dot = document.createElement('div');
-      dot.className = 'tushar-item-dot ' + item.type;
-
-      const content = document.createElement('div');
-      content.className = 'tushar-item-content';
-
-      const label = document.createElement('div');
-      label.className = 'tushar-item-label';
-      label.textContent = item.label;
-      content.appendChild(label);
-
-      if (item.detail) {
-        const detail = document.createElement('div');
-        detail.className = 'tushar-item-detail';
-        detail.textContent = item.detail;
-        content.appendChild(detail);
+      for (const item of cafeItems) {
+        siteEl.appendChild(buildTusharItem(item, 'cafe'));
       }
+    }
 
-      row.appendChild(dot);
-      row.appendChild(content);
-      siteEl.appendChild(row);
+    // Autres
+    const autreItems = site.items.filter(i => i.type !== 'cafe');
+    if (autreItems.length > 0) {
+      const typeLabel = document.createElement('div');
+      typeLabel.className = 'tushar-type-label';
+      typeLabel.textContent = t.autre;
+      siteEl.appendChild(typeLabel);
+
+      for (const item of autreItems) {
+        siteEl.appendChild(buildTusharItem(item, 'autre'));
+      }
     }
 
     container.appendChild(siteEl);
   }
+}
+
+function buildTusharItem(item, type) {
+  const row = document.createElement('div');
+  row.className = 'tushar-item';
+
+  const dot = document.createElement('div');
+  dot.className = 'tushar-item-dot ' + type;
+
+  const cnt = document.createElement('div');
+  cnt.className = 'tushar-item-content';
+
+  const label = document.createElement('div');
+  label.className = 'tushar-item-label';
+  label.textContent = item.label;
+  cnt.appendChild(label);
+
+  if (item.detail) {
+    const detail = document.createElement('div');
+    detail.className = 'tushar-item-detail';
+    detail.textContent = '💬 ' + item.detail;
+    cnt.appendChild(detail);
+  }
+
+  row.appendChild(dot);
+  row.appendChild(cnt);
+  return row;
 }
 
 
@@ -1527,17 +1575,20 @@ const TUSHAR_NAME = "Tushar";
 function updateTusharBtn() {
   const btn = document.getElementById('tushar-btn');
   if (!btn) return;
-  // Affiche le bouton uniquement si Tushar est sélectionné
   if (selectedAgent && selectedAgent.toLowerCase().includes('tushar')) {
-    btn.style.display = 'block';
+    btn.classList.add('visible');
   } else {
-    btn.style.display = 'none';
+    btn.classList.remove('visible');
   }
 }
 
 async function openTusharTasks() {
+  const lang = currentLang || 'fr';
+  const titles = { fr: '📋 Tâches de la semaine', en: '📋 Tasks of the week', bn: '📋 এই সপ্তাহের কাজ' };
+  const loadings = { fr: '⏳ Chargement des tâches...', en: '⏳ Loading tasks...', bn: '⏳ লোড হচ্ছে...' };
+  document.getElementById('tushar-modal-title').textContent = titles[lang] || titles.fr;
   document.getElementById('tushar-modal').classList.add('visible');
-  document.getElementById('tushar-content').innerHTML = '<div class="tushar-loading">⏳ Chargement des tâches...</div>';
+  document.getElementById('tushar-content').innerHTML = '<div class="tushar-loading">' + (loadings[lang] || loadings.fr) + '</div>';
 
   try {
     const res = await fetch(SCRIPT_URL + '?action=tushar');
@@ -1555,52 +1606,97 @@ function closeTusharTasks() {
 
 function renderTusharTasks(tasks) {
   const container = document.getElementById('tushar-content');
+  const lang = currentLang || 'fr';
+
+  const TT = {
+    fr: { empty: '✅ Aucune tâche en cours.', subtitle: 'Tâches à effectuer cette semaine', cafe: '☕ Cafés & consommables', autre: '📦 Autres tâches', sites: 'site', sitePlural: 'sites' },
+    en: { empty: '✅ No tasks at the moment.', subtitle: 'Tasks for this week', cafe: '☕ Coffee & supplies', autre: '📦 Other tasks', sites: 'site', sitePlural: 'sites' },
+    bn: { empty: '✅ এই মুহূর্তে কোনো কাজ নেই।', subtitle: 'এই সপ্তাহের কাজ', cafe: '☕ কফি ও সরবরাহ', autre: '📦 অন্যান্য কাজ', sites: 'সাইট', sitePlural: 'সাইট' }
+  };
+  const t = TT[lang] || TT.fr;
 
   if (!tasks || tasks.length === 0) {
-    container.innerHTML = '<div class="tushar-empty">✅ Aucune tâche en cours.</div>';
+    container.innerHTML = '<div class="tushar-empty">' + t.empty + '</div>';
     return;
   }
 
   container.innerHTML = '';
 
+  // Sous-titre
+  const sub = document.createElement('div');
+  sub.className = 'tushar-subtitle';
+  sub.textContent = tasks.length + ' ' + (tasks.length > 1 ? t.sitePlural : t.sites) + ' — ' + t.subtitle;
+  container.appendChild(sub);
+
   for (const site of tasks) {
     const siteEl = document.createElement('div');
     siteEl.className = 'tushar-site';
 
+    // Header avec compteur
+    const cafeCount = site.items.filter(i => i.type === 'cafe').length;
+    const autreCount = site.items.filter(i => i.type !== 'cafe').length;
+    const total = site.items.length;
+
     const header = document.createElement('div');
     header.className = 'tushar-site-header';
-    header.textContent = site.adresse;
+    header.innerHTML = '📍 ' + site.adresse + '<span class="tushar-site-count">' + total + ' tâche' + (total > 1 ? 's' : '') + '</span>';
     siteEl.appendChild(header);
 
-    for (const item of site.items) {
-      const row = document.createElement('div');
-      row.className = 'tushar-item';
+    // Cafés
+    const cafeItems = site.items.filter(i => i.type === 'cafe');
+    if (cafeItems.length > 0) {
+      const typeLabel = document.createElement('div');
+      typeLabel.className = 'tushar-type-label';
+      typeLabel.textContent = t.cafe;
+      siteEl.appendChild(typeLabel);
 
-      const dot = document.createElement('div');
-      dot.className = 'tushar-item-dot ' + item.type;
-
-      const content = document.createElement('div');
-      content.className = 'tushar-item-content';
-
-      const label = document.createElement('div');
-      label.className = 'tushar-item-label';
-      label.textContent = item.label;
-      content.appendChild(label);
-
-      if (item.detail) {
-        const detail = document.createElement('div');
-        detail.className = 'tushar-item-detail';
-        detail.textContent = item.detail;
-        content.appendChild(detail);
+      for (const item of cafeItems) {
+        siteEl.appendChild(buildTusharItem(item, 'cafe'));
       }
+    }
 
-      row.appendChild(dot);
-      row.appendChild(content);
-      siteEl.appendChild(row);
+    // Autres
+    const autreItems = site.items.filter(i => i.type !== 'cafe');
+    if (autreItems.length > 0) {
+      const typeLabel = document.createElement('div');
+      typeLabel.className = 'tushar-type-label';
+      typeLabel.textContent = t.autre;
+      siteEl.appendChild(typeLabel);
+
+      for (const item of autreItems) {
+        siteEl.appendChild(buildTusharItem(item, 'autre'));
+      }
     }
 
     container.appendChild(siteEl);
   }
+}
+
+function buildTusharItem(item, type) {
+  const row = document.createElement('div');
+  row.className = 'tushar-item';
+
+  const dot = document.createElement('div');
+  dot.className = 'tushar-item-dot ' + type;
+
+  const cnt = document.createElement('div');
+  cnt.className = 'tushar-item-content';
+
+  const label = document.createElement('div');
+  label.className = 'tushar-item-label';
+  label.textContent = item.label;
+  cnt.appendChild(label);
+
+  if (item.detail) {
+    const detail = document.createElement('div');
+    detail.className = 'tushar-item-detail';
+    detail.textContent = '💬 ' + item.detail;
+    cnt.appendChild(detail);
+  }
+
+  row.appendChild(dot);
+  row.appendChild(cnt);
+  return row;
 }
 
 
@@ -1611,7 +1707,7 @@ applyLang();
 <div class="tushar-modal" id="tushar-modal">
   <div class="tushar-modal-inner">
     <div class="tushar-modal-header">
-      <div class="tushar-modal-title">📋 Tâches de la semaine</div>
+      <div class="tushar-modal-title" id="tushar-modal-title">📋 Tâches de la semaine</div>
       <button class="tushar-close" onclick="closeTusharTasks()">✕</button>
     </div>
     <div id="tushar-content">
