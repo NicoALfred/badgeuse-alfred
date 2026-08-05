@@ -1,303 +1,1624 @@
-const SITE_MIN = {
-  "19 Rue Daru": 60,
-  "236 Rue du Faubourg St Martin, 75010 Paris": 119,
-  "17 Rue du Faubourg Montmartre, 75009 Paris": 89,
-  "21 Rue St Marc, 75002 Paris": 362,
-  "14 Rue de la Pépinière, 75008 Paris": 89,
-  "165 Boulevard Haussmann, 75008 Paris": 60,
-  "70 Rue du Fbg Poissonière, 75002 Paris": 89,
-  "7 Rue Louis Murat, 75008 Paris": 89,
-  "10 Blv Malesherbes, 75008 Paris": 179,
-  "30 Rue de Lisbonne, 75008 Paris": 120,
-  "74 Boulevard de Sébastopol, 75003 Paris": 60,
-  "17 Rue du Colisée, 75008 Paris": 28,
-  "18 Rue Treillard, 75008 Paris": 177,
-  "81 Rue Raymond Poincarré, 75016 Paris": 119,
-  "25 Rue d'Alsace, 75010 Paris": 83,
-  "33 Rue d'Amsterdam, 75008 Paris": 60,
-  "41 rue de Villiers, 92200 Neuilly Sur Seine": 168,
-  "12 Place de la Bastille, 75012 Paris": 60,
-  "18 Rue d'Arras, 92000 Nanterre": 453,
-  "44 Rue Lucien Sampaix, 75010 Paris": 89,
-  "8 Rue du Faubourg Poissonière, 75010 Paris": 60,
-  "65 Rue d'Amsterdam, 75009 Paris": 120,
-  "10 Rue Nicolas Appert, 75011 Paris": 120,
-  "7 Boulevard Malesherbes, 75008 Paris": 60,
-  "61 Rue Douai, 75009 Paris": 60,
-  "61 Rue de Douai, 75009 Paris": 89,
-  "4 Rue de Berri, 75008 Paris": 120,
-  "122 Haussmann, 75008 Paris": 45,
-  "32 Bis Haussmann, 75008 Paris": 48,
-  "177 Avenue Achille Peretti, 92200 Neuilly": 90,
-  "76 Avenue des Champs Élysées, 75008 Paris": 60,
-  "15 Rue du Louvre, 75001 Paris": 60,
-  "31 Rue Tronchet, 75008 Paris": 120,
-  "17 Rue Louis Rouquier, 92300 Neuilly sur Seine": 72,
-  "9 Passage Dubail, 75010 Paris": 90,
-  "142 Rue Montmartre 75002 Paris": 120
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Badgeuse Alfred</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap');
+
+  :root {
+    --bleu: #A8D5DC;
+    --orange: #E8703A;
+    --noir: #1A1A1A;
+    --blanc: #F8F6F2;
+    --rouge-pastel: #FADBD8;
+    --vert-pastel: #EAFAF1;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--noir);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 24px 60px;
+    color: var(--blanc);
+  }
+
+  .top-bar {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    display: flex;
+    gap: 6px;
+    z-index: 100;
+  }
+
+  .lang-btn {
+    background: #2e2e2e;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    padding: 6px 10px;
+    color: rgba(255,255,255,0.5);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .lang-btn.active { background: rgba(168,213,220,0.15); border-color: var(--bleu); color: var(--bleu); }
+
+  .logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.2rem;
+    color: var(--bleu);
+    margin-bottom: 6px;
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  .site-name {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.45);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .card {
+    background: #242424;
+    border-radius: 20px;
+    padding: 32px 28px;
+    width: 100%;
+    max-width: 420px;
+    border: 1px solid rgba(255,255,255,0.06);
+    margin-bottom: 16px;
+  }
+
+  .label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 10px;
+  }
+
+  .agent-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+
+  .agent-btn {
+    background: #2e2e2e;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    padding: 14px 10px;
+    color: var(--blanc);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    text-align: center;
+  }
+  .agent-btn:hover { background: #363636; border-color: var(--bleu); }
+  .agent-btn.selected { background: rgba(168,213,220,0.12); border-color: var(--bleu); color: var(--bleu); }
+
+  .loading-agents {
+    text-align: center;
+    color: rgba(255,255,255,0.3);
+    font-size: 0.85rem;
+    padding: 20px 0;
+    margin-bottom: 28px;
+  }
+
+  .divider { height: 1px; background: rgba(255,255,255,0.07); margin-bottom: 28px; }
+
+  .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 28px; }
+
+  .action-btn {
+    border: none;
+    border-radius: 14px;
+    padding: 18px 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .action-btn .icon { font-size: 1.5rem; }
+
+  .btn-arrivee {
+    background: rgba(168,213,220,0.15);
+    color: var(--bleu);
+    border: 2px solid rgba(168,213,220,0.3);
+  }
+  .btn-arrivee:hover:not(:disabled), .btn-arrivee.selected {
+    background: var(--bleu); color: var(--noir); border-color: var(--bleu);
+  }
+
+  .btn-depart {
+    background: rgba(232,112,58,0.12);
+    color: var(--orange);
+    border: 2px solid rgba(232,112,58,0.25);
+  }
+  .btn-depart:hover:not(:disabled), .btn-depart.selected {
+    background: var(--orange); color: white; border-color: var(--orange);
+  }
+
+  .action-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border-radius: 20px;
+    padding: 6px 12px;
+    font-size: 0.78rem;
+    margin-bottom: 20px;
+    width: 100%;
+    justify-content: center;
+    background: rgba(168,213,220,0.1);
+    border: 1px solid rgba(168,213,220,0.2);
+    color: var(--bleu);
+  }
+  .status-badge.active {
+    background: rgba(232,112,58,0.1);
+    border-color: rgba(232,112,58,0.2);
+    color: var(--orange);
+  }
+
+  .submit-btn {
+    width: 100%;
+    padding: 17px;
+    background: var(--orange);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.18s ease;
+  }
+  .submit-btn:hover { background: #d4612e; transform: translateY(-1px); }
+  .submit-btn:disabled { background: #3a3a3a; color: rgba(255,255,255,0.3); cursor: not-allowed; transform: none; }
+
+  .time-display {
+    text-align: center;
+    margin-bottom: 28px;
+    padding: 14px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 10px;
+  }
+  .time-display .time { font-size: 1.8rem; font-weight: 300; letter-spacing: 2px; }
+  .time-display .date { font-size: 0.75rem; color: rgba(255,255,255,0.35); margin-top: 2px; text-transform: capitalize; }
+
+  .error-msg {
+    background: rgba(232,112,58,0.15);
+    border: 1px solid rgba(232,112,58,0.3);
+    color: var(--orange);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 0.85rem;
+    margin-bottom: 16px;
+    display: none;
+    text-align: center;
+  }
+
+  /* MODAL CONFIRMATION */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .modal-overlay.visible { display: flex; }
+
+  .modal {
+    background: #2a2a2a;
+    border-radius: 20px;
+    padding: 32px 28px;
+    width: 100%;
+    max-width: 380px;
+    border: 1px solid rgba(255,255,255,0.1);
+    text-align: center;
+  }
+
+  .modal-icon { font-size: 2.5rem; margin-bottom: 12px; }
+  .modal-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.3rem;
+    color: var(--bleu);
+    margin-bottom: 10px;
+  }
+  .modal-text {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+  .modal-text strong { color: var(--blanc); }
+
+  .modal-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  .modal-confirm {
+    padding: 14px;
+    background: var(--orange);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .modal-confirm:hover { background: #d4612e; }
+
+  .modal-cancel {
+    padding: 14px;
+    background: transparent;
+    color: rgba(255,255,255,0.5);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .modal-cancel:hover { border-color: rgba(255,255,255,0.4); color: var(--blanc); }
+
+  /* SUCCESS */
+  .success-banner {
+    background: rgba(168,213,220,0.1);
+    border: 1px solid rgba(168,213,220,0.3);
+    border-radius: 14px;
+    padding: 16px 20px;
+    text-align: center;
+    margin-bottom: 16px;
+    width: 100%;
+    max-width: 420px;
+  }
+  .success-banner .check { font-size: 2rem; margin-bottom: 6px; }
+  .success-banner .title { font-family: 'DM Serif Display', serif; font-size: 1.3rem; color: var(--bleu); }
+  .success-banner .detail { font-size: 0.8rem; color: rgba(255,255,255,0.4); margin-top: 4px; }
+
+  .reset-btn {
+    background: transparent;
+    border: 1px solid rgba(232,112,58,0.4);
+    color: var(--orange);
+    padding: 10px 24px;
+    border-radius: 30px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-bottom: 16px;
+  }
+  .reset-btn:hover { background: rgba(232,112,58,0.1); }
+
+  /* CHECKLIST */
+  .checklist-wrap {
+    width: 100%;
+    max-width: 420px;
+    display: none;
+  }
+
+  .checklist-card {
+    background: #242424;
+    border-radius: 20px;
+    padding: 28px;
+    border: 1px solid rgba(255,255,255,0.06);
+    margin-bottom: 16px;
+  }
+
+  .checklist-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.2rem;
+    color: var(--bleu);
+    margin-bottom: 4px;
+  }
+  .checklist-date {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.35);
+    margin-bottom: 20px;
+    text-transform: capitalize;
+  }
+
+  /* Tâches exceptionnelles */
+  .exceptional-block {
+    background: rgba(250,219,216,0.1);
+    border: 1px solid rgba(250,219,216,0.3);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 20px;
+  }
+  .exceptional-block.empty {
+    background: rgba(234,250,241,0.08);
+    border-color: rgba(168,213,168,0.2);
+  }
+  .exceptional-header {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #e57373;
+  }
+  .exceptional-header.empty { color: #81c784; }
+
+  .exceptional-zone { margin-bottom: 12px; }
+  .exceptional-zone:last-child { margin-bottom: 0; }
+  .exceptional-zone-title {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .exc-task {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 0;
+    font-size: 0.87rem;
+    color: rgba(255,255,255,0.85);
+  }
+
+  .freq-pill {
+    font-size: 0.65rem;
+    padding: 2px 7px;
+    border-radius: 10px;
+    margin-left: auto;
+    flex-shrink: 0;
+    font-weight: 600;
+  }
+  .freq-pill.hebdo { background: rgba(168,213,168,0.2); color: #a5d6a7; }
+  .freq-pill.mensuel { background: rgba(255,213,79,0.15); color: #ffd54f; }
+  .freq-pill.trimestriel { background: rgba(206,147,216,0.2); color: #ce93d8; }
+
+  /* Tâches quotidiennes */
+  .daily-block {
+    margin-bottom: 16px;
+  }
+  .daily-header {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--bleu);
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(168,213,220,0.2);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .daily-zone { margin-bottom: 14px; }
+  .daily-zone-title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .daily-task {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 5px 0;
+    font-size: 0.87rem;
+    color: rgba(255,255,255,0.75);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .daily-task:last-child { border-bottom: none; }
+  .task-bullet {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--bleu);
+    margin-top: 7px;
+    flex-shrink: 0;
+  }
+
+  /* Bouton confirmation tâches */
+
+
+  .site-error {
+    text-align: center;
+    padding: 40px 20px;
+    color: rgba(255,255,255,0.5);
+  }
+  .site-error h2 { color: var(--orange); margin-bottom: 10px; }
+</style>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0iQ2FscXVlXzEiIGRhdGEtbmFtZT0iQ2FscXVlIDEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgdmlld0JveD0iMjAgMTg1IDQwMCA0MjAiPgogIDxwYXRoIGQ9Ik02Ni4yNiw1MzMuNzVjMjcuNzMtNjMuNzgsMTEyLjAyLTI3NC4wNCwxMTIuMDItMzEyLjg2LDAtNy43Ny0xLjA4LTEzLjMyLTMuODgtMTcuMjEsMjEuMDktMy4zMiw0OS45Ni00Ljk5LDY3LjEyLTQuOTksMjEuMDksMCwyNy4xOSw0LjQ1LDMyLjc1LDE5Ljk5bDEwNC44NCwyODkuNTVjMTEuMTEsMzIuMjEsMjMuODUsNjIuNjksMzcuMTcsODEuNTdoLTExNy4wM2M2LjY0LTE1LDYuNjQtMzguMy00LjQ3LTcwLjQ2bC0yMy44NS02Ny4xMmgtMTE4LjdjLS41NCwzOC44NSw3LjIzLDk0Ljg1LDMuODgsMTEzLjczLTEuMDgsMTguODQtMTIuNzQsMjMuODUtMzYuNTksMjMuODVIMzUuMThjMTAuNTItMTQuNDUsMTkuOTYtMjkuOTUsMzEuMDgtNTYuMDVaTTI2Ni40OSw0MzkuNDhsLTc1LjQzLTIxMy42Yy0yMi4xOCw2OC43OS0zOS4zOSwxNDUuOS0zOC4zLDIxMy42aDExMy43M1oiIHN0eWxlPSJmaWxsOiAjMDIwMjAyOyIvPgogIDwvc3ZnPg==">
+</head>
+<body>
+
+<div class="top-bar">
+  <button class="lang-btn active" id="btn-fr" onclick="setLang('fr')">🇫🇷</button>
+  <button class="lang-btn" id="btn-en" onclick="setLang('en')">🇬🇧</button>
+  <button class="lang-btn" id="btn-bn" onclick="setLang('bn')">🇧🇩</button>
+</div>
+
+<div class="logo"><svg style="height:36px;width:auto;" id="Calque_1" data-name="Calque 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1093.7 205.83">
+  <path d="M16.12,173.86C30.52,140.76,74.25,31.66,74.25,11.52c0-4.03-.56-6.91-2.02-8.93,10.95-1.72,25.92-2.59,34.83-2.59,10.95,0,14.11,2.31,16.99,10.37l54.4,150.24c5.77,16.71,12.37,32.53,19.29,42.33h-60.73c3.45-7.78,3.45-19.87-2.32-36.56l-12.37-34.83h-61.59c-.28,20.16,3.75,49.22,2.02,59.01-.56,9.77-6.61,12.37-18.98,12.37H0c5.46-7.5,10.36-15.54,16.12-29.09ZM120.02,124.94L80.88,14.11c-11.51,35.69-20.44,75.7-19.87,110.83h59.01Z" style="fill: #b1d6e0;"/>
+  <path d="M229.22,161.48V41.17c0-18.14-2.3-30.52-8.91-39.73h68.51c-12.37,11.52-16.71,32.24-16.71,57.85v102.19c0,16.41.3,28.5,2.32,37.15h4.03c36.54,0,52.38-46.45,77.13-46.45v8.74c0,13.8,0,28.19,3.75,42.02h-139.03c6.61-8.93,8.91-22.17,8.91-41.46Z" style="fill: #b1d6e0;"/>
+  <path d="M562.7,161.48V41.17c0-18.14-2.3-30.52-8.91-39.73h75.12c50.95,0,78.58,18.42,78.58,52.39,0,29.06-20.72,46.92-57,51.82,33.68,50.65,52.97,73.69,71.39,78.28-5.18,14.7-19.85,21.89-34.83,21.89-19.85,0-36.56-26.48-74.27-98.46h-7.2v54.12c0,19.29,2.02,32.53,8.65,41.46h-60.44c6.61-8.93,8.91-22.17,8.91-41.46ZM621.44,102.19c24.75,0,40.57-17.27,40.57-48.35s-15.54-47.5-44.32-47.5h-12.09v94.98c4.9.59,10.95.87,15.84.87Z" style="fill: #b1d6e0;"/>
+  <path d="M932.78,161.48V41.17c0-18.14-2.3-30.52-8.91-39.73h73.1c62.18,0,96.73,44.33,96.73,100.46s-30.52,101.04-94.12,101.04h-75.7c6.61-8.93,8.91-22.17,8.91-41.46ZM979.42,197.18l15.26.59c37.41,0,50.95-43.48,50.95-95.86,0-57.28-20.44-95.57-54.98-95.57h-14.98v155.14c0,15.54,1.15,27.07,3.75,35.69Z" style="fill: #b1d6e0;"/>
+  <path d="M787.22,92.85l-19.6,12.51c58.6,6.68,73.17,14.09,86.73,8.18,11.34-4.94,15.2-23.13,9.03-33.2-11.44,9.75-33.32,12.5-76.16,12.5Z" style="fill: #b1d6e0;"/>
+  <path d="M424.51,91.17l-19.6,12.51c58.6,6.68,73.17,14.09,86.73,8.18,11.34-4.94,15.2-23.13,9.03-33.2-11.44,9.75-33.32,12.5-76.16,12.5Z" style="fill: #b1d6e0;"/>
+  <path d="M746.76,202.94h145.92c-4.03-12.09-4.03-24.75-4.03-36.84v-7.59c-23.02,0-44.04,40.12-78.87,40.12h-5.18c-4.59-8.65-6.05-20.74-6.05-37.15v-56.98c.92.2,1.82.42,2.72.64v-6.22c-.9.13-1.81.24-2.72.4V6.05h7.2c43.48,0,58.15,35.5,82.34,35.5v-7.58c0-10.95.28-21.88,4.03-32.53h-145.36c6.61,9.21,8.91,21.59,8.91,39.73v120.31c0,19.29-2.3,32.53-8.91,41.46Z" style="fill: #b1d6e0;"/>
+  <path d="M384.16,1.44c6.63,9.21,8.93,21.59,8.93,39.73v120.31c0,19.29-2.3,32.53-8.93,41.46h68.51c-12.37-10.08-16.69-36.28-16.69-57.87v-39.42c.72.16,1.41.33,2.12.5v-6.08c-.71.13-1.41.27-2.12.4V6.05h7.19c42.59,0,57.56,36.08,81.16,36.36v-8.43c0-10.95.28-21.88,4.03-32.53h-144.21Z" style="fill: #b1d6e0;"/>
+</svg></div>
+<div class="site-name" id="site-display">Chargement...</div>
+
+<!-- CARTE PRINCIPALE -->
+<div class="card" id="main-card">
+  <div class="time-display">
+    <div class="time" id="clock">--:--</div>
+    <div class="date" id="dateDisplay"></div>
+  </div>
+
+  <div class="label" id="label-agent">Agent</div>
+  <div id="agent-container">
+    <div class="loading-agents" id="loading-msg">⏳ Chargement...</div>
+    <div class="agent-grid" id="agent-grid" style="display:none"></div>
+  </div>
+
+  <div id="status-area"></div>
+  <button class="tushar-btn" id="tushar-btn" onclick="openTusharTasks()">📋 Mes tâches de la semaine</button>
+  <div class="divider"></div>
+
+  <div class="label" id="label-action">Action</div>
+  <div class="action-grid">
+    <button class="action-btn btn-arrivee" id="btn-arrivee" onclick="selectAction('Arrivée')">
+      <span class="icon">▶</span>
+      <span id="txt-arrivee">Arrivée</span>
+    </button>
+    <button class="action-btn btn-depart" id="btn-depart" onclick="selectAction('Départ')">
+      <span class="icon">◼</span>
+      <span id="txt-depart">Départ</span>
+    </button>
+  </div>
+
+  <div class="error-msg" id="error-msg"></div>
+  <button class="submit-btn" id="submit-btn" onclick="showConfirmModal()">Valider le badge</button>
+</div>
+
+<!-- MODAL CONFIRMATION BADGE -->
+<div class="modal-overlay" id="confirm-modal">
+  <div class="modal">
+    <div class="modal-icon" id="modal-icon">👋</div>
+    <div class="modal-title" id="modal-title"></div>
+    <div class="modal-text" id="modal-text"></div>
+    <div class="modal-btns">
+      <button class="modal-cancel" onclick="closeModal()" id="modal-cancel-btn">Annuler</button>
+      <button class="modal-confirm" onclick="confirmBadge()" id="modal-confirm-btn">Confirmer</button>
+    </div>
+  </div>
+</div>
+
+<!-- SUCCÈS -->
+<div id="success-area" style="display:none; width:100%; max-width:420px; text-align:center;">
+  <div class="success-banner">
+    <div class="check">✓</div>
+    <div class="title" id="success-title"></div>
+    <div class="detail" id="success-detail"></div>
+  </div>
+  <button class="reset-btn" id="reset-btn" onclick="tryReset()">← <span id="reset-label">Nouveau badge</span></button>
+</div>
+
+<!-- CHECKLIST -->
+<div class="checklist-wrap" id="checklist-wrap">
+  <div class="checklist-card">
+    <div class="checklist-title" id="checklist-title">📋 Tâches du jour</div>
+    <div class="checklist-date" id="checklist-date"></div>
+
+    <!-- Tâches exceptionnelles -->
+    <div id="exceptional-area"></div>
+
+    <!-- Tâches quotidiennes -->
+    <div id="daily-area"></div>
+
+
+  </div>
+</div>
+
+<script>
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby5GfqDkVWSoNOolviOccT70_kBD8gP00jqiLPQezhqyyJaE4SZqhMOnvjuISoBu2UA/exec";
+
+const SITES = {
+  "daru":             "19 Rue Daru",
+  "montmartre":       "17 Rue du Faubourg Montmartre, 75009 Paris",
+  "stmarc":           "21 Rue St Marc, 75002 Paris",
+  "pepiniere":        "14 Rue de la Pépinière, 75008 Paris",
+  "haussmann":        "165 Boulevard Haussmann, 75008 Paris",
+  "poissoniere":      "70 Rue du Fbg Poissonière, 75002 Paris",
+  "murat":            "7 Rue Louis Murat, 75008 Paris",
+  "malesherbes":      "10 Blv Malesherbes, 75008 Paris",
+  "lisbonne":         "30 Rue de Lisbonne, 75008 Paris",
+  "sebastopol":       "74 Boulevard de Sébastopol, 75003 Paris",
+  "colisee":          "17 Rue du Colisée, 75008 Paris",
+  "treillard":        "18 Rue Treillard, 75008 Paris",
+  "poincare":         "81 Rue Raymond Poincarré, 75016 Paris",
+  "alsace":           "25 Rue d'Alsace, 75010 Paris",
+  "amsterdam33":      "33 Rue d'Amsterdam, 75008 Paris",
+  "villiers":         "41 rue de Villiers, 92200 Neuilly Sur Seine",
+  "bastille":         "12 Place de la Bastille, 75012 Paris",
+  "arras":            "18 Rue d'Arras, 92000 Nanterre",
+  "sampaix":          "44 Rue Lucien Sampaix, 75010 Paris",
+  "fgpoissoniere8":   "8 Rue du Faubourg Poissonière, 75010 Paris",
+  "provence":         "46 Rue de Provence, 75009 Paris",
+  "amsterdam65":      "65 Rue d'Amsterdam, 75009 Paris",
+  "appert":           "10 Rue Nicolas Appert, 75011 Paris",
+  "malesherbes7":     "7 Boulevard Malesherbes, 75008 Paris",
+  "fgpoissoniere24":  "24 Rue du Faubourg Poissonière, 75010 Paris",
+  "blanche":          "33 Rue Blanche, 75009 Paris",
+  "laugier":          "12 Rue Laugier, 75017 Paris",
+  "douai61":          "61 Rue Douai, 75009 Paris",
+  "bordeaux":         "29 Rue Boudet, 33000 Bordeaux",
+  "douai61bis":       "61 Rue de Douai, 75009 Paris",
+  "berri":            "4 Rue de Berri, 75008 Paris",
+  "haussmann122":     "122 Haussmann, 75008 Paris",
+  "haussmann32":      "32 Bis Haussmann, 75008 Paris",
+  "peretti":          "177 Avenue Achille Peretti, 92200 Neuilly",
+  "champselysees":    "76 Avenue des Champs Élysées, 75008 Paris",
+  "louvre":           "15 Rue du Louvre, 75001 Paris",
+  "tronchet":         "31 Rue Tronchet, 75008 Paris",
+  "rouquier":         "17 Rue Louis Rouquier, 92300 Neuilly sur Seine",
+  "dubail":           "9 Passage Dubail, 75010 Paris",
+  "montmartre142":    "142 Rue Montmartre 75002 Paris",
+  "magellan":         "10 Rue Magellan, 75008 Paris",
+  "boetie":           "12 Rue de la Boétie, 75008 Paris",
+  "rouquier3":        "17 Rue Louis Rouquier, 3e étage, 92300 Neuilly sur Seine",
+  "magnum":           "Magnum 150cl — 1 Rue de Phalsbourg, 75017 Paris",
+  "grillroom":        "The Grill Room — 103 Bd Malesherbes, 75008 Paris",
 };
 
-const SITE_COLORS = [
-  "#E8F4FD","#FEF9E7","#EAFAF1","#FDEDEC","#F4ECF7",
-  "#EBF5FB","#FDF2E9","#E9F7EF","#FEF5E7","#E8F8F5",
-  "#EAF2F8","#F0F3F4","#FDFEFE","#FEF5E7","#F9EBEA"
-];
-
-const COLOR_DEPART = "#FDE8D8";     // Orange clair pour les lignes départ OK
-const COLOR_INSUFFISANT = "#FADBD8"; // Rouge clair pour durée insuffisante
-
-// ============================================
-// doGet — renvoie la liste des agents
-// ============================================
-function doGet(e) {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const action = e && e.parameter && e.parameter.action;
-
-  if (action === 'tushar') return getTusharTasks();
-
-  if (action === 'log') {
-    const logSheet = ss.getSheetByName("LOG");
-    if (!logSheet || logSheet.getLastRow() < 2) {
-      return ContentService.createTextOutput(JSON.stringify({ log: [] })).setMimeType(ContentService.MimeType.JSON);
-    }
-    const headers = logSheet.getRange(1, 1, 1, logSheet.getLastColumn()).getValues()[0];
-    const rows = logSheet.getRange(2, 1, logSheet.getLastRow() - 1, logSheet.getLastColumn()).getValues();
-    const log = rows.map(row => {
-      const obj = {};
-      headers.forEach((h, i) => {
-        const key = String(h).toLowerCase()
-          .replace('timestamp','timestamp').replace('agent','agent').replace('site','site')
-          .replace('action','action').replace('durée (min)','duree_min').replace('durée','duree').replace('statut','statut');
-        obj[key] = row[i];
-      });
-      return obj;
-    }).filter(r => r.timestamp);
-    return ContentService.createTextOutput(JSON.stringify({ log })).setMimeType(ContentService.MimeType.JSON);
-  }
-
-  const config = ss.getSheetByName("Config");
-  let agents = [];
-  if (config) {
-    const vals = config.getRange(1, 1, config.getLastRow(), 1).getValues();
-    agents = vals.map(r => r[0]).filter(v => v !== "");
-  }
-  return ContentService.createTextOutput(JSON.stringify({ agents })).setMimeType(ContentService.MimeType.JSON);
+// Type de checklist par site
+const SITE_TYPE = {
+  "magnum":    "magnum",
+  "grillroom": "grillroom",
+};
+function getSiteType(key) {
+  const params = new URLSearchParams(window.location.search);
+  const k = params.get("site") || "";
+  return SITE_TYPE[k] || "bureaux";
 }
 
-function getTusharTasks() {
-  let livSheet = null;
+// Tâches quotidiennes simplifiées
+const DAILY_TASKS = {
+  fr: [
+    {
+      zone: "🏢 Bureaux & Espaces communs",
+      tasks: [
+        "Aération des locaux",
+        "Vidage / Nettoyage des poubelles",
+        "Aspiration / Lavage des sols",
+        "Enlèvement des traces de doigts (portes, vitres, miroirs)",
+        "Dépoussiérage du mobilier",
+        "Débarrassage des tasses et verres",
+        "Remise en place des chaises sous les tables",
+        "Nettoyage des tables et plans de travail",
+        "Nettoyage machine à café et bouilloire",
+        "Remplissage, lancement, vidage lave-vaisselle",
+      ]
+    },
+    {
+      zone: "🚿 Sanitaires & Douches",
+      tasks: [
+        "Aération des sanitaires",
+        "Vidage et nettoyage des poubelles",
+        "Aspiration / Lavage des sols",
+        "Nettoyage des cuvettes, appareils, douches",
+        "Nettoyage robinetterie",
+        "Recharge des consommables",
+        "Enlèvement des traces sur les miroirs",
+      ]
+    }
+  ],
+  en: [
+    {
+      zone: "🏢 Offices & Common areas",
+      tasks: [
+        "Room ventilation",
+        "Emptying / Cleaning garbage cans",
+        "Vacuum / Floor washing",
+        "Removal of fingerprints (doors, windows, mirrors)",
+        "Furniture dusting",
+        "Clearance of cups and glasses",
+        "Replacing chairs under tables",
+        "Cleaning of tables and worktops",
+        "Cleaning coffee machine and kettle",
+        "Filling, launching, emptying the dishwasher",
+      ]
+    },
+    {
+      zone: "🚿 Sanitary & Showers",
+      tasks: [
+        "Aeration of sanitary facilities",
+        "Emptying and cleaning of bins",
+        "Vacuum / Floor washing",
+        "Cleaning of toilet bowls, appliances, showers",
+        "Faucet cleaning",
+        "Refill consumables",
+        "Removal of traces on mirrors",
+      ]
+    }
+  ],
+  bn: [
+    {
+      zone: "🏢 অফিস ও সাধারণ এলাকা",
+      tasks: [
+        "ঘর বায়ুচলাচল করুন",
+        "ডাস্টবিন খালি করুন / পরিষ্কার করুন",
+        "মেঝে ভ্যাকুয়াম / ধোয়া করুন",
+        "দরজা, জানালা, আয়নার দাগ মুছুন",
+        "আসবাবপত্র ঝাড়া দিন",
+        "কাপ ও গ্লাস সরিয়ে ফেলুন",
+        "টেবিলের নিচে চেয়ার রাখুন",
+        "টেবিল ও কাজের জায়গা পরিষ্কার করুন",
+        "কফি মেশিন ও কেটলি পরিষ্কার করুন",
+        "ডিশওয়াশার ভরুন, চালু করুন ও খালি করুন",
+      ]
+    },
+    {
+      zone: "🚿 স্যানিটারি ও শাওয়ার",
+      tasks: [
+        "স্যানিটারি বায়ুচলাচল করুন",
+        "ডাস্টবিন খালি ও পরিষ্কার করুন",
+        "মেঝে ভ্যাকুয়াম / ধোয়া করুন",
+        "টয়লেট, যন্ত্রপাতি ও শাওয়ার পরিষ্কার করুন",
+        "কল পরিষ্কার করুন",
+        "সরবরাহ পুনরায় পূরণ করুন",
+        "আয়নার দাগ মুছুন",
+      ]
+    }
+  ]
+};
+
+// Tâches exceptionnelles par fréquence et zone
+const EXCEPTIONAL_TASKS = {
+  fr: {
+    hebdo: [
+      { zone: "🏢 Accueil & Hall", tasks: ["Nettoyage des poubelles", "Dépoussiérage du mobilier"] },
+      { zone: "💼 Bureaux", tasks: ["Dépoussiérage des luminaires", "Dépoussiérage dessus d'armoires", "Dépoussiérage des fauteuils et chaises"] },
+      { zone: "🤝 Salles de réunion", tasks: ["Dépoussiérage des luminaires", "Dépoussiérage dessus d'armoires", "Dépoussiérage des fauteuils et chaises"] },
+      { zone: "🍽️ Cuisines", tasks: ["Nettoyage des poubelles", "Nettoyage micro-ondes"] },
+    ],
+    mensuel: [
+      { zone: "🏢 Accueil & Hall", tasks: ["Dépoussiérage plinthes et fenêtres"] },
+      { zone: "🚪 Circulations", tasks: ["Dépoussiérage plinthes et fenêtres"] },
+      { zone: "💼 Bureaux", tasks: ["Dépoussiérage plinthes et fenêtres"] },
+      { zone: "🍽️ Cuisines", tasks: ["Dépoussiérage plinthes et fenêtres"] },
+    ],
+    trimestriel: [
+      { zone: "🏢 Accueil & Hall", tasks: ["Nettoyage intensif des vitres"] },
+      { zone: "🚪 Circulations", tasks: ["Dépoussiérage des extincteurs", "Lessivage des portes"] },
+      { zone: "💼 Bureaux", tasks: ["Lessivage des portes"] },
+      { zone: "🍽️ Cuisines", tasks: ["Détartrage machines à cafés", "Nettoyage en profondeur du frigidaire", "Nettoyage du lave-vaisselle", "Vidange lave-vaisselle", "Dépoussiérage intérieur du mobilier", "Lessivage des portes"] },
+      { zone: "🚿 Sanitaires", tasks: ["Détartrage des WC"] },
+    ]
+  },
+  en: {
+    hebdo: [
+      { zone: "🏢 Reception & Hall", tasks: ["Cleaning garbage cans", "Furniture dusting"] },
+      { zone: "💼 Offices", tasks: ["Dedusting of luminaires", "Dusting uncluttered cabinet tops", "Dusting of armchairs and chairs"] },
+      { zone: "🤝 Meeting rooms", tasks: ["Dedusting of luminaires", "Dusting uncluttered cabinet tops", "Dust removal from armchairs and chairs"] },
+      { zone: "🍽️ Kitchens", tasks: ["Cleaning garbage cans", "Microwave cleaning"] },
+    ],
+    mensuel: [
+      { zone: "🏢 Reception & Hall", tasks: ["Dusting of baseboards and windows"] },
+      { zone: "🚪 Circulations", tasks: ["Dusting of baseboards and windows"] },
+      { zone: "💼 Offices", tasks: ["Dusting of baseboards and windows"] },
+      { zone: "🍽️ Kitchens", tasks: ["Dusting of baseboards and windows"] },
+    ],
+    trimestriel: [
+      { zone: "🏢 Reception & Hall", tasks: ["Intensive window cleaning"] },
+      { zone: "🚪 Circulations", tasks: ["Dusting of fire extinguishers", "Leaching of doors"] },
+      { zone: "💼 Offices", tasks: ["Leaching of doors"] },
+      { zone: "🍽️ Kitchens", tasks: ["Coffee machine descaling", "Deep cleaning of the fridge", "Cleaning the dishwasher", "Dishwasher drain", "Interior dusting of furniture", "Leaching of doors"] },
+      { zone: "🚿 Sanitary", tasks: ["WC descaling"] },
+    ]
+  },
+  bn: {
+    hebdo: [
+      { zone: "🏢 অভ্যর্থনা ও হল", tasks: ["ডাস্টবিন পরিষ্কার করুন", "আসবাবপত্র ঝাড়া দিন"] },
+      { zone: "💼 অফিস", tasks: ["লাইট ঝাড়া দিন", "আলমারির উপর ঝাড়া দিন", "চেয়ার ও আর্মচেয়ার ঝাড়া দিন"] },
+      { zone: "🍽️ রান্নাঘর", tasks: ["ডাস্টবিন পরিষ্কার করুন", "মাইক্রোওয়েভ পরিষ্কার করুন"] },
+    ],
+    mensuel: [
+      { zone: "সকল এলাকা", tasks: ["বেসবোর্ড ও জানালা ঝাড়া দিন"] },
+    ],
+    trimestriel: [
+      { zone: "🏢 অভ্যর্থনা", tasks: ["জানালা গভীরভাবে পরিষ্কার করুন"] },
+      { zone: "🚪 করিডোর", tasks: ["অগ্নিনির্বাপক ঝাড়া দিন", "দরজা ধোয়া করুন"] },
+      { zone: "🍽️ রান্নাঘর", tasks: ["কফি মেশিন ডিস্কেল করুন", "ফ্রিজ গভীরভাবে পরিষ্কার করুন", "ডিশওয়াশার পরিষ্কার করুন"] },
+      { zone: "🚿 স্যানিটারি", tasks: ["টয়লেট ডিস্কেল করুন"] },
+    ]
+  }
+};
+
+const T = {
+  fr: {
+    agent: "Agent", action: "Action",
+    arrivee: "Arrivée", depart: "Départ",
+    valider: "Valider le badge",
+    erreur: "Veuillez sélectionner un agent et une action.",
+    enregistrement: "Enregistrement...",
+    arrivee_ok: "▶ Arrivée enregistrée",
+    depart_ok: "◼ Départ enregistré",
+    nouveau: "← Nouveau badge",
+    statut_in: "Session en cours depuis",
+    statut_out: "Pas de session en cours",
+    chargement: "⏳ Chargement...",
+    confirmer: "Confirmer",
+    annuler: "Annuler",
+    modal_arrivee_title: "Confirmer l'arrivée",
+    modal_depart_title: "Confirmer le départ",
+    modal_arrivee_text: (agent, site, heure) => `<strong>${agent}</strong>, vous confirmez votre arrivée au<br><strong>${site}</strong><br>à <strong>${heure}</strong> ?`,
+    modal_depart_text: (agent, site, heure) => `<strong>${agent}</strong>, vous confirmez votre départ du<br><strong>${site}</strong><br>à <strong>${heure}</strong> ?`,
+    checklist_title: "📋 Tâches du jour",
+    exc_title: "⚠️ Tâches prioritaires aujourd'hui",
+    exc_empty: "✅ Pas de tâches exceptionnelles aujourd'hui",
+    daily_title: "📌 Tâches quotidiennes",
+    confirm_tasks: "✋ J'ai pris connaissance des tâches à effectuer aujourd'hui",
+    tasks_done: "✅ Tâches prises en compte",
+    depart_locked: "← Confirmer les tâches pour badger le départ",
+    freq_hebdo: "hebdo",
+    freq_mensuel: "mensuel",
+    freq_trimestriel: "trimestriel",
+  },
+  en: {
+    agent: "Agent", action: "Action",
+    arrivee: "Clock In", depart: "Clock Out",
+    valider: "Submit",
+    erreur: "Please select an agent and an action.",
+    enregistrement: "Saving...",
+    arrivee_ok: "▶ Clocked In",
+    depart_ok: "◼ Clocked Out",
+    nouveau: "← New entry",
+    statut_in: "Session started at",
+    statut_out: "No active session",
+    chargement: "⏳ Loading...",
+    confirmer: "Confirm",
+    annuler: "Cancel",
+    modal_arrivee_title: "Confirm clock-in",
+    modal_depart_title: "Confirm clock-out",
+    modal_arrivee_text: (agent, site, heure) => `<strong>${agent}</strong>, confirm your arrival at<br><strong>${site}</strong><br>at <strong>${heure}</strong>?`,
+    modal_depart_text: (agent, site, heure) => `<strong>${agent}</strong>, confirm your departure from<br><strong>${site}</strong><br>at <strong>${heure}</strong>?`,
+    checklist_title: "📋 Today's tasks",
+    exc_title: "⚠️ Priority tasks today",
+    exc_empty: "✅ No exceptional tasks today",
+    daily_title: "📌 Daily tasks",
+    confirm_tasks: "✋ I have acknowledged today's tasks",
+    tasks_done: "✅ Tasks acknowledged",
+    depart_locked: "← Confirm tasks to clock out",
+    freq_hebdo: "weekly",
+    freq_mensuel: "monthly",
+    freq_trimestriel: "quarterly",
+  },
+  bn: {
+    agent: "এজেন্ট", action: "কার্যক্রম",
+    arrivee: "আগমন", depart: "প্রস্থান",
+    valider: "ব্যাজ নিশ্চিত করুন",
+    erreur: "একজন এজেন্ট এবং একটি কার্যক্রম বেছে নিন।",
+    enregistrement: "সংরক্ষণ হচ্ছে...",
+    arrivee_ok: "▶ আগমন নিবন্ধিত",
+    depart_ok: "◼ প্রস্থান নিবন্ধিত",
+    nouveau: "← নতুন ব্যাজ",
+    statut_in: "সেশন শুরু হয়েছে",
+    statut_out: "কোনো সক্রিয় সেশন নেই",
+    chargement: "⏳ লোড হচ্ছে...",
+    confirmer: "নিশ্চিত করুন",
+    annuler: "বাতিল করুন",
+    modal_arrivee_title: "আগমন নিশ্চিত করুন",
+    modal_depart_title: "প্রস্থান নিশ্চিত করুন",
+    modal_arrivee_text: (agent, site, heure) => `<strong>${agent}</strong>, আপনি কি <strong>${site}</strong>-এ <strong>${heure}</strong> সময়ে আগমন নিশ্চিত করছেন?`,
+    modal_depart_text: (agent, site, heure) => `<strong>${agent}</strong>, আপনি কি <strong>${site}</strong> থেকে <strong>${heure}</strong> সময়ে প্রস্থান নিশ্চিত করছেন?`,
+    checklist_title: "📋 আজকের কাজ",
+    exc_title: "⚠️ আজকের অগ্রাধিকার কাজ",
+    exc_empty: "✅ আজ কোনো বিশেষ কাজ নেই",
+    daily_title: "📌 দৈনিক কাজ",
+    confirm_tasks: "✋ আমি আজকের কাজগুলো সম্পর্কে অবহিত হয়েছি",
+    tasks_done: "✅ কাজ স্বীকার করা হয়েছে",
+    depart_locked: "← প্রস্থানের আগে কাজ নিশ্চিত করুন",
+    freq_hebdo: "সাপ্তাহিক",
+    freq_mensuel: "মাসিক",
+    freq_trimestriel: "ত্রৈমাসিক",
+  }
+};
+
+// Site
+function getSiteFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  const key = params.get("site");
+  return key ? { key, nom: SITES[key] || null } : null;
+}
+
+const siteInfo = getSiteFromURL();
+const SITE = siteInfo && siteInfo.nom ? siteInfo.nom : null;
+
+if (SITE) {
+  document.getElementById('site-display').textContent = SITE;
+} else if (siteInfo) {
+  document.getElementById('site-display').textContent = "Site inconnu";
+  document.getElementById('main-card').innerHTML = `<div class="site-error"><h2>⚠️ Site non reconnu</h2><p>Paramètre "?site=${siteInfo.key}" inconnu.</p></div>`;
+} else {
+  document.getElementById('site-display').textContent = "Site non défini";
+  document.getElementById('main-card').innerHTML = `<div class="site-error"><h2>⚠️ Aucun site détecté</h2><p>Cette page doit être ouverte via un tag NFC.</p></div>`;
+}
+
+let selectedAgent = null;
+let selectedAction = null;
+let currentLang = "fr";
+let agentStatus = {};
+let tasksConfirmed = false;
+
+function updateClock() {
+  const now = new Date();
+  document.getElementById('clock').textContent =
+    now.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+  document.getElementById('dateDisplay').textContent =
+    now.toLocaleDateString(currentLang === 'en' ? 'en-GB' : 'fr-FR',
+      {weekday:'long', day:'numeric', month:'long'});
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+async function loadAgents() {
   try {
-    const extSS = SpreadsheetApp.openById("1XqM42nmJlM1_AFElPzF9VTiXgFwlOrADZK-Wug7A12k");
-    livSheet = extSS.getSheetByName("Livraisons");
+    const res = await fetch(SCRIPT_URL);
+    const data = await res.json();
+    const agents = data.agents || [];
+    agents.forEach(a => { agentStatus[a] = localStorage.getItem("status_" + a) || "out"; });
+    const grid = document.getElementById('agent-grid');
+    grid.innerHTML = "";
+    agents.forEach(name => {
+      const btn = document.createElement('button');
+      btn.className = 'agent-btn';
+      btn.textContent = name.split(' ')[0];
+      btn.title = name;
+      btn.onclick = () => selectAgent(name, btn);
+      grid.appendChild(btn);
+    });
+    document.getElementById('loading-msg').style.display = 'none';
+    grid.style.display = 'grid';
+  } catch(err) {
+    document.getElementById('loading-msg').textContent = "⚠️ Erreur";
+  }
+}
+
+if (SITE) loadAgents();
+
+function setLang(lang) {
+  currentLang = lang;
+  ['fr','en','bn'].forEach(l => {
+    document.getElementById('btn-' + l).classList.toggle('active', l === lang);
+  });
+  
+// ============================================
+// TUSHAR TASK LIST
+// ============================================
+
+const TUSHAR_NAME = "Tushar";
+
+function updateTusharBtn() {
+  const btn = document.getElementById('tushar-btn');
+  if (!btn) return;
+  // Affiche le bouton uniquement si Tushar est sélectionné
+  if (selectedAgent && selectedAgent.toLowerCase().includes('tushar')) {
+    btn.style.display = 'block';
+  } else {
+    btn.style.display = 'none';
+  }
+}
+
+async function openTusharTasks() {
+  document.getElementById('tushar-modal').classList.add('visible');
+  document.getElementById('tushar-content').innerHTML = '<div class="tushar-loading">⏳ Chargement des tâches...</div>';
+
+  try {
+    const res = await fetch(SCRIPT_URL + '?action=tushar');
+    const data = await res.json();
+    renderTusharTasks(data.tasks || []);
+  } catch(e) {
+    document.getElementById('tushar-content').innerHTML =
+      '<div class="tushar-empty">⚠️ Impossible de charger les tâches.</div>';
+  }
+}
+
+function closeTusharTasks() {
+  document.getElementById('tushar-modal').classList.remove('visible');
+}
+
+function renderTusharTasks(tasks) {
+  const container = document.getElementById('tushar-content');
+
+  if (!tasks || tasks.length === 0) {
+    container.innerHTML = '<div class="tushar-empty">✅ Aucune tâche en cours.</div>';
+    return;
+  }
+
+  container.innerHTML = '';
+
+  for (const site of tasks) {
+    const siteEl = document.createElement('div');
+    siteEl.className = 'tushar-site';
+
+    const header = document.createElement('div');
+    header.className = 'tushar-site-header';
+    header.textContent = site.adresse;
+    siteEl.appendChild(header);
+
+    for (const item of site.items) {
+      const row = document.createElement('div');
+      row.className = 'tushar-item';
+
+      const dot = document.createElement('div');
+      dot.className = 'tushar-item-dot ' + item.type;
+
+      const content = document.createElement('div');
+      content.className = 'tushar-item-content';
+
+      const label = document.createElement('div');
+      label.className = 'tushar-item-label';
+      label.textContent = item.label;
+      content.appendChild(label);
+
+      if (item.detail) {
+        const detail = document.createElement('div');
+        detail.className = 'tushar-item-detail';
+        detail.textContent = item.detail;
+        content.appendChild(detail);
+      }
+
+      row.appendChild(dot);
+      row.appendChild(content);
+      siteEl.appendChild(row);
+    }
+
+    container.appendChild(siteEl);
+  }
+}
+
+
+applyLang();
+
+  // Régénère la checklist si elle est visible
+  const checklistVisible = document.getElementById('checklist-wrap').style.display === 'block';
+  if (checklistVisible) {
+    afficherChecklist(lang);
+  }
+}
+
+function applyLang() {
+  const t = T[currentLang];
+  const els = {
+    'label-agent': t.agent,
+    'label-action': t.action,
+    'txt-arrivee': t.arrivee,
+    'txt-depart': t.depart,
+    'submit-btn': t.valider,
+    'error-msg': t.erreur,
+    'loading-msg': t.chargement,
+    'modal-cancel-btn': t.annuler,
+    'modal-confirm-btn': t.confirmer,
+  };
+  Object.entries(els).forEach(([id, val]) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = val;
+  });
+  updateClock();
+  updateStatusArea();
+}
+
+function selectAgent(name, btnEl) {
+  selectedAgent = name;
+  selectedAction = null;
+  document.querySelectorAll('.agent-btn').forEach(b => b.classList.remove('selected'));
+  btnEl.classList.add('selected');
+  document.querySelectorAll('.action-btn').forEach(b => b.classList.remove('selected'));
+  hideError();
+  updateActionButtons();
+  updateStatusArea();
+}
+
+function updateActionButtons() {
+  const btnIn  = document.getElementById('btn-arrivee');
+  const btnOut = document.getElementById('btn-depart');
+  if (!selectedAgent) { btnIn.disabled = false; btnOut.disabled = false; return; }
+  const status = agentStatus[selectedAgent] || "out";
+  btnIn.disabled  = status === "in";
+  btnOut.disabled = status === "out";
+}
+
+function updateStatusArea() {
+  const area = document.getElementById('status-area');
+  if (!selectedAgent) { area.innerHTML = ''; return; }
+  const status = agentStatus[selectedAgent] || "out";
+  const t = T[currentLang];
+  if (status === "in") {
+    const since = localStorage.getItem("checkin_" + selectedAgent) || "";
+    area.innerHTML = `<div class="status-badge active">🟠 ${t.statut_in} ${since}</div>`;
+  } else {
+    area.innerHTML = `<div class="status-badge">⚪ ${t.statut_out}</div>`;
+  }
+}
+
+function selectAction(action) {
+  selectedAction = action;
+  document.querySelectorAll('.action-btn').forEach(b => b.classList.remove('selected'));
+  event.currentTarget.classList.add('selected');
+  hideError();
+}
+
+function hideError() { document.getElementById('error-msg').style.display = 'none'; }
+
+function showConfirmModal() {
+  if (!selectedAgent || !selectedAction) {
+    document.getElementById('error-msg').style.display = 'block';
+    return;
+  }
+  const t = T[currentLang];
+  const now = new Date();
+  const heure = now.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
+
+  document.getElementById('modal-icon').textContent = selectedAction === 'Arrivée' ? '👋' : '👋';
+  document.getElementById('modal-title').textContent = selectedAction === 'Arrivée' ? t.modal_arrivee_title : t.modal_depart_title;
+  document.getElementById('modal-text').innerHTML = selectedAction === 'Arrivée'
+    ? t.modal_arrivee_text(selectedAgent, SITE, heure)
+    : t.modal_depart_text(selectedAgent, SITE, heure);
+
+  document.getElementById('confirm-modal').classList.add('visible');
+}
+
+function closeModal() {
+  document.getElementById('confirm-modal').classList.remove('visible');
+}
+
+async function confirmBadge() {
+  closeModal();
+  const now = new Date();
+  const timestamp = now.toLocaleString('fr-FR');
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  btn.textContent = T[currentLang].enregistrement;
+
+  try {
+    await fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({agent: selectedAgent, action: selectedAction, site: SITE, timestamp})
+    });
   } catch(e) {}
 
-  if (!livSheet || livSheet.getLastRow() < 2) {
-    return ContentService.createTextOutput(JSON.stringify({ tasks: [] })).setMimeType(ContentService.MimeType.JSON);
-  }
+  const t = T[currentLang];
 
-  const data = livSheet.getRange(2, 1, livSheet.getLastRow() - 1, 6).getValues();
-  const lignes = data.filter(row => String(row[1]).trim() && String(row[2]).trim() && String(row[4]).trim() !== '✅');
+  if (selectedAction === "Arrivée") {
+    agentStatus[selectedAgent] = "in";
+    localStorage.setItem("status_" + selectedAgent, "in");
+    localStorage.setItem("checkin_" + selectedAgent,
+      now.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'}));
+    document.getElementById('main-card').style.display = 'none';
+    document.getElementById('success-area').style.display = 'block';
+    document.getElementById('success-title').textContent = t.arrivee_ok;
+    document.getElementById('success-detail').innerHTML = `<strong>${selectedAgent}</strong> — ${SITE}<br>${timestamp}`;
 
-  const parAdresse = {};
-  for (const row of lignes) {
-    const adresse = String(row[1]).trim();
-    const produit = String(row[2]).trim();
-    const qte = parseFloat(row[3]) || 1;
-    const notes = String(row[5]).trim();
-    if (!parAdresse[adresse]) parAdresse[adresse] = { cafe: {}, autres: [] };
-    const isCafe = produit.toLowerCase().includes('caf');
-    if (isCafe) {
-      if (!parAdresse[adresse].cafe[produit]) parAdresse[adresse].cafe[produit] = { qte: 0, notes: [] };
-      parAdresse[adresse].cafe[produit].qte += qte;
-      if (notes && !parAdresse[adresse].cafe[produit].notes.includes(notes)) parAdresse[adresse].cafe[produit].notes.push(notes);
-    } else {
-      parAdresse[adresse].autres.push({ produit, qte, notes });
-    }
-  }
+    // Bouton retour toujours accessible
+    const resetBtn = document.getElementById('reset-btn');
+    resetBtn.classList.add('unlocked');
+    document.getElementById('reset-label').textContent = t.nouveau;
 
-  const tasks = [];
-  for (const adresse of Object.keys(parAdresse).sort()) {
-    const items = [];
-    for (const [type, d] of Object.entries(parAdresse[adresse].cafe)) {
-      items.push({ label: type + ' × ' + d.qte + ' kg', detail: d.notes.join(', '), type: 'cafe' });
-    }
-    for (const item of parAdresse[adresse].autres) {
-      items.push({ label: item.produit + (item.qte > 1 ? ' × ' + item.qte : ''), detail: item.notes, type: 'autre' });
-    }
-    if (items.length > 0) tasks.push({ adresse, items });
+    // Affiche checklist
+    afficherChecklist(currentLang);
+
+  } else {
+    agentStatus[selectedAgent] = "out";
+    localStorage.setItem("status_" + selectedAgent, "out");
+    localStorage.removeItem("checkin_" + selectedAgent);
+    document.getElementById('main-card').style.display = 'none';
+    document.getElementById('checklist-wrap').style.display = 'none';
+    document.getElementById('success-area').style.display = 'block';
+    document.getElementById('success-title').textContent = t.depart_ok;
+    document.getElementById('success-detail').innerHTML = `<strong>${selectedAgent}</strong> — ${SITE}<br>${timestamp}`;
+
+    const resetBtn = document.getElementById('reset-btn');
+    resetBtn.classList.add('unlocked');
+    document.getElementById('reset-label').textContent = t.nouveau;
   }
-  return ContentService.createTextOutput(JSON.stringify({ tasks })).setMimeType(ContentService.MimeType.JSON);
 }
 
 
-function doPost(e) {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const data = JSON.parse(e.postData.contents);
-  const { agent, site, action, timestamp } = data;
 
-  // Onglet LOG global
-  let log = ss.getSheetByName("LOG");
-  if (!log) {
-    log = ss.insertSheet("LOG");
-    log.appendRow(["Timestamp","Agent","Site","Action","Durée (min)","Durée","Statut"]);
-    log.getRange(1,1,1,7).setFontWeight("bold").setBackground("#1A1A1A").setFontColor("white");
-    log.setColumnWidth(1, 160);
-    log.setColumnWidth(3, 300);
+function tryReset() {
+  reset();
+}
+
+function reset() {
+  selectedAgent = null;
+  selectedAction = null;
+  document.getElementById('main-card').style.display = 'block';
+  document.getElementById('success-area').style.display = 'none';
+  document.getElementById('checklist-wrap').style.display = 'none';
+  document.querySelectorAll('.agent-btn, .action-btn').forEach(b => b.classList.remove('selected'));
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = false;
+  btn.textContent = T[currentLang].valider;
+  document.getElementById('status-area').innerHTML = '';
+  updateActionButtons();
+}
+
+function getFrequencesActives(date) {
+  const actives = [];
+  const jour = date.getDay();
+  const dateNum = date.getDate();
+  const mois = date.getMonth();
+  if (jour === 1) actives.push("hebdo");
+  if (dateNum === 1) actives.push("mensuel");
+  if (dateNum === 1 && [0,3,6,9].includes(mois)) actives.push("trimestriel");
+  return actives;
+}
+
+
+// =============================================
+// CHECKLISTS RESTAURANTS
+// =============================================
+
+// Jour JS : 0=dim, 1=lun, 2=mar, 3=mer, 4=jeu, 5=ven, 6=sam
+const CHECKLIST_GRILLROOM = {
+  fr: {
+    quotidien: [
+      { heure: "7h00–7h30",  tache: "🪑 Mise en place terrasse" },
+      { heure: "7h30–7h50",  tache: "🧹 Nettoyage sols (4 zones)" },
+      { heure: "7h50–8h20",  tache: "🚽 Nettoyage toilettes (3 zones)" },
+    ],
+    hebdo: {
+      1: "🌿 Poussières boiseries entrée",
+      2: "🌿 Poussières coffee shop",
+      3: "🌿 Poussières bars + consoles",
+      4: "🌿 Poussières véranda",
+      5: "🛋️ Banquettes & canapés + vitres",
+      6: "🪑 Pieds chaises & tables",
+      0: "🚽 Toilettes approfondies + escalier",
+    }
+  },
+  en: {
+    quotidien: [
+      { heure: "7h00–7h30",  tache: "🪑 Terrace setup" },
+      { heure: "7h30–7h50",  tache: "🧹 Floor cleaning (4 zones)" },
+      { heure: "7h50–8h20",  tache: "🚽 Toilet cleaning (3 zones)" },
+    ],
+    hebdo: {
+      1: "🌿 Dust entrance woodwork",
+      2: "🌿 Dust coffee shop",
+      3: "🌿 Dust bars + consoles",
+      4: "🌿 Dust veranda",
+      5: "🛋️ Banquettes & sofas + windows",
+      6: "🪑 Chair & table legs",
+      0: "🚽 Deep toilet cleaning + staircase",
+    }
+  },
+  bn: {
+    quotidien: [
+      { heure: "7h00–7h30",  tache: "🪑 টেরেস সাজানো" },
+      { heure: "7h30–7h50",  tache: "🧹 মেঝে পরিষ্কার (৪ জোন)" },
+      { heure: "7h50–8h20",  tache: "🚽 টয়লেট পরিষ্কার (৩ জোন)" },
+    ],
+    hebdo: {
+      1: "🌿 প্রবেশদ্বার কাঠ ঝাড়া",
+      2: "🌿 কফি শপ ঝাড়া",
+      3: "🌿 বার ও কনসোল ঝাড়া",
+      4: "🌿 ভেরান্ডা ঝাড়া",
+      5: "🛋️ ব্যাঙ্কেট ও জানালা",
+      6: "🪑 চেয়ার ও টেবিলের পা",
+      0: "🚽 টয়লেট গভীর পরিষ্কার + সিঁড়ি",
+    }
+  }
+};
+
+const CHECKLIST_MAGNUM = {
+  fr: {
+    quotidien: [
+      { heure: "8h00–8h20",  tache: "🪑 Mise en place terrasse" },
+      { heure: "8h20–8h40",  tache: "🧹 Aspirateur salle principale" },
+      { heure: "8h40–9h00",  tache: "🚽 Nettoyage toilettes" },
+    ],
+    hebdo: {
+      1: "🌿 Zone 1 – Poussières + miroirs + vins",
+      2: "🌿 Zone 2 – Poussières + arrière bar",
+      3: "🌿 Zone 3 – Poussières + surfaces bar",
+      4: "🌿 Zone 4 – Mobilier & déco",
+      5: "🌿 Zone 5 – Finitions bar + vitres",
+      6: "🛋️ Banquettes & coussins",
+      0: "✨ Lustres + finitions générales",
+    },
+    // Shampouineuse : 1 fois par mois, le 24 de chaque mois (alerte J-2 = le 22)
+    mensuel: {
+      dateJ: 24, // jour du mois où la shampouineuse est prévue
+      tache: "🧼 Shampouineuse (banquettes / tissus / sol)",
+    }
+  },
+  en: {
+    quotidien: [
+      { heure: "8h00–8h20",  tache: "🪑 Terrace setup" },
+      { heure: "8h20–8h40",  tache: "🧹 Vacuum main room" },
+      { heure: "8h40–9h00",  tache: "🚽 Toilet cleaning" },
+    ],
+    hebdo: {
+      1: "🌿 Zone 1 – Dust + mirrors + wines",
+      2: "🌿 Zone 2 – Dust + back bar",
+      3: "🌿 Zone 3 – Dust + bar surfaces",
+      4: "🌿 Zone 4 – Furniture & decor",
+      5: "🌿 Zone 5 – Bar finishes + windows",
+      6: "🛋️ Banquettes & cushions",
+      0: "✨ Chandeliers + general finishing",
+    },
+    mensuel: {
+      dateJ: 24,
+      tache: "🧼 Shampooing machine (banquettes / fabrics / floor)",
+    }
+  },
+  bn: {
+    quotidien: [
+      { heure: "8h00–8h20",  tache: "🪑 টেরেস সাজানো" },
+      { heure: "8h20–8h40",  tache: "🧹 মূল হল ভ্যাকুয়াম" },
+      { heure: "8h40–9h00",  tache: "🚽 টয়লেট পরিষ্কার" },
+    ],
+    hebdo: {
+      1: "🌿 জোন ১ – ঝাড়া + আয়না + ওয়াইন",
+      2: "🌿 জোন ২ – ঝাড়া + বার পেছন",
+      3: "🌿 জোন ৩ – ঝাড়া + বার সারফেস",
+      4: "🌿 জোন ৪ – আসবাব ও সাজসজ্জা",
+      5: "🌿 জোন ৫ – বার ফিনিশ + জানালা",
+      6: "🛋️ ব্যাঙ্কেট ও কুশন",
+      0: "✨ ঝাড়বাতি + সাধারণ ফিনিশিং",
+    },
+    mensuel: {
+      dateJ: 24,
+      tache: "🧼 শ্যাম্পু মেশিন (ব্যাঙ্কেট / কাপড় / মেঝে)",
+    }
+  }
+};
+
+const ALERT_LABELS = {
+  fr: {
+    shampoo_j2: "⚠️ Dans 2 jours : Shampouineuse prévue — préparez le matériel !",
+    shampoo_j1: "⚠️ Demain : Shampouineuse — préparez le matériel !",
+    shampoo_j0: "🚨 AUJOURD'HUI : Shampouineuse à effectuer !",
+    vitres_j0:  "🪟 AUJOURD'HUI : Nettoyage intensif des vitres !",
+    hebdo_title: "📅 Tâche du jour",
+    daily_title: "📌 Tâches quotidiennes",
+    checklist_title: "📋 Tâches du jour",
+  },
+  en: {
+    shampoo_j2: "⚠️ In 2 days: Shampooing machine scheduled — prepare the equipment!",
+    shampoo_j1: "⚠️ Tomorrow: Shampooing machine — prepare the equipment!",
+    shampoo_j0: "🚨 TODAY: Shampooing machine to be done!",
+    vitres_j0:  "🪟 TODAY: Intensive window cleaning!",
+    hebdo_title: "📅 Task of the day",
+    daily_title: "📌 Daily tasks",
+    checklist_title: "📋 Today's tasks",
+  },
+  bn: {
+    shampoo_j2: "⚠️ ২ দিন পরে: শ্যাম্পু মেশিন — সরঞ্জাম প্রস্তুত করুন!",
+    shampoo_j1: "⚠️ আগামীকাল: শ্যাম্পু মেশিন — সরঞ্জাম প্রস্তুত করুন!",
+    shampoo_j0: "🚨 আজ: শ্যাম্পু মেশিন করতে হবে!",
+    vitres_j0:  "🪟 আজ: জানালা গভীরভাবে পরিষ্কার করুন!",
+    hebdo_title: "📅 আজকের কাজ",
+    daily_title: "📌 দৈনিক কাজ",
+    checklist_title: "📋 আজকের কাজ",
+  }
+};
+
+function afficherChecklistResto(lang, type) {
+  const now = new Date();
+  const jour = now.getDay();
+  const dateNum = now.getDate();
+  const mois = now.getMonth();
+  const data = type === "grillroom"
+    ? (CHECKLIST_GRILLROOM[lang] || CHECKLIST_GRILLROOM.fr)
+    : (CHECKLIST_MAGNUM[lang] || CHECKLIST_MAGNUM.fr);
+  const labels = ALERT_LABELS[lang] || ALERT_LABELS.fr;
+
+  document.getElementById('checklist-title').textContent = labels.checklist_title;
+  document.getElementById('checklist-date').textContent = now.toLocaleDateString(
+    lang === 'en' ? 'en-GB' : 'fr-FR',
+    {weekday:'long', day:'numeric', month:'long', year:'numeric'}
+  );
+
+  const excArea = document.getElementById('exceptional-area');
+  const dailyArea = document.getElementById('daily-area');
+  excArea.innerHTML = '';
+  dailyArea.innerHTML = '';
+
+  // ---- ALERTES MENSUELLES (shampouineuse) ----
+  if (type === "magnum" && data.mensuel) {
+    const dateJ = data.mensuel.dateJ;
+    const diff = dateJ - dateNum;
+    let alertMsg = null;
+    let alertClass = '';
+
+    if (diff === 2) { alertMsg = labels.shampoo_j2; alertClass = 'warn'; }
+    else if (diff === 1) { alertMsg = labels.shampoo_j1; alertClass = 'warn'; }
+    else if (diff === 0) { alertMsg = labels.shampoo_j0; alertClass = 'urgent'; }
+
+    if (alertMsg) {
+      const alertEl = document.createElement('div');
+      alertEl.style.cssText = alertClass === 'urgent'
+        ? 'background:#7f1d1d;border:2px solid #ef4444;border-radius:14px;padding:18px;margin-bottom:16px;text-align:center;font-weight:700;font-size:1rem;color:#fca5a5;'
+        : 'background:rgba(250,219,216,0.15);border:2px solid #f97316;border-radius:14px;padding:16px;margin-bottom:16px;text-align:center;font-weight:600;font-size:0.92rem;color:#fb923c;';
+      alertEl.textContent = alertMsg;
+      excArea.appendChild(alertEl);
+    }
   }
 
-  if (action === "Arrivée") {
-    log.appendRow([timestamp, agent, site, action, "", "", ""]);
-    log.getRange(log.getLastRow(),1,1,7).setBackground(getSiteColor(site));
+  // ---- TÂCHE HEBDO DU JOUR ----
+  const tacheHebdo = data.hebdo[jour];
+  if (tacheHebdo) {
+    const block = document.createElement('div');
+    block.style.cssText = 'background:rgba(168,213,220,0.1);border:1px solid rgba(168,213,220,0.3);border-radius:14px;padding:16px;margin-bottom:16px;';
+    const h = document.createElement('div');
+    h.style.cssText = 'font-size:0.75rem;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,0.4);margin-bottom:8px;';
+    h.textContent = labels.hebdo_title;
+    const t = document.createElement('div');
+    t.style.cssText = 'font-size:1rem;font-weight:600;color:var(--bleu);';
+    t.textContent = tacheHebdo;
+    block.appendChild(h);
+    block.appendChild(t);
+    excArea.appendChild(block);
+  }
+
+  // ---- TÂCHES QUOTIDIENNES ----
+  const dailyBlock = document.createElement('div');
+  dailyBlock.className = 'daily-block';
+  const dailyHeader = document.createElement('div');
+  dailyHeader.className = 'daily-header';
+  dailyHeader.textContent = labels.daily_title;
+  dailyBlock.appendChild(dailyHeader);
+
+  for (const item of data.quotidien) {
+    const row = document.createElement('div');
+    row.className = 'daily-task';
+    row.innerHTML = `<div class="task-bullet"></div><span style="flex:1">${item.tache}</span><span style="font-size:0.75rem;color:rgba(255,255,255,0.3);margin-left:8px;">${item.heure}</span>`;
+    dailyBlock.appendChild(row);
+  }
+
+  dailyArea.appendChild(dailyBlock);
+  document.getElementById('checklist-wrap').style.display = 'block';
+}
+
+function afficherChecklist(lang) {
+  lang = lang || currentLang;
+
+  // Router vers la checklist resto si applicable
+  const siteType = getSiteType();
+  if (siteType === "grillroom" || siteType === "magnum") {
+    afficherChecklistResto(lang, siteType);
+    return;
+  }
+
+  const now = new Date();
+  const freqs = getFrequencesActives(now);
+  const t = T[lang];
+  const excData = EXCEPTIONAL_TASKS[lang] || EXCEPTIONAL_TASKS.fr;
+  const dailyData = DAILY_TASKS[lang] || DAILY_TASKS.fr;
+
+  document.getElementById('checklist-title').textContent = t.checklist_title;
+  document.getElementById('checklist-date').textContent = now.toLocaleDateString(
+    lang === 'en' ? 'en-GB' : 'fr-FR',
+    {weekday:'long', day:'numeric', month:'long', year:'numeric'}
+  );
+
+  // ---- Tâches exceptionnelles ----
+  const excArea = document.getElementById('exceptional-area');
+  excArea.innerHTML = '';
+
+  const block = document.createElement('div');
+
+  if (freqs.length === 0) {
+    block.className = 'exceptional-block empty';
+    const header = document.createElement('div');
+    header.className = 'exceptional-header empty';
+    header.textContent = t.exc_empty;
+    block.appendChild(header);
   } else {
-    const { dureeMin, dureeStr, statut, arrRow } = calcDureeLog(log, agent, site, timestamp);
-    log.appendRow([timestamp, agent, site, action, dureeMin, dureeStr, statut]);
-    const r = log.getLastRow();
-    const bg = statut === "⚠️ Insuffisant" ? COLOR_INSUFFISANT : COLOR_DEPART;
-    log.getRange(r,1,1,7).setBackground(bg);
-    if (arrRow > 0) {
-      log.getRange(arrRow,5).setValue(dureeMin);
-      log.getRange(arrRow,6).setValue(dureeStr);
-      log.getRange(arrRow,7).setValue(statut);
-      if (statut === "⚠️ Insuffisant") {
-        log.getRange(arrRow,1,1,7).setBackground(COLOR_INSUFFISANT);
+    block.className = 'exceptional-block';
+    const header = document.createElement('div');
+    header.className = 'exceptional-header';
+    header.textContent = t.exc_title;
+    block.appendChild(header);
+
+    for (const freq of freqs) {
+      const freqData = excData[freq] || [];
+      const freqLabel = freq === 'hebdo' ? t.freq_hebdo : freq === 'mensuel' ? t.freq_mensuel : t.freq_trimestriel;
+      const freqClass = freq;
+
+      for (const zone of freqData) {
+        const zoneEl = document.createElement('div');
+        zoneEl.className = 'exceptional-zone';
+
+        const zTitle = document.createElement('div');
+        zTitle.className = 'exceptional-zone-title';
+        zTitle.textContent = zone.zone;
+        zoneEl.appendChild(zTitle);
+
+        for (const task of zone.tasks) {
+          const item = document.createElement('div');
+          item.className = 'exc-task';
+          item.innerHTML = `<span style="flex:1">${task}</span><span class="freq-pill ${freqClass}">${freqLabel}</span>`;
+          zoneEl.appendChild(item);
+        }
+
+        block.appendChild(zoneEl);
       }
     }
   }
 
-  // Onglet par agent
-  let sheet = ss.getSheetByName(agent);
-  if (!sheet) {
-    sheet = ss.insertSheet(agent);
-    sheet.appendRow(["Timestamp","Site","Action","Durée (min)","Durée","Statut"]);
-    sheet.getRange(1,1,1,6).setFontWeight("bold").setBackground("#1A1A1A").setFontColor("white");
-    sheet.setColumnWidth(1, 160);
-    sheet.setColumnWidth(2, 300);
+  excArea.appendChild(block);
+
+  // ---- Tâches quotidiennes ----
+  const dailyArea = document.getElementById('daily-area');
+  dailyArea.innerHTML = '';
+
+  const dailyBlock = document.createElement('div');
+  dailyBlock.className = 'daily-block';
+
+  const dailyHeader = document.createElement('div');
+  dailyHeader.className = 'daily-header';
+  dailyHeader.textContent = t.daily_title;
+  dailyBlock.appendChild(dailyHeader);
+
+  for (const zone of dailyData) {
+    const zoneEl = document.createElement('div');
+    zoneEl.className = 'daily-zone';
+
+    const zTitle = document.createElement('div');
+    zTitle.className = 'daily-zone-title';
+    zTitle.textContent = zone.zone;
+    zoneEl.appendChild(zTitle);
+
+    for (const task of zone.tasks) {
+      const item = document.createElement('div');
+      item.className = 'daily-task';
+      item.innerHTML = `<div class="task-bullet"></div><span>${task}</span>`;
+      zoneEl.appendChild(item);
+    }
+
+    dailyBlock.appendChild(zoneEl);
   }
 
-  if (action === "Arrivée") {
-    sheet.appendRow([timestamp, site, action, "", "", ""]);
-    sheet.getRange(sheet.getLastRow(),1,1,6).setBackground(getSiteColor(site));
+  dailyArea.appendChild(dailyBlock);
+
+  document.getElementById('checklist-wrap').style.display = 'block';
+}
+
+
+// ============================================
+// TUSHAR TASK LIST
+// ============================================
+
+const TUSHAR_NAME = "Tushar";
+
+function updateTusharBtn() {
+  const btn = document.getElementById('tushar-btn');
+  if (!btn) return;
+  // Affiche le bouton uniquement si Tushar est sélectionné
+  if (selectedAgent && selectedAgent.toLowerCase().includes('tushar')) {
+    btn.style.display = 'block';
   } else {
-    const { dureeMin, dureeStr, statut, arrRow } = calcDureeAgent(sheet, site, timestamp);
-    sheet.appendRow([timestamp, site, action, dureeMin, dureeStr, statut]);
-    const r = sheet.getLastRow();
-    const bg = statut === "⚠️ Insuffisant" ? COLOR_INSUFFISANT : COLOR_DEPART;
-    sheet.getRange(r,1,1,6).setBackground(bg);
-    if (arrRow > 0) {
-      sheet.getRange(arrRow,4).setValue(dureeMin);
-      sheet.getRange(arrRow,5).setValue(dureeStr);
-      sheet.getRange(arrRow,6).setValue(statut);
-      if (statut === "⚠️ Insuffisant") {
-        sheet.getRange(arrRow,1,1,6).setBackground(COLOR_INSUFFISANT);
+    btn.style.display = 'none';
+  }
+}
+
+async function openTusharTasks() {
+  document.getElementById('tushar-modal').classList.add('visible');
+  document.getElementById('tushar-content').innerHTML = '<div class="tushar-loading">⏳ Chargement des tâches...</div>';
+
+  try {
+    const res = await fetch(SCRIPT_URL + '?action=tushar');
+    const data = await res.json();
+    renderTusharTasks(data.tasks || []);
+  } catch(e) {
+    document.getElementById('tushar-content').innerHTML =
+      '<div class="tushar-empty">⚠️ Impossible de charger les tâches.</div>';
+  }
+}
+
+function closeTusharTasks() {
+  document.getElementById('tushar-modal').classList.remove('visible');
+}
+
+function renderTusharTasks(tasks) {
+  const container = document.getElementById('tushar-content');
+
+  if (!tasks || tasks.length === 0) {
+    container.innerHTML = '<div class="tushar-empty">✅ Aucune tâche en cours.</div>';
+    return;
+  }
+
+  container.innerHTML = '';
+
+  for (const site of tasks) {
+    const siteEl = document.createElement('div');
+    siteEl.className = 'tushar-site';
+
+    const header = document.createElement('div');
+    header.className = 'tushar-site-header';
+    header.textContent = site.adresse;
+    siteEl.appendChild(header);
+
+    for (const item of site.items) {
+      const row = document.createElement('div');
+      row.className = 'tushar-item';
+
+      const dot = document.createElement('div');
+      dot.className = 'tushar-item-dot ' + item.type;
+
+      const content = document.createElement('div');
+      content.className = 'tushar-item-content';
+
+      const label = document.createElement('div');
+      label.className = 'tushar-item-label';
+      label.textContent = item.label;
+      content.appendChild(label);
+
+      if (item.detail) {
+        const detail = document.createElement('div');
+        detail.className = 'tushar-item-detail';
+        detail.textContent = item.detail;
+        content.appendChild(detail);
       }
+
+      row.appendChild(dot);
+      row.appendChild(content);
+      siteEl.appendChild(row);
     }
+
+    container.appendChild(siteEl);
   }
-
-  return ContentService.createTextOutput("OK");
 }
 
-// ============================================
-// Calcule durée dans l'onglet LOG
-// Colonnes: Timestamp(1), Agent(2), Site(3), Action(4)
-// ============================================
-function calcDureeLog(sheet, agent, site, timestamp) {
-  const last = sheet.getLastRow();
-  if (last < 2) return { dureeMin:0, dureeStr:"0h00", statut:"⚠️ Insuffisant", arrRow:-1 };
-  const vals = sheet.getRange(2, 1, last-1, 4).getValues();
-  let arrRow = -1, arrTime = null;
 
-  for (let i = vals.length-1; i >= 0; i--) {
-    if (vals[i][3] === "Arrivée" && vals[i][1] === agent && vals[i][2] === site) {
-      arrRow = i + 2;
-      arrTime = vals[i][0];
-      break;
-    }
-  }
+applyLang();
+</script>
 
-  if (!arrTime) return { dureeMin:0, dureeStr:"0h00", statut:"⚠️ Insuffisant", arrRow:-1 };
-  return calcDiff(arrTime, timestamp, site, arrRow);
-}
+<!-- TUSHAR TASK LIST MODAL -->
+<div class="tushar-modal" id="tushar-modal">
+  <div class="tushar-modal-inner">
+    <div class="tushar-modal-header">
+      <div class="tushar-modal-title">📋 Tâches de la semaine</div>
+      <button class="tushar-close" onclick="closeTusharTasks()">✕</button>
+    </div>
+    <div id="tushar-content">
+      <div class="tushar-loading">⏳ Chargement...</div>
+    </div>
+  </div>
+</div>
 
-// ============================================
-// Calcule durée dans l'onglet agent
-// Colonnes: Timestamp(1), Site(2), Action(3)
-// ============================================
-function calcDureeAgent(sheet, site, timestamp) {
-  const last = sheet.getLastRow();
-  if (last < 2) return { dureeMin:0, dureeStr:"0h00", statut:"⚠️ Insuffisant", arrRow:-1 };
-  const vals = sheet.getRange(2, 1, last-1, 3).getValues();
-  let arrRow = -1, arrTime = null;
-
-  for (let i = vals.length-1; i >= 0; i--) {
-    if (vals[i][2] === "Arrivée" && vals[i][1] === site) {
-      arrRow = i + 2;
-      arrTime = vals[i][0];
-      break;
-    }
-  }
-
-  if (!arrTime) return { dureeMin:0, dureeStr:"0h00", statut:"⚠️ Insuffisant", arrRow:-1 };
-  return calcDiff(arrTime, timestamp, site, arrRow);
-}
-
-// ============================================
-// Calcule la différence de temps
-// arrTime = objet Date venant du Sheet
-// timestamp = string "dd/mm/yyyy, hh:mm:ss"
-// ============================================
-function calcDiff(arrTime, timestamp, site, arrRow) {
-  const arr = new Date(arrTime);
-  const parts = timestamp.match(/(\d{2})\/(\d{2})\/(\d{4}),?\s+(\d{2}:\d{2}:\d{2})/);
-  const dep = parts
-    ? new Date(`${parts[3]}-${parts[2]}-${parts[1]}T${parts[4]}`)
-    : new Date(timestamp);
-
-  let dureeMin = Math.round((dep - arr) / 60000);
-  if (dureeMin < 0) dureeMin = 0;
-
-  const h = Math.floor(dureeMin / 60);
-  const m = dureeMin % 60;
-  const dureeStr = h + "h" + String(m).padStart(2, "0");
-  const minRequis = SITE_MIN[site] || 60;
-  const statut = dureeMin >= minRequis ? "✅ OK" : "⚠️ Insuffisant";
-  return { dureeMin, dureeStr, statut, arrRow };
-}
-
-// ============================================
-// Couleur par site
-// ============================================
-function getSiteColor(site) {
-  const keys = Object.keys(SITE_MIN);
-  const i = keys.indexOf(site);
-  return SITE_COLORS[(i >= 0 ? i : Math.abs(site.charCodeAt(0))) % SITE_COLORS.length];
-}
-
-// ============================================
-// Initialise les onglets agents depuis Config
-// ============================================
-function initSheets() {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const config = ss.getSheetByName("Config");
-  if (!config) { SpreadsheetApp.getUi().alert("Onglet Config introuvable !"); return; }
-
-  const agents = config.getRange(1,1,config.getLastRow(),1).getValues()
-    .map(r => r[0]).filter(v => v !== "");
-
-  agents.forEach(agent => {
-    if (!ss.getSheetByName(agent)) {
-      const s = ss.insertSheet(agent);
-      s.appendRow(["Timestamp","Site","Action","Durée (min)","Durée","Statut"]);
-      s.getRange(1,1,1,6).setFontWeight("bold").setBackground("#1A1A1A").setFontColor("white");
-      s.setColumnWidth(1,160); s.setColumnWidth(2,300);
-    }
-  });
-
-  if (!ss.getSheetByName("LOG")) {
-    const log = ss.insertSheet("LOG");
-    log.appendRow(["Timestamp","Agent","Site","Action","Durée (min)","Durée","Statut"]);
-    log.getRange(1,1,1,7).setFontWeight("bold").setBackground("#1A1A1A").setFontColor("white");
-    log.setColumnWidth(1,160); log.setColumnWidth(3,300);
-  }
-
-  SpreadsheetApp.getUi().alert("✅ " + agents.length + " onglets agents créés !");
-}
+</body>
+</html>
