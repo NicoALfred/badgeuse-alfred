@@ -489,6 +489,7 @@
   </div>
 
   <div id="status-area"></div>
+  <button class="tushar-btn" id="tushar-btn" onclick="openTusharTasks()">📋 Mes tâches de la semaine</button>
   <div class="divider"></div>
 
   <div class="label" id="label-action">Action</div>
@@ -918,7 +919,94 @@ function setLang(lang) {
   ['fr','en','bn'].forEach(l => {
     document.getElementById('btn-' + l).classList.toggle('active', l === lang);
   });
-  applyLang();
+  
+// ============================================
+// TUSHAR TASK LIST
+// ============================================
+
+const TUSHAR_NAME = "Tushar";
+
+function updateTusharBtn() {
+  const btn = document.getElementById('tushar-btn');
+  if (!btn) return;
+  // Affiche le bouton uniquement si Tushar est sélectionné
+  if (selectedAgent && selectedAgent.toLowerCase().includes('tushar')) {
+    btn.style.display = 'block';
+  } else {
+    btn.style.display = 'none';
+  }
+}
+
+async function openTusharTasks() {
+  document.getElementById('tushar-modal').classList.add('visible');
+  document.getElementById('tushar-content').innerHTML = '<div class="tushar-loading">⏳ Chargement des tâches...</div>';
+
+  try {
+    const res = await fetch(SCRIPT_URL + '?action=tushar');
+    const data = await res.json();
+    renderTusharTasks(data.tasks || []);
+  } catch(e) {
+    document.getElementById('tushar-content').innerHTML =
+      '<div class="tushar-empty">⚠️ Impossible de charger les tâches.</div>';
+  }
+}
+
+function closeTusharTasks() {
+  document.getElementById('tushar-modal').classList.remove('visible');
+}
+
+function renderTusharTasks(tasks) {
+  const container = document.getElementById('tushar-content');
+
+  if (!tasks || tasks.length === 0) {
+    container.innerHTML = '<div class="tushar-empty">✅ Aucune tâche en cours.</div>';
+    return;
+  }
+
+  container.innerHTML = '';
+
+  for (const site of tasks) {
+    const siteEl = document.createElement('div');
+    siteEl.className = 'tushar-site';
+
+    const header = document.createElement('div');
+    header.className = 'tushar-site-header';
+    header.textContent = site.adresse;
+    siteEl.appendChild(header);
+
+    for (const item of site.items) {
+      const row = document.createElement('div');
+      row.className = 'tushar-item';
+
+      const dot = document.createElement('div');
+      dot.className = 'tushar-item-dot ' + item.type;
+
+      const content = document.createElement('div');
+      content.className = 'tushar-item-content';
+
+      const label = document.createElement('div');
+      label.className = 'tushar-item-label';
+      label.textContent = item.label;
+      content.appendChild(label);
+
+      if (item.detail) {
+        const detail = document.createElement('div');
+        detail.className = 'tushar-item-detail';
+        detail.textContent = item.detail;
+        content.appendChild(detail);
+      }
+
+      row.appendChild(dot);
+      row.appendChild(content);
+      siteEl.appendChild(row);
+    }
+
+    container.appendChild(siteEl);
+  }
+}
+
+
+applyLang();
 
   // Régénère la checklist si elle est visible
   const checklistVisible = document.getElementById('checklist-wrap').style.display === 'block';
@@ -1429,7 +1517,108 @@ function afficherChecklist(lang) {
   document.getElementById('checklist-wrap').style.display = 'block';
 }
 
+
+// ============================================
+// TUSHAR TASK LIST
+// ============================================
+
+const TUSHAR_NAME = "Tushar";
+
+function updateTusharBtn() {
+  const btn = document.getElementById('tushar-btn');
+  if (!btn) return;
+  // Affiche le bouton uniquement si Tushar est sélectionné
+  if (selectedAgent && selectedAgent.toLowerCase().includes('tushar')) {
+    btn.style.display = 'block';
+  } else {
+    btn.style.display = 'none';
+  }
+}
+
+async function openTusharTasks() {
+  document.getElementById('tushar-modal').classList.add('visible');
+  document.getElementById('tushar-content').innerHTML = '<div class="tushar-loading">⏳ Chargement des tâches...</div>';
+
+  try {
+    const res = await fetch(SCRIPT_URL + '?action=tushar');
+    const data = await res.json();
+    renderTusharTasks(data.tasks || []);
+  } catch(e) {
+    document.getElementById('tushar-content').innerHTML =
+      '<div class="tushar-empty">⚠️ Impossible de charger les tâches.</div>';
+  }
+}
+
+function closeTusharTasks() {
+  document.getElementById('tushar-modal').classList.remove('visible');
+}
+
+function renderTusharTasks(tasks) {
+  const container = document.getElementById('tushar-content');
+
+  if (!tasks || tasks.length === 0) {
+    container.innerHTML = '<div class="tushar-empty">✅ Aucune tâche en cours.</div>';
+    return;
+  }
+
+  container.innerHTML = '';
+
+  for (const site of tasks) {
+    const siteEl = document.createElement('div');
+    siteEl.className = 'tushar-site';
+
+    const header = document.createElement('div');
+    header.className = 'tushar-site-header';
+    header.textContent = site.adresse;
+    siteEl.appendChild(header);
+
+    for (const item of site.items) {
+      const row = document.createElement('div');
+      row.className = 'tushar-item';
+
+      const dot = document.createElement('div');
+      dot.className = 'tushar-item-dot ' + item.type;
+
+      const content = document.createElement('div');
+      content.className = 'tushar-item-content';
+
+      const label = document.createElement('div');
+      label.className = 'tushar-item-label';
+      label.textContent = item.label;
+      content.appendChild(label);
+
+      if (item.detail) {
+        const detail = document.createElement('div');
+        detail.className = 'tushar-item-detail';
+        detail.textContent = item.detail;
+        content.appendChild(detail);
+      }
+
+      row.appendChild(dot);
+      row.appendChild(content);
+      siteEl.appendChild(row);
+    }
+
+    container.appendChild(siteEl);
+  }
+}
+
+
 applyLang();
 </script>
+
+<!-- TUSHAR TASK LIST MODAL -->
+<div class="tushar-modal" id="tushar-modal">
+  <div class="tushar-modal-inner">
+    <div class="tushar-modal-header">
+      <div class="tushar-modal-title">📋 Tâches de la semaine</div>
+      <button class="tushar-close" onclick="closeTusharTasks()">✕</button>
+    </div>
+    <div id="tushar-content">
+      <div class="tushar-loading">⏳ Chargement...</div>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
